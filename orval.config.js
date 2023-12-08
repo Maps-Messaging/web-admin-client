@@ -1,5 +1,5 @@
  module.exports = {
-     'dojomanagement-file-transfomer': {
+     'maps-messaging-file-transfomer': {
          output: {
              mode: 'tags-split',
              target: './src/generated/mapsServer.ts',
@@ -10,7 +10,7 @@
                  query: {
                      useQuery: true,
                      options: {
-                         staleTime: 5000,
+                         staleTime: 30000,
                      },
                  },
              },
