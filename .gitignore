@@ -51,6 +51,8 @@ bower_components
 .settings/
 *.sublime-workspace
 *.sublime-project
+# Generated code that should not be in git
+src/generated
 
 # Vim / Emacs
 *.swp
