@@ -1,5 +1,5 @@
 module.exports = {
-    'dojomanagement-file-transfomer': {
+    'maps-admin-client-file-transfomer': {
         output: {
             mode: 'tags-split',
             target: './src/generated/mapsmessaging.ts',
@@ -16,7 +16,7 @@ module.exports = {
             },
         },
         input: {
-            target: './resources/api-docs.json',
+            target: './resources/openapi.json',
         },
     },
 };
