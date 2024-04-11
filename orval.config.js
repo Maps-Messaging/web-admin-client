@@ -6,6 +6,7 @@ module.exports = {
             schemas: './src/generated/model',
             client: 'react-query',
             mock: false,
+            document: false,
             override: {
                 query: {
                     useQuery: true,

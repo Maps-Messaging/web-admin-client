@@ -4,6 +4,23 @@ const project = resolve(__dirname, 'tsconfig.json');
 
 module.exports = {
   root: true,
+  overrides: [
+    {
+      files: ['src/generated/**/*.ts'], // Adjust the pattern to match your generated files
+      rules: {
+        'import/no-useless-path-segments': 'off',
+        '@typescript-eslint/no-unnecessary-type-arguments': 'off',
+        'no-implicit-coercion': 'off',
+        '@typescript-eslint/explicit-function-return-type': 'off',
+        '@typescript-eslint/consistent-type-definitions': 'off',
+        '@typescript-eslint/consistent-indexed-object-style': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+        'tsdoc/syntax': 'off'
+
+        // any other rules you want to disable for these files
+      },
+    },
+  ],
   extends: [
     require.resolve('@vercel/style-guide/eslint/node'),
     require.resolve('@vercel/style-guide/eslint/typescript'),
@@ -52,10 +69,10 @@ module.exports = {
         cases: {
           kebabCase: true, // personal style
           pascalCase: true,
+          camelCase: true
         },
       },
     ],
-
     // Deactivated
     '@typescript-eslint/dot-notation': 'off', // paths are used with a dot notation
     '@typescript-eslint/no-misused-promises': 'off', // onClick with async fails
