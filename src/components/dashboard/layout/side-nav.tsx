@@ -20,6 +20,9 @@ import { navItems } from './config';
 import { navIcons } from './nav-icons';
 
 export function SideNav(): React.JSX.Element {
+
+  const basePath = process.env.BASE_PATH || '';
+
   const pathname = usePathname();
 
   return (
@@ -94,7 +97,7 @@ export function SideNav(): React.JSX.Element {
           <Box
             component="img"
             alt="Pro version"
-            src="/assets/devias-kit-pro.png"
+            src={`${basePath}/assets/devias-kit-pro.png`}
             sx={{ height: 'auto', width: '160px' }}
           />
         </Box>

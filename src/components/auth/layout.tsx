@@ -10,7 +10,7 @@ import { DynamicLogo } from '@/components/core/logo';
 export interface LayoutProps {
   children: React.ReactNode;
 }
-
+const basePath = process.env.BASE_PATH || '';
 export function Layout({ children }: LayoutProps): React.JSX.Element {
   return (
     <Box
@@ -57,7 +57,7 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
             <Box
               component="img"
               alt="Widgets"
-              src="/assets/auth-widgets.png"
+              src={`${basePath}/assets/auth-widgets.png`}
               sx={{ height: 'auto', width: '100%', maxWidth: '600px' }}
             />
           </Box>

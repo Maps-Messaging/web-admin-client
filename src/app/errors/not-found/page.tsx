@@ -11,6 +11,7 @@ import { config } from '@/config';
 import { paths } from '@/paths';
 
 export const metadata = { title: `Not found | Errors | ${config.site.name}` } satisfies Metadata;
+const basePath = process.env.BASE_PATH || '';
 
 export default function NotFound(): React.JSX.Element {
   return (
@@ -20,7 +21,7 @@ export default function NotFound(): React.JSX.Element {
           <Box
             component="img"
             alt="Under development"
-            src="/assets/error-404.png"
+            src={`${basePath}/assets/error-404.png`}
             sx={{ display: 'inline-block', height: 'auto', maxWidth: '100%', width: '400px' }}
           />
         </Box>

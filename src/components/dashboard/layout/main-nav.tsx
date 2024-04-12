@@ -22,6 +22,8 @@ export function MainNav(): React.JSX.Element {
 
   const userPopover = usePopover<HTMLDivElement>();
 
+  const basePath = process.env.BASE_PATH || '';
+
   return (
     <React.Fragment>
       <Box
@@ -70,7 +72,7 @@ export function MainNav(): React.JSX.Element {
             <Avatar
               onClick={userPopover.handleOpen}
               ref={userPopover.anchorRef}
-              src="/assets/avatar.png"
+              src={`${basePath}/assets/avatar.png`}
               sx={{ cursor: 'pointer' }}
             />
           </Stack>

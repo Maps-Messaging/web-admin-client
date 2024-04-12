@@ -25,7 +25,7 @@ export interface MobileNavProps {
   open?: boolean;
   items?: NavItemConfig[];
 }
-
+const basePath = process.env.BASE_PATH || '';
 export function MobileNav({ open, onClose }: MobileNavProps): React.JSX.Element {
   const pathname = usePathname();
 
@@ -101,7 +101,7 @@ export function MobileNav({ open, onClose }: MobileNavProps): React.JSX.Element 
           <Box
             component="img"
             alt="Pro version"
-            src="/assets/devias-kit-pro.png"
+            src={`${basePath}/assets/devias-kit-pro.png`}
             sx={{ height: 'auto', width: '160px' }}
           />
         </Box>
