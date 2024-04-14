@@ -9,6 +9,12 @@ const nextConfig = {
     BASE_PATH: '/admin',
     ASSET_PREFIX: '/admin',
   },
+  webpack(config, options) {
+    if (!options.dev) {
+      config.devtool = 'source-map';
+    }
+    return config;
+  }
   // Optional: Change links `/me` -> `/me/` and emit `/me.html` -> `/me/index.html`
   // trailingSlash: true,
 
