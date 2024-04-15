@@ -9,23 +9,39 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 
 export function ServerDetails () :  React.JSX.Element {
-  const { data, error, isLoading } = useGetBuildInfo();
+
+  const formatUptime = (milliseconds: number): string => {
+    const seconds = Math.floor(milliseconds / 1000);
+    const days = Math.floor(seconds / (3600 * 24));
+    const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+
+    return `${String(days)}d ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  };
+  const { data, error, isLoading } = useGetBuildInfo({
+    query:{
+      refetchInterval: 2000
+    }
+  });
 
   if (isLoading) return <div>Loading name...</div>;
   if (error) return <div>Error loading name: {error.message}</div>;
 
   return (
     <Container maxWidth="lg">
+      <Typography variant="h3" component="h1" gutterBottom>
+        Server : {data?.data.serverName}
+      </Typography>
       <Grid container spacing={2}>
         {/* Server basic info */}
         <Grid item xs={12} sm={6} md={4}>
           <Card>
             <CardContent>
               <Typography variant="h6">Server Overview</Typography>
-              <Typography variant="body2">Name: {data?.data.serverName}</Typography>
               <Typography variant="body2">Version: {data?.data.version}</Typography>
               <Typography variant="body2">Build Date: {data?.data.buildDate}</Typography>
-              <Typography variant="body2">Uptime (secs): {data?.data.uptime}</Typography>
+              <Typography variant="body2">Uptime: {formatUptime(data?.data.uptime || 0)}</Typography>
             </CardContent>
           </Card>
         </Grid>

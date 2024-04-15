@@ -92,7 +92,7 @@ export default function MessagingServerDiagram(): React.JSX.Element {
       }
     }
 
-  }, [data]);
+  }, [data, key]);
 
   if (isLoading) return <div>Loading name...</div>;
   if (error) return <div>Error loading data: {error.message}</div>;
