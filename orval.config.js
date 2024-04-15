@@ -11,7 +11,8 @@ module.exports = {
                 query: {
                     useQuery: true,
                     options: {
-                        staleTime: 5000,
+                      staleTime: 10000,
+                      refreshInterval: 5000,
                     },
                 },
             },
