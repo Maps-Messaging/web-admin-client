@@ -4,7 +4,6 @@ import React, {useEffect, useState} from 'react';
 import { Grid, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import type { Theme } from '@mui/material/styles';
-import {logger} from "@/lib/default-logger";
 import type {ServerStatistics} from "@/generated/model";
 import {useGetStats} from "@/generated/server-management/server-management";
 
