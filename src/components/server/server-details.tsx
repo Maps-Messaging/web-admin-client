@@ -1,12 +1,13 @@
 'use client'
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useGetBuildInfo} from "@/generated/server-management/server-management";
 import Container from "@mui/material/Container";
 import {Grid} from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
+import DataGraph from "@/components/graphs/data-graph";
 
 export function ServerDetails () :  React.JSX.Element {
 
@@ -25,8 +26,23 @@ export function ServerDetails () :  React.JSX.Element {
     }
   });
 
+  const [connectionsData, setConnectionsData] = useState<number[]>([]);
+  const [freeMemoryData, setFreeMemoryData] = useState<number[]>([]);
+  const [threads, setNoOfThreads] = useState<number[]>([]);
+
+  // Update arrays whenever new data is fetched
+  useEffect(() => {
+    if (data) {
+      // Check each value if it's not undefined before updating the state
+      setConnectionsData(prev => [...prev, data?.data.connections || 0]);
+      setFreeMemoryData(prev => [...prev, data?.data.freeMemory || 0]);
+      setNoOfThreads(prev => [...prev, data?.data.numberOfThreads || 0]);
+    }
+  }, [data]);
+
   if (isLoading) return <div>Loading name...</div>;
   if (error) return <div>Error loading name: {error.message}</div>;
+
 
   return (
     <Container maxWidth="lg">
@@ -42,6 +58,7 @@ export function ServerDetails () :  React.JSX.Element {
               <Typography variant="body2">Version: {data?.data.version}</Typography>
               <Typography variant="body2">Build Date: {data?.data.buildDate}</Typography>
               <Typography variant="body2">Uptime: {formatUptime(data?.data.uptime || 0)}</Typography>
+              <Typography variant="body2">CPU Time: {formatUptime(data?.data.cpuTime || 0)}</Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -66,10 +83,14 @@ export function ServerDetails () :  React.JSX.Element {
               {Object.entries(data?.data.threadState || {}).map(([state, count]) => (
                 <Typography key={state} variant="body2">{state}: {count}</Typography>
               ))}
+              <Typography variant="body2">Total Threads: {data?.data.numberOfThreads}</Typography>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
+      <DataGraph name='Connections' data={connectionsData} />
+      <DataGraph name='Free Memory' data={freeMemoryData} />
+      <DataGraph name='Threads' data={threads} />
     </Container>
   );
 }
