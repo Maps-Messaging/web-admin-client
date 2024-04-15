@@ -1,5 +1,6 @@
 'use client'
 
+import '../../hostname-lookup';
 import React, {useEffect, useState} from 'react';
 import {useGetBuildInfo} from "@/generated/server-management/server-management";
 import Container from "@mui/material/Container";
@@ -33,10 +34,14 @@ export function ServerDetails () :  React.JSX.Element {
   // Update arrays whenever new data is fetched
   useEffect(() => {
     if (data) {
-      // Check each value if it's not undefined before updating the state
-      setConnectionsData(prev => [...prev, data?.data.connections || 0]);
-      setFreeMemoryData(prev => [...prev, data?.data.freeMemory || 0]);
-      setNoOfThreads(prev => [...prev, data?.data.numberOfThreads || 0]);
+      const updateArray = (prev: number[], newValue: number | undefined) => {
+        if (typeof newValue !== 'number') return prev;  // skip update if newValue is undefined or invalid
+        const newArray = [...prev, newValue];
+        return newArray.length > 120 ? newArray.slice(newArray.length - 120) : newArray;
+      };
+      setConnectionsData(prev => updateArray(prev, data.data.connections));
+      setFreeMemoryData(prev => updateArray(prev, data.data.freeMemory));
+      setNoOfThreads(prev => updateArray(prev, data.data.numberOfThreads));
     }
   }, [data]);
 
