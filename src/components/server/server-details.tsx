@@ -52,8 +52,8 @@ export function ServerDetails () :  React.JSX.Element {
             <CardContent>
               <Typography variant="h6">Memory Usage</Typography>
               <Typography variant="body2">Total Memory: {((data?.data.totalMemory || 0) / 1024 / 1024).toFixed(2)} MB</Typography>
-              <Typography variant="body2">Max Memory: {((data?.data.maxMemory|| 0) / 1024 / 1024).toFixed(2)} MB</Typography>
               <Typography variant="body2">Free Memory: {((data?.data.freeMemory|| 0) / 1024 / 1024).toFixed(2)} MB</Typography>
+              <Typography variant="body2">Max Memory: {((data?.data.maxMemory|| 0) / 1024 / 1024).toFixed(2)} MB</Typography>
             </CardContent>
           </Card>
         </Grid>
