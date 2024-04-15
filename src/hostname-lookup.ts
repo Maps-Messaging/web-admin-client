@@ -7,6 +7,5 @@ axios.defaults.baseURL = API_BASE_URL;
 
 
 axios.interceptors.request.use(req => {
-  console.log('Sending request to URL:', req.url);
   return req;
 });

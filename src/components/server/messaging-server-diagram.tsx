@@ -88,7 +88,6 @@ export default function MessagingServerDiagram(): React.JSX.Element {
         setPreviousUpdate(stat);
         const prev = key + 1;
         setKey(prev);
-        logger.warn(key);
       }
     }
 
@@ -96,9 +95,6 @@ export default function MessagingServerDiagram(): React.JSX.Element {
 
   if (isLoading) return <div>Loading name...</div>;
   if (error) return <div>Error loading data: {error.message}</div>;
-
-  logger.warn(previousUpdate);
-  logger.warn(diff);
 
   const computeState = ():string =>{
     const totalProcessed = (diff.totalPublishedMessages||0 ) - (diff.totalNoInterestMessages || 0);
