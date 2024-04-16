@@ -2,12 +2,11 @@ import type { NavItemConfig } from '@/types/nav';
 import { paths } from '@/paths';
 
 export const navItems = [
-  { key: 'overview', title: 'Overview', href: paths.dashboard.overview, icon: 'chart-pie' },
-  { key: 'namespace', title: 'namespace', href: paths.dashboard.namespace, icon: 'folder' },
-  { key: 'customers', title: 'Customers', href: paths.dashboard.customers, icon: 'users' },
+  { key: 'overview', title: 'Overview', href: paths.dashboard.overview, icon: 'cpu' },
+  { key: 'authentication', title: 'Authentication', href: paths.dashboard.authentication, icon: 'user' },
   { key: 'integrations', title: 'Integrations', href: paths.dashboard.integrations, icon: 'plugs-connected' },
+  { key: 'namespace', title: 'Namespace', href: paths.dashboard.namespace, icon: 'folder' },
+  { key: 'network', title: 'Network', href: paths.dashboard.network, icon: 'folder' },
   { key: 'settings', title: 'Settings', href: paths.dashboard.settings, icon: 'gear-six' },
-  { key: 'account', title: 'Account', href: paths.dashboard.account, icon: 'user' },
-  { key: 'status', title: 'Status', href: paths.dashboard.status, icon: 'gear-six' },
-  { key: 'error', title: 'Error', href: paths.errors.notFound, icon: 'x-square' },
+  { key: 'monitor', title: 'Monitor', href: paths.dashboard.monitor, icon: 'gear-six' },
 ] satisfies NavItemConfig[];

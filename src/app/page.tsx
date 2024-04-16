@@ -2,6 +2,9 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
+
+axios.defaults.baseURL = process.env.API_BASE_URL;
 
 export default function Page(): React.JSX.Element {
   const router = useRouter();

@@ -1,6 +1,5 @@
 'use client'
 
-import '../../hostname-lookup';
 import React, {useEffect, useState} from 'react';
 import {useGetBuildInfo} from "@/generated/server-management/server-management";
 import Container from "@mui/material/Container";

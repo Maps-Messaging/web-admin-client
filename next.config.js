@@ -8,6 +8,7 @@ const nextConfig = {
   env: {
     BASE_PATH: '/admin',
     ASSET_PREFIX: '/admin',
+    API_BASE_URL: 'http://localhost:8080',
   },
   webpack(config, options) {
     if (!options.dev) {
