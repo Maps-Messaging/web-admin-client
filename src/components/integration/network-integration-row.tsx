@@ -1,31 +1,26 @@
-import type {InterfaceInfo} from "@/generated/model";
+import type {IntegrationInfo, InterfaceInfo} from "@/generated/model";
 import * as React from "react";
 import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
-import {
-  useGetInterfaceStatus
-} from "@/generated/server-interface-management/server-interface-management";
 import { formatNumberWithPowerUnit } from "@/helper-functions";
 import TableRow from "@mui/material/TableRow";
+import {useGetIntegrationStatus} from "@/generated/server-integration-management/server-integration-management";
 
-interface NetworkInterfaceRowProps {
+interface NetworkIntegrationRowProps {
   key: string;
-  networkInfo: InterfaceInfo;
+  networkInfo: IntegrationInfo;
 }
 
-export function NetworkInterfaceRow({
+export function NetworkIntegrationRow({
                                       networkInfo = {},
                                       key=''
-                                      }: NetworkInterfaceRowProps): React.JSX.Element {
+                                      }: NetworkIntegrationRowProps): React.JSX.Element {
 
-  const { data, error, isLoading } = useGetInterfaceStatus(networkInfo.name ||'',{
+  const { data, error, isLoading } = useGetIntegrationStatus(networkInfo.name ||'',{
     query:{
       refetchInterval: 10000
     }
   });
-  if (isLoading) return <div>Loading name...</div>;
-  if (error) return <div>Error loading name: {error.message}</div>;
-
   return (
     <TableRow
       id={key}
@@ -34,10 +29,10 @@ export function NetworkInterfaceRow({
         <Typography variant="subtitle2">{networkInfo.name}</Typography>
       </TableCell>
       <TableCell>
-        <Typography variant="subtitle2">{networkInfo.host}:{networkInfo.port}/</Typography>
+        <Typography variant="subtitle2">{networkInfo.remoteUrl}</Typography>
       </TableCell>
       <TableCell>
-        { formatNumberWithPowerUnit(data?.data.connections || 0)}
+        { formatNumberWithPowerUnit(networkInfo.mappings || 0)}
       </TableCell>
       <TableCell>
         {formatNumberWithPowerUnit(data?.data.messagesReceived || 0)}
@@ -52,7 +47,7 @@ export function NetworkInterfaceRow({
         {formatNumberWithPowerUnit(data?.data.bytesSent || 0)}
       </TableCell>
       <TableCell>
-        <Typography variant="subtitle2">{networkInfo.state}</Typography>
+        <Typography variant="subtitle2">{data?.data.state}</Typography>
       </TableCell>
     </TableRow>
   );
