@@ -23,7 +23,7 @@ export function ServerDetails () :  React.JSX.Element {
   const [threads, setNoOfThreads] = useState<number[]>([]);
 
   // Update arrays whenever new data is fetched
-  useEffect(() => {
+  useEffect(() :void => {
     if (data) {
       const updateArray = (prev: number[], newValue: number | undefined) => {
         if (typeof newValue !== 'number') return prev;  // skip update if newValue is undefined or invalid

@@ -7,3 +7,17 @@ export const formatUptime = (milliseconds: number): string => {
   const secs = seconds % 60;
   return `${String(days)}d ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 };
+
+export function formatNumberWithPowerUnit(number: number): string {
+  if (number >= 1_000_000_000_000) {
+    return `${Math.round(number / 1_000_000_000_000).toString()}T`;
+  } else if (number >= 1_000_000_000) {
+    return `${Math.round(number / 1_000_000_000).toString()}G`;
+  } else if (number >= 1_000_000) {
+    return `${Math.round(number / 1_000_000).toString()}M`;
+  } else if (number >= 1_000) {
+    return `${Math.round(number / 1_000).toString()}K`;
+  }
+  return number.toString();
+}
+
