@@ -4,12 +4,13 @@ export const paths = {
   auth: { signIn: '/auth/sign-in', signUp: '/auth/sign-up', resetPassword: '/auth/reset-password' },
   dashboard: {
     overview: '/dashboard',
+    monitor: '/dashboard/monitor',
     authentication: '/dashboard/authentication',
     namespace: '/dashboard/namespace',
     network: '/dashboard/network',
     integrations: '/dashboard/integrations',
+    schemas: '/dashboard/schema',
     settings: '/dashboard/settings',
-    monitor: '/dashboard/monitor',
   },
   errors: { notFound: '/errors/not-found' },
 } as const;
