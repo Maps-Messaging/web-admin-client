@@ -1,4 +1,4 @@
-import type {InterfaceInfo, SchemaConfig} from "@/generated/model";
+import type {SchemaConfig} from "@/generated/model";
 import * as React from "react";
 import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";

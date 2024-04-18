@@ -3,10 +3,8 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 
-import {type IntegrationInfo, type InterfaceInfo} from "@/generated/model";
-import {useGetAllInterfaces} from "@/generated/server-interface-management/server-interface-management";
+import {type IntegrationInfo} from "@/generated/model";
 import Typography from "@mui/material/Typography";
-import {NetworkInterfaceTable} from "@/components/network/network-interface-table";
 import {NetworkIntegrationTable} from "@/components/integration/network-integration-table";
 import {useGetAllIntegrations} from "@/generated/server-integration-management/server-integration-management";
 

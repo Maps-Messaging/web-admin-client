@@ -1,4 +1,4 @@
-import type {IntegrationInfo, InterfaceInfo} from "@/generated/model";
+import type {IntegrationInfo} from "@/generated/model";
 import * as React from "react";
 import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
@@ -21,6 +21,11 @@ export function NetworkIntegrationRow({
       refetchInterval: 10000
     }
   });
+
+
+  if (isLoading) return <div>Loading details...</div>;
+  if (error) return <div>Error loading details: {error.message}</div>;
+
   return (
     <TableRow
       id={key}

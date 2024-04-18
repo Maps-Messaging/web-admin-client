@@ -1,11 +1,8 @@
-import type {EndPointDetails, InterfaceInfo} from "@/generated/model";
+import type {EndPointDetails} from "@/generated/model";
 import * as React from "react";
 import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
-import {
-  useGetInterfaceStatus
-} from "@/generated/server-interface-management/server-interface-management";
-import {formatNumberWithPowerUnit, formatUptime, numberToDateString} from "@/helper-functions";
+import {formatNumberWithPowerUnit, numberToDateString} from "@/helper-functions";
 import TableRow from "@mui/material/TableRow";
 
 interface ConnectionRowProps {

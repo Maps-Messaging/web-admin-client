@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 
-import {type EndPointDetails, type InterfaceInfo} from "@/generated/model";
+import {type EndPointDetails} from "@/generated/model";
 import Typography from "@mui/material/Typography";
 import {useGetAllConnections} from "@/generated/connection-management/connection-management";
 import {ConnectionTable} from "@/components/connections/connection-table";
