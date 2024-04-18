@@ -34,7 +34,7 @@ export function NetworkInterfaceRow({
         <Typography variant="subtitle2">{networkInfo.name}</Typography>
       </TableCell>
       <TableCell>
-        <Typography variant="subtitle2">{networkInfo.host}:{networkInfo.port}/</Typography>
+        <Typography variant="subtitle2">{networkInfo.host}:{networkInfo.port}</Typography>
       </TableCell>
       <TableCell>
         { formatNumberWithPowerUnit(data?.data.connections || 0)}

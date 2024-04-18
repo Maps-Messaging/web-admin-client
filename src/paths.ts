@@ -8,6 +8,7 @@ export const paths = {
     authentication: '/dashboard/authentication',
     namespace: '/dashboard/namespace',
     network: '/dashboard/network',
+    connections: '/dashboard/connections',
     integrations: '/dashboard/integrations',
     schemas: '/dashboard/schema',
     settings: '/dashboard/settings',

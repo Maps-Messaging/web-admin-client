@@ -8,6 +8,11 @@ export const formatUptime = (milliseconds: number): string => {
   return `${String(days)}d ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 };
 
+export function numberToDateString(javaTimeInMs: number): string {
+  const date = new Date(javaTimeInMs);
+  return date.toLocaleTimeString();
+}
+
 export function formatNumberWithPowerUnit(number: number): string {
   if (number >= 1_000_000_000_000) {
     return `${Math.round(number / 1_000_000_000_000).toString()}T`;
