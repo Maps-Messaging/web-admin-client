@@ -10,7 +10,6 @@ import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { GearSix as GearSixIcon } from '@phosphor-icons/react/dist/ssr/GearSix';
 import { SignOut as SignOutIcon } from '@phosphor-icons/react/dist/ssr/SignOut';
-import { User as UserIcon } from '@phosphor-icons/react/dist/ssr/User';
 
 import { paths } from '@/paths';
 import { authClient } from '@/lib/auth/client';
@@ -69,12 +68,6 @@ export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): Reac
             <GearSixIcon fontSize="var(--icon-fontSize-md)" />
           </ListItemIcon>
           Settings
-        </MenuItem>
-        <MenuItem component={RouterLink} href={paths.dashboard.authentication} onClick={onClose}>
-          <ListItemIcon>
-            <UserIcon fontSize="var(--icon-fontSize-md)" />
-          </ListItemIcon>
-          Profile
         </MenuItem>
         <MenuItem onClick={handleSignOut}>
           <ListItemIcon>

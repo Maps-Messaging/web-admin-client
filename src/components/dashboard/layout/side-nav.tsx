@@ -4,13 +4,9 @@ import * as React from 'react';
 import RouterLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { ArrowSquareUpRight as ArrowSquareUpRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowSquareUpRight';
-import { CaretUpDown as CaretUpDownIcon } from '@phosphor-icons/react/dist/ssr/CaretUpDown';
-
 import type { NavItemConfig } from '@/types/nav';
 import { paths } from '@/paths';
 import { isNavItemActive } from '@/lib/is-nav-item-active';
@@ -20,8 +16,6 @@ import { navItems } from './config';
 import { navIcons } from './nav-icons';
 
 export function SideNav(): React.JSX.Element {
-
-  const basePath = process.env.BASE_PATH || '';
 
   const pathname = usePathname();
 
@@ -70,13 +64,12 @@ export function SideNav(): React.JSX.Element {
         >
           <Box sx={{ flex: '1 1 auto' }}>
             <Typography color="var(--mui-palette-neutral-400)" variant="body2">
-              Workspace
+              Maps Messaging
             </Typography>
             <Typography color="inherit" variant="subtitle1">
-              Devias
+              Server Administration
             </Typography>
           </Box>
-          <CaretUpDownIcon />
         </Box>
       </Stack>
       <Divider sx={{ borderColor: 'var(--mui-palette-neutral-700)' }} />
@@ -84,35 +77,6 @@ export function SideNav(): React.JSX.Element {
         {renderNavItems({ pathname, items: navItems })}
       </Box>
       <Divider sx={{ borderColor: 'var(--mui-palette-neutral-700)' }} />
-      <Stack spacing={2} sx={{ p: '12px' }}>
-        <div>
-          <Typography color="var(--mui-palette-neutral-100)" variant="subtitle2">
-            Need more features?
-          </Typography>
-          <Typography color="var(--mui-palette-neutral-400)" variant="body2">
-            Check out our Pro solution template.
-          </Typography>
-        </div>
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Box
-            component="img"
-            alt="Pro version"
-            src={`${basePath}/assets/devias-kit-pro.png`}
-            sx={{ height: 'auto', width: '160px' }}
-          />
-        </Box>
-        <Button
-          component="a"
-          endIcon={<ArrowSquareUpRightIcon fontSize="var(--icon-fontSize-md)" />}
-          fullWidth
-          href="https://material-kit-pro-react.devias.io/"
-          sx={{ mt: 2 }}
-          target="_blank"
-          variant="contained"
-        >
-          Pro version
-        </Button>
-      </Stack>
     </Box>
   );
 }
@@ -133,11 +97,7 @@ function renderNavItems({ items = [], pathname }: { items?: NavItemConfig[]; pat
   );
 }
 
-interface NavItemProps extends Omit<NavItemConfig, 'items'> {
-  pathname: string;
-}
-
-function NavItem({ disabled, external, href, icon, matcher, pathname, title }: NavItemProps): React.JSX.Element {
+function NavItem({ items, pathname, disabled, external, href, icon, matcher, title }: NavItemConfig & { pathname: string }): React.JSX.Element {
   const active = isNavItemActive({ disabled, external, href, matcher, pathname });
   const Icon = icon ? navIcons[icon] : null;
 
@@ -146,11 +106,11 @@ function NavItem({ disabled, external, href, icon, matcher, pathname, title }: N
       <Box
         {...(href
           ? {
-              component: external ? 'a' : RouterLink,
-              href,
-              target: external ? '_blank' : undefined,
-              rel: external ? 'noreferrer' : undefined,
-            }
+            component: external ? 'a' : RouterLink,
+            href,
+            target: external ? '_blank' : undefined,
+            rel: external ? 'noreferrer' : undefined,
+          }
           : { role: 'button' })}
         sx={{
           alignItems: 'center',
@@ -173,13 +133,13 @@ function NavItem({ disabled, external, href, icon, matcher, pathname, title }: N
         }}
       >
         <Box sx={{ alignItems: 'center', display: 'flex', justifyContent: 'center', flex: '0 0 auto' }}>
-          {Icon ? (
+          {Icon && (
             <Icon
               fill={active ? 'var(--NavItem-icon-active-color)' : 'var(--NavItem-icon-color)'}
               fontSize="var(--icon-fontSize-md)"
               weight={active ? 'fill' : undefined}
             />
-          ) : null}
+          )}
         </Box>
         <Box sx={{ flex: '1 1 auto' }}>
           <Typography
@@ -189,6 +149,11 @@ function NavItem({ disabled, external, href, icon, matcher, pathname, title }: N
             {title}
           </Typography>
         </Box>
+      </Box>
+      <Box component="ul" sx={{ listStyle: 'none', m: 0, p: '0 0 0 20px' }}>
+        {items?.map(({ key, ...restOfSubItem }) => (
+          <NavItem key={key} pathname={pathname} {...restOfSubItem} />
+        ))}
       </Box>
     </li>
   );

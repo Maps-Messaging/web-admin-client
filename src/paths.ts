@@ -5,7 +5,8 @@ export const paths = {
   dashboard: {
     overview: '/dashboard',
     monitor: '/dashboard/monitor',
-    authentication: '/dashboard/authentication',
+    users: '/dashboard/authentication/users',
+    groups: '/dashboard/authentication/groups',
     namespace: '/dashboard/namespace',
     network: '/dashboard/network',
     connections: '/dashboard/connections',
