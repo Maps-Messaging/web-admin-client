@@ -9,6 +9,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import DataGraph from "@/components/graphs/data-graph";
 import {formatUptime} from "@/helper-functions";
+import DualNumberGraph from "@/components/graphs/dual-number-graph";
 
 export function ServerDetails () :  React.JSX.Element {
 
@@ -18,9 +19,12 @@ export function ServerDetails () :  React.JSX.Element {
     }
   });
 
-  const [connectionsData, setConnectionsData] = useState<number[]>([]);
   const [freeMemoryData, setFreeMemoryData] = useState<number[]>([]);
   const [threads, setNoOfThreads] = useState<number[]>([]);
+  const [published, setPublished] = useState<number[]>([]);
+  const [noInterest, setNoInterest] = useState<number[]>([]);
+  const [delivered, setDelivered] = useState<number[]>([]);
+  const [retrieved, setRetrieved] = useState<number[]>([]);
 
   // Update arrays whenever new data is fetched
   useEffect(() :void => {
@@ -30,9 +34,12 @@ export function ServerDetails () :  React.JSX.Element {
         const newArray = [...prev, newValue];
         return newArray.length > 120 ? newArray.slice(newArray.length - 120) : newArray;
       };
-      setConnectionsData(prev => updateArray(prev, data.data.connections));
       setFreeMemoryData(prev => updateArray(prev, data.data.freeMemory));
       setNoOfThreads(prev => updateArray(prev, data.data.numberOfThreads));
+      setPublished(prev => updateArray(prev, data.data.serverStatistics?.publishedPerSecond || 0));
+      setNoInterest(prev => updateArray(prev,data.data.serverStatistics?.noInterestPerSecond || 0))
+      setDelivered(prev => updateArray(prev,data.data.serverStatistics?.deliveredPerSecond || 0))
+      setRetrieved(prev => updateArray(prev,data.data.serverStatistics?.retrievedPerSecond || 0))
     }
   }, [data]);
 
@@ -46,7 +53,6 @@ export function ServerDetails () :  React.JSX.Element {
         Server : {data?.data.serverName}
       </Typography>
       <Grid container spacing={2}>
-        {/* Server basic info */}
         <Grid item xs={12} sm={6} md={4}>
           <Card>
             <CardContent>
@@ -64,14 +70,14 @@ export function ServerDetails () :  React.JSX.Element {
           <Card>
             <CardContent>
               <Typography variant="h6">Memory Usage</Typography>
-              <Typography variant="body2">Total Memory: {((data?.data.totalMemory || 0) / 1024 / 1024).toFixed(2)} MB</Typography>
-              <Typography variant="body2">Free Memory: {((data?.data.freeMemory|| 0) / 1024 / 1024).toFixed(2)} MB</Typography>
-              <Typography variant="body2">Max Memory: {((data?.data.maxMemory|| 0) / 1024 / 1024).toFixed(2)} MB</Typography>
+              <Typography variant="body2">Total Memory: {((data?.data.totalMemory || 0) / 1024 / 1024).toFixed(0)} MB</Typography>
+              <Typography variant="body2">Free Memory: {((data?.data.freeMemory|| 0) / 1024 / 1024).toFixed(0)} MB</Typography>
+              <Typography variant="body2">Max Memory: {((data?.data.maxMemory|| 0) / 1024 / 1024).toFixed(0)} MB</Typography>
+              <Typography variant="body2">&nbsp;</Typography>
             </CardContent>
           </Card>
         </Grid>
 
-        {/* Thread states */}
         <Grid item xs={12} sm={6} md={4}>
           <Card>
             <CardContent>
@@ -84,9 +90,20 @@ export function ServerDetails () :  React.JSX.Element {
           </Card>
         </Grid>
       </Grid>
-      <DataGraph name='Connections' data={connectionsData} />
-      <DataGraph name='Free Memory' data={freeMemoryData} />
-      <DataGraph name='Threads' data={threads} />
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <DualNumberGraph name1='Published' data1={published} name2='No Interest' data2={noInterest} />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <DualNumberGraph name1='From Store' data1={retrieved} name2='Delivered' data2={delivered} />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <DataGraph name='Free Memory' data={freeMemoryData} />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <DataGraph name='Threads' data={threads} />
+        </Grid>
+      </Grid>
     </Container>
   );
 }

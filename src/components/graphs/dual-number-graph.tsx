@@ -1,18 +1,20 @@
 import React from 'react';
-import {ApexOptions} from "apexcharts";
+import { ApexOptions } from "apexcharts";
 import {Chart} from "@/components/core/chart";
 
-interface NumberGraphProps {
-  name: string;
-  data: number[];
+interface DualNumberGraphProps {
+  name1: string;
+  data1: number[];
+  name2: string;
+  data2: number[];
 }
 
-const NumberGraph: React.FC<NumberGraphProps> = ({ name, data }) => {
+const DualNumberGraph: React.FC<DualNumberGraphProps> = ({ name1, data1, name2, data2 }) => {
   // Define the chart configuration
   const options: ApexOptions = {
     chart: {
       height: 350,
-      type: 'line', // Ensure this is a literal match to the expected type
+      type: 'line',
       zoom: {
         enabled: false
       }
@@ -24,24 +26,30 @@ const NumberGraph: React.FC<NumberGraphProps> = ({ name, data }) => {
       curve: 'smooth'
     },
     title: {
-      text: name,
+      text: `${name1} and ${name2}`,
       align: 'left'
     },
     grid: {
       row: {
-        colors: ['#f3f3f3', 'transparent'], // this array will be repeated on columns
+        colors: ['#f3f3f3', 'transparent'],
         opacity: 0.5
       },
     },
     xaxis: {
-      categories: Array.from(data.keys()).map(key => key.toString()), // Convert keys to string array if needed
+      categories: Array.from(Array(Math.max(data1.length, data2.length)).keys()).map(key => key.toString()),
     }
   };
 
-  const series = [{
-    name: name,
-    data: data
-  }];
+  const series = [
+    {
+      name: name1,
+      data: data1
+    },
+    {
+      name: name2,
+      data: data2
+    }
+  ];
 
   return (
     <div className="chart-container" style={{width: '100%'}}>
@@ -50,4 +58,4 @@ const NumberGraph: React.FC<NumberGraphProps> = ({ name, data }) => {
   );
 };
 
-export default NumberGraph;
+export default DualNumberGraph;
