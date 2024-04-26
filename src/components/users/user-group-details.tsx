@@ -8,7 +8,6 @@ import { Download as DownloadIcon } from '@phosphor-icons/react/dist/ssr/Downloa
 import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
 import { Upload as UploadIcon } from '@phosphor-icons/react/dist/ssr/Upload';
 
-import { CustomersFilters } from '@/components/dashboard/customer/customers-filters';
 import {UserTable} from "@/components/users/user-table";
 import {User} from "@/generated/model";
 import {
@@ -51,7 +50,6 @@ export default function UserGroupDetails(): React.JSX.Element {
           </Button>
         </div>
       </Stack>
-      <CustomersFilters />
       <UserTable
         count={paginatedUsers.length}
         page={page}

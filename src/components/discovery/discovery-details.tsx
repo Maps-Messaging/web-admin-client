@@ -1,88 +1,99 @@
-'use client'
-
 import * as React from 'react';
+import { useState } from 'react';
 import Stack from '@mui/material/Stack';
-
-import {DiscoveredServers} from "@/generated/model";
-import Typography from "@mui/material/Typography";
-import {useGetAllDiscoveredServers} from "@/generated/discovery-management/discovery-management";
+import Typography from '@mui/material/Typography';
+import { useGetAllDiscoveredServers } from '@/generated/discovery-management/discovery-management';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
-import Table from "@mui/material/Table";
-import {TableContainer} from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import {useState} from "react";
-import {MinusCircle, PlusCircle} from "@phosphor-icons/react";
+import Table from '@mui/material/Table';
+import { TableContainer } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import { MinusCircle, PlusCircle } from '@phosphor-icons/react';
+import {ServiceData} from "@/generated/model";
 
-export default function DiscoveryDetails(): React.JSX.Element {
-  const page = 0;
-  const rowsPerPage = 20;
-
+export default function DiscoveryDetails(): React.ReactElement {
   const { data, error, isLoading } = useGetAllDiscoveredServers({
-    query:{
-      refetchInterval: 60000
-    }
+    query: {
+      refetchInterval: 60000,
+    },
   });
 
-  const [open, setOpen] = useState<{ [key: string]: boolean }>({});
+  const [open, setOpen] = useState<Record<string, boolean>>({});
 
-  const toggleOpen = (key: string) => {
-    setOpen(prev => ({ ...prev, [key]: !prev[key] }));
+  const toggleOpen = (key: string) : Record<string, boolean> => {
+    setOpen((prev) => {
+      const newState = { ...prev, [key]: !prev[key] };
+      return newState;
+    });
+    return open;
   };
 
   if (isLoading) return <div>Loading details...</div>;
   if (error) return <div>Error loading details: {error.message}</div>;
 
-  const paginatedInterfaces = applyPagination((data?.data || []), page, rowsPerPage);
+  function getProtocolSupport(serviceData: ServiceData): string {
+    let versions = '';
+    if(serviceData.application === 'mqtt'){
+      if( serviceData.properties?.['version 5.0']){
+        versions = 'V5.0'
+      }
+      if( serviceData.properties?.['version 3.1.1']){
+        versions += ' V3.1.1'
+      }
+      if( serviceData.properties?.['version 3.1']){
+        versions += ' V3.1'
+      }
+    }
+    else if(serviceData.application === 'maps'){
+      versions += serviceData.properties?.['version'] || '';
+    }
+    return versions;
+  }
 
   return (
     <Stack spacing={3}>
-      <Stack direction="row" spacing={3}>
-        <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
-          <Typography variant="h4">Discovered Servers</Typography>
-        </Stack>
-      </Stack>
+      <Typography variant="h4">Discovered Servers</Typography>
       <TableContainer>
         <Table>
           <TableBody>
-            {data?.data.map((server, index) => (
-              <React.Fragment key={index}>
-                <TableRow>
-                  <TableCell>
-                    <IconButton onClick={() => toggleOpen(`server-${index}`)}>
-                      {open[`server-${index}`] ? <MinusCircle /> : <PlusCircle />}
-                    </IconButton>
-                    <Typography variant="subtitle2">{server.server}</Typography>
-                  </TableCell>
-                </TableRow>
-                {open[`server-${index}`] && server.serviceInfo && (
+            {data?.data.map((server, index) => {
+              const key = `server-${index.toString()}`;
+              return (
+                <React.Fragment key={key}>
                   <TableRow>
-                    <TableCell style={{ paddingLeft: 40 }}>
-                      <Table size="small">
-                        <TableBody>
-                          {server.serviceInfo.map((service, serviceIndex) => (
-                            <TableRow key={serviceIndex}>
-                              <TableCell>{service.application}</TableCell>
-                              <TableCell>{service.domain}</TableCell>
-                              <TableCell>{service.hostAddresses?.join(', ')}</TableCell>
-                              <TableCell>{service.port}</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                    <TableCell>
+                      <IconButton onClick={() => toggleOpen(key)}>
+                        {open[key] ? <MinusCircle /> : <PlusCircle />}
+                      </IconButton>
+                      <Typography variant="subtitle2">{server.server}</Typography>
                     </TableCell>
                   </TableRow>
-                )}
-              </React.Fragment>
-            ))}
+                  {open[key] && server.serviceInfo && (
+                    <TableRow>
+                      <TableCell style={{ paddingLeft: 40 }}>
+                        <Table size="small">
+                          <TableBody>
+                            {server.serviceInfo.map((service) => (
+                              <TableRow key={service.application}>
+                                <TableCell>{service.application}</TableCell>
+                                <TableCell>{service.domain}</TableCell>
+                                <TableCell>{service.hostAddresses?.join(', ')}</TableCell>
+                                <TableCell>{service.port}</TableCell>
+                                <TableCell>{getProtocolSupport(service)}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </React.Fragment>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
     </Stack>
   );
-}
-
-function applyPagination(rows: DiscoveredServers[], page: number, rowsPerPage: number): DiscoveredServers[] {
-  return rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 }
