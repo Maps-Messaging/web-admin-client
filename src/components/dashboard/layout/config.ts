@@ -13,6 +13,7 @@ export const navItems = [
     ]
   },
   { key: 'integrations', title: 'Integrations', href: paths.dashboard.integrations, icon: 'plugs-connected' },
+  { key: 'discovery', title: 'Discovery', href: paths.dashboard.discovery, icon: 'folder' },
   { key: 'namespace', title: 'Namespace', href: paths.dashboard.namespace, icon: 'folder' },
   { key: 'network', title: 'Network', href: paths.dashboard.network, icon: 'folder' },
   { key: 'connections', title: 'Connections', href: paths.dashboard.connections, icon: 'folder' },

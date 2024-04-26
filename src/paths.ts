@@ -6,6 +6,7 @@ export const paths = {
     overview: '/dashboard',
     users: '/dashboard/authentication/users',
     groups: '/dashboard/authentication/groups',
+    discovery: '/dashboard/discovery',
     monitor: '/dashboard/monitor',
     namespace: '/dashboard/namespace',
     network: '/dashboard/network',
