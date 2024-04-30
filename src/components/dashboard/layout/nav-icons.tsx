@@ -15,6 +15,8 @@ import { Monitor as MonitorIcon } from '@phosphor-icons/react/dist/ssr/Monitor';
 import { Lock as LockIcon } from '@phosphor-icons/react/dist/ssr/Lock';
 import { Database as DatabaseIcon } from '@phosphor-icons/react/dist/ssr/Database';
 import { Circuitry as CircuitryIcon } from '@phosphor-icons/react/dist/ssr/Circuitry';
+import { ComputerTower as ComputerTowerIcon } from '@phosphor-icons/react/dist/ssr/ComputerTower';
+import { Archive as ArchiveIcon } from '@phosphor-icons/react/dist/ssr/Archive';
 
 
 export const navIcons = {
@@ -31,6 +33,8 @@ export const navIcons = {
   'repeat' : RepeatIcon,
   'database' : DatabaseIcon,
   'circuit' : CircuitryIcon,
+  'archive' : ArchiveIcon,
+  'computer' : ComputerTowerIcon,
   'lock' : LockIcon,
   user: UserIcon,
   users: UsersIcon,

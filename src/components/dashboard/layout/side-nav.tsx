@@ -14,6 +14,9 @@ import { Logo } from '@/components/core/logo';
 
 import { navItems } from './config';
 import { navIcons } from './nav-icons';
+import {useState} from "react";
+import {Collapse} from "@mui/material";
+import {CaretDown, CaretRight, CaretUp, Carrot} from "@phosphor-icons/react";
 
 export function SideNav(): React.JSX.Element {
 
@@ -98,8 +101,17 @@ function renderNavItems({ items = [], pathname }: { items?: NavItemConfig[]; pat
 }
 
 function NavItem({ items, pathname, disabled, external, href, icon, matcher, title }: NavItemConfig & { pathname: string }): React.JSX.Element {
+  const [expanded, setExpanded] = useState(false);
+  const toggleExpand = () => {
+    if (items && items.length > 0) {
+      setExpanded(!expanded);
+    }
+  };
+
   const active = isNavItemActive({ disabled, external, href, matcher, pathname });
   const Icon = icon ? navIcons[icon] : null;
+  const hasChildren = items && items.length > 0;
+
 
   return (
     <li>
@@ -110,8 +122,9 @@ function NavItem({ items, pathname, disabled, external, href, icon, matcher, tit
             href,
             target: external ? '_blank' : undefined,
             rel: external ? 'noreferrer' : undefined,
+            onClick: toggleExpand
           }
-          : { role: 'button' })}
+          : { role: 'button', onClick: toggleExpand })}
         sx={{
           alignItems: 'center',
           borderRadius: 1,
@@ -132,7 +145,7 @@ function NavItem({ items, pathname, disabled, external, href, icon, matcher, tit
           ...(active && { bgcolor: 'var(--NavItem-active-background)', color: 'var(--NavItem-active-color)' }),
         }}
       >
-        <Box sx={{ alignItems: 'center', display: 'flex', justifyContent: 'center', flex: '0 0 auto' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', flex: '1 1 auto' }}>
           {Icon && (
             <Icon
               fill={active ? 'var(--NavItem-icon-active-color)' : 'var(--NavItem-icon-color)'}
@@ -140,8 +153,6 @@ function NavItem({ items, pathname, disabled, external, href, icon, matcher, tit
               weight={active ? 'fill' : undefined}
             />
           )}
-        </Box>
-        <Box sx={{ flex: '1 1 auto' }}>
           <Typography
             component="span"
             sx={{ color: 'inherit', fontSize: '0.875rem', fontWeight: 500, lineHeight: '28px' }}
@@ -149,12 +160,19 @@ function NavItem({ items, pathname, disabled, external, href, icon, matcher, tit
             {title}
           </Typography>
         </Box>
+        {hasChildren && (
+          expanded ? <CaretDown size={20} /> : <CaretRight size={20} />
+        )}
       </Box>
-      <Box component="ul" sx={{ listStyle: 'none', m: 0, p: '0 0 0 20px' }}>
-        {items?.map(({ key, ...restOfSubItem }) => (
-          <NavItem key={key} pathname={pathname} {...restOfSubItem} />
-        ))}
-      </Box>
+      {hasChildren && (
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <Box component="ul" sx={{ listStyle: 'none', m: 0, p: '0 0 0 20px' }}>
+            {items.map(({ key, ...restOfSubItem }) => (
+              <NavItem key={key} pathname={pathname} {...restOfSubItem} />
+            ))}
+          </Box>
+        </Collapse>
+      )}
     </li>
   );
 }
