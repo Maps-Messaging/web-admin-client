@@ -16,7 +16,7 @@ import { navItems } from './config';
 import { navIcons } from './nav-icons';
 import {useState} from "react";
 import {Collapse} from "@mui/material";
-import {CaretDown, CaretRight, CaretUp, Carrot} from "@phosphor-icons/react";
+import {CaretDown, CaretRight} from "@phosphor-icons/react";
 
 export function SideNav(): React.JSX.Element {
 
