@@ -31,7 +31,6 @@ export function NetworkInterfaceRow({
   if (isLoading) return <div>Loading name...</div>;
   if (error) return <div>Error loading name: {error.message}</div>;
 
-
   const onStart = () => {
     if(networkInfo.name) {
       startInterface(networkInfo.name);

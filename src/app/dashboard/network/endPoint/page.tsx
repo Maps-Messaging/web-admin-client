@@ -1,6 +1,11 @@
 'use client'
 
 import {useSearchParams} from "next/navigation";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import * as React from "react";
+import EndPointDetails from "@/components/network/endPoint/end-point-details";
+
+const queryClient = new QueryClient();
 
 const NetworkEndPointPage = () => {
 
@@ -8,10 +13,10 @@ const NetworkEndPointPage = () => {
   const name = searchParams.get('networkName')
 
   return (
-    <div>
-      <h1>Network Endpoint</h1>
-      <p>Network Name: {name}</p>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <EndPointDetails
+        name={name||''}/>
+    </QueryClientProvider>
   );
 };
 
