@@ -44,7 +44,7 @@ export function NetworkInterfaceTable({
               <TableCell>Msg Out</TableCell>
               <TableCell>Bytes In</TableCell>
               <TableCell>Bytes Out</TableCell>
-              <TableCell>State</TableCell>
+              <TableCell>Control</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

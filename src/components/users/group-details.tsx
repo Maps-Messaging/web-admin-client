@@ -8,33 +8,32 @@ import { Download as DownloadIcon } from '@phosphor-icons/react/dist/ssr/Downloa
 import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
 import { Upload as UploadIcon } from '@phosphor-icons/react/dist/ssr/Upload';
 
-import {UserTable} from "@/components/users/user-table";
-import {User} from "@/generated/model";
+import {type Group} from "@/generated/model";
 import {
-  useGetAllUsers
-} from "@/generated/authentication-and-authorisation-management/authentication-and-authorisation-management";
+  useGetAllGroups} from "@/generated/authentication-and-authorisation-management/authentication-and-authorisation-management";
+import {GroupTable} from "@/components/users/group-table";
 
-export default function UserGroupDetails(): React.JSX.Element {
+export default function GroupDetails(): React.JSX.Element {
   const page = 0;
   const rowsPerPage = 10;
 
-  const { data, error, isLoading } = useGetAllUsers({
+  const { data, error, isLoading } = useGetAllGroups({
     query:{
       refetchInterval: 120000
     }
   });
 
 
-  if (isLoading) return <div>Loading name...</div>;
-  if (error) return <div>Error loading name: {error.message}</div>;
+  if (isLoading) return <div>Loading groups...</div>;
+  if (error) return <div>Error loading groups: {error.message}</div>;
 
-  const paginatedUsers = applyPagination((data?.data.data || []), page, rowsPerPage);
+  const paginatedGroups = applyPagination((data?.data.data || []), page, rowsPerPage);
 
   return (
     <Stack spacing={3}>
       <Stack direction="row" spacing={3}>
         <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
-          <Typography variant="h4">Users</Typography>
+          <Typography variant="h4">Groups</Typography>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <Button color="inherit" startIcon={<UploadIcon fontSize="var(--icon-fontSize-md)" />}>
               Import
@@ -50,16 +49,16 @@ export default function UserGroupDetails(): React.JSX.Element {
           </Button>
         </div>
       </Stack>
-      <UserTable
-        count={paginatedUsers.length}
+      <GroupTable
+        count={paginatedGroups.length}
         page={page}
-        rows={paginatedUsers}
+        rows={paginatedGroups}
         rowsPerPage={rowsPerPage}
       />
     </Stack>
   );
 }
 
-function applyPagination(rows: User[], page: number, rowsPerPage: number): User[] {
+function applyPagination(rows: Group[], page: number, rowsPerPage: number): Group[] {
   return rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 }
