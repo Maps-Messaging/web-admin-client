@@ -73,9 +73,6 @@ export default function EndPointDetails({
           />
         </CardContent>
       </Card>
-      <div>
-        <YamlEditor value={data?.data.config || ''} onChange={onConfigChange} />
-      </div>
     </Stack>
   );
 }
