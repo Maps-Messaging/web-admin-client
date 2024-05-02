@@ -5,23 +5,26 @@ import Stack from '@mui/material/Stack';
 
 import {type EndPointDetails} from "@/generated/model";
 import Typography from "@mui/material/Typography";
-import {useGetAllConnections} from "@/generated/connection-management/connection-management";
 import {ConnectionTable} from "@/components/connections/connection-table";
+import {
+  useGetInterfaceConnections
+} from "@/generated/server-interface-management/server-interface-management";
 
 interface EndPointConnectionDetailsProps {
   name: string;
 }
 export default function EndPointConnectionDetails({
                                                     name=''
-                                                  }: EndPointDetailsProps): React.JSX.Element {
+                                                  }: EndPointConnectionDetailsProps): React.JSX.Element {
   const page = 0;
   const rowsPerPage = 20;
 
-  const { data, error, isLoading } = useGetAllConnections({
+  const { data, error, isLoading } = useGetInterfaceConnections(name ||'',{
     query:{
-      refetchInterval: 2000
+      refetchInterval: 6000
     }
   });
+
 
   if (isLoading) return <div>Loading details...</div>;
   if (error) return <div>Error loading details: {error.message}</div>;

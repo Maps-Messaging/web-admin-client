@@ -16,6 +16,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import ActionController from "@/components/general/action-controller";
 import YamlEditor from "@/components/general/yaml-editor";
+import {EndPointStatus} from "@/components/network/endPoint/end-point-status";
 
 interface EndPointDetailsProps {
   name: string;
@@ -73,6 +74,7 @@ export default function EndPointDetails({
           />
         </CardContent>
       </Card>
+      <EndPointStatus name={name}/>
     </Stack>
   );
 }
