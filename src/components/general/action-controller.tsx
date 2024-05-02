@@ -3,14 +3,14 @@ import {Pause, Play, Record, Stop} from "@phosphor-icons/react";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
-type ActionControllerProps = {
-  currentState: String;
+interface ActionControllerProps {
+  currentState: string;
   onStart?: () => void;
   onStop?: () => void;
   onPause?: () => void;
   onResume?: () => void;
   onRecord?: (isRecording: boolean) => void;
-};
+}
 
 const ActionController: React.FC<ActionControllerProps> = ({
                                                              currentState,
@@ -20,7 +20,7 @@ const ActionController: React.FC<ActionControllerProps> = ({
                                                              onResume,
                                                              onRecord
                                                            }) => {
-  const [state, setState] = useState<String>(currentState);
+  const [state, setState] = useState<string>(currentState);
   const [recording, setRecording] = useState(false);
 
   const handleStart = () => {
@@ -67,7 +67,7 @@ const ActionController: React.FC<ActionControllerProps> = ({
         </IconButton>
       )}
       {state === 'Paused' && (
-        <IconButton onClick={handleStart} color="primary">
+        <IconButton onClick={handleResume} color="primary">
           <Tooltip title="Resume">
             <Play/>
           </Tooltip>

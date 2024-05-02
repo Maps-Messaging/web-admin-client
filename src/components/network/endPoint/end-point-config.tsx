@@ -8,6 +8,7 @@ import {
 } from "@/generated/server-interface-management/server-interface-management";
 import Typography from "@mui/material/Typography";
 import YamlEditor from "@/components/general/yaml-editor";
+import toast from "react-hot-toast";
 
 interface EndPointConfigurationProps {
   name: string;
@@ -26,7 +27,10 @@ export default function EndPointConfiguration({
   if (isLoading) return <div>Loading name...</div>;
   if (error) return <div>Error loading name: {error.message}</div>;
 
-  const onConfigChange = () =>{}
+  const onConfigChange = () =>{
+    toast.success('Not Yet Implemented');
+  }
+
   return (
     <Stack spacing={3}>
       <Stack direction="row" spacing={3}>

@@ -3,15 +3,12 @@ import * as React from "react";
 import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
 import {
-  pauseInterface, resumeInterface,
-  startInterface,
-  stopInterface,
   useGetInterfaceStatus
 } from "@/generated/server-interface-management/server-interface-management";
 import { formatNumberWithPowerUnit } from "@/helper-functions";
 import TableRow from "@mui/material/TableRow";
-import ActionController from "@/components/general/action-controller";
 import Link from "next/link";
+import EndPointActionController from "@/components/network/endPoint/end-point-action-controller";
 
 interface NetworkInterfaceRowProps {
   key: string;
@@ -30,31 +27,6 @@ export function NetworkInterfaceRow({
   });
   if (isLoading) return <div>Loading name...</div>;
   if (error) return <div>Error loading name: {error.message}</div>;
-
-  const onStart = () => {
-    if(networkInfo.name) {
-      startInterface(networkInfo.name);
-    }
-  };
-
-  const onStop = () => {
-    if(networkInfo.name) {
-      stopInterface(networkInfo.name);
-    }
-  };
-
-  const onPause = () => {
-    if(networkInfo.name) {
-      pauseInterface(networkInfo.name);
-    }
-  };
-
-  const onResume = () => {
-    if(networkInfo.name) {
-      resumeInterface(networkInfo.name);
-    }
-  };
-
 
   return (
     <TableRow
@@ -84,13 +56,7 @@ export function NetworkInterfaceRow({
         {formatNumberWithPowerUnit(data?.data.bytesSent || 0)}
       </TableCell>
       <TableCell>
-        <ActionController
-          currentState={networkInfo.state||''}
-          onPause={onPause}
-          onStart={onStart}
-          onStop={onStop}
-          onResume={onResume}
-        />
+        <EndPointActionController name={networkInfo.name||''} />
       </TableCell>
     </TableRow>
   );

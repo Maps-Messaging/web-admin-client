@@ -1,13 +1,12 @@
 'use client'
 
 import * as React from 'react';
+import {useState} from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import UserDetails from "@/components/users/user-details";
-import '../../../hostname-lookup'
-import {ChangeEvent, useState} from "react";
-import {Tab, Tabs} from "@mui/material";
-import Box from "@mui/material/Box";
 import GroupDetails from "@/components/users/group-details";
+import { Tab, Tabs } from "@mui/material";
+import Box from "@mui/material/Box";
 
 const queryClient = new QueryClient();
 
@@ -26,7 +25,7 @@ const tabs = [
 export default function Page(): React.JSX.Element {
   const [currentTab, setCurrentTab] = useState<string>('users');
 
-  const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
+  const handleTabsChange = (event: React.SyntheticEvent, value: string): void => {
     setCurrentTab(value);
   };
 

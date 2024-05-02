@@ -5,7 +5,6 @@ import Container from "@mui/material/Container";
 import {Grid} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import DataGraph from "@/components/graphs/data-graph";
-import DualNumberGraph from "@/components/graphs/dual-number-graph";
 import {useGetInterfaceStatus} from "@/generated/server-interface-management/server-interface-management";
 
 interface EndPointStatusProps {

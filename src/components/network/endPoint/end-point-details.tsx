@@ -3,20 +3,14 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 
-import {type InterfaceInfo } from "@/generated/model";
 import {
-  pauseInterface, resumeInterface,
-  startInterface, stopInterface,
-  useGetAllInterfaces, useGetInterface,
-  useGetInterfaceStatus
+  useGetInterface,
 } from "@/generated/server-interface-management/server-interface-management";
 import Typography from "@mui/material/Typography";
-import {NetworkInterfaceTable} from "@/components/network/network-interface-table";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import ActionController from "@/components/general/action-controller";
-import YamlEditor from "@/components/general/yaml-editor";
 import {EndPointStatus} from "@/components/network/endPoint/end-point-status";
+import EndPointActionController from "@/components/network/endPoint/end-point-action-controller";
 
 interface EndPointDetailsProps {
   name: string;
@@ -35,24 +29,6 @@ export default function EndPointDetails({
   if (isLoading) return <div>Loading name...</div>;
   if (error) return <div>Error loading name: {error.message}</div>;
 
-
-  const onStart = () => {
-    startInterface(name);
-  };
-
-  const onStop = () => {
-    stopInterface(name);
-  };
-
-  const onPause = () => {
-    pauseInterface(name);
-  };
-
-  const onResume = () => {
-    resumeInterface(name);
-  };
-
-  const onConfigChange = () =>{}
   return (
     <Stack spacing={3}>
       <Stack direction="row" spacing={3}>
@@ -65,13 +41,7 @@ export default function EndPointDetails({
           <Typography variant="h5" component="div">
             {data?.data.host}:{data?.data.port}
           </Typography>
-          <ActionController
-            currentState={data?.data.state||''}
-            onPause={onPause}
-            onStart={onStart}
-            onStop={onStop}
-            onResume={onResume}
-          />
+          <EndPointActionController name={name||''} />
         </CardContent>
       </Card>
       <EndPointStatus name={name}/>
