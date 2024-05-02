@@ -1,6 +1,7 @@
 import React from 'react';
 import { ApexOptions } from "apexcharts";
 import {Chart} from "@/components/core/chart";
+import {formatNumberWithPowerUnit} from "@/helper-functions";
 
 interface DualNumberGraphProps {
   name1: string;
@@ -10,10 +11,12 @@ interface DualNumberGraphProps {
 }
 
 const DualNumberGraph: React.FC<DualNumberGraphProps> = ({ name1, data1, name2, data2 }) => {
-  // Define the chart configuration
+  const formatYAxis = (value: number):string => {
+    return formatNumberWithPowerUnit(value);
+  };
+
   const options: ApexOptions = {
     chart: {
-      height: 350,
       type: 'line',
       zoom: {
         enabled: false
@@ -37,6 +40,12 @@ const DualNumberGraph: React.FC<DualNumberGraphProps> = ({ name1, data1, name2, 
     },
     xaxis: {
       categories: Array.from(Array(Math.max(data1.length, data2.length)).keys()).map(key => key.toString()),
+      tickAmount: 10, // Specify the number of ticks on the X axis
+    },
+    yaxis: {
+      labels: {
+        formatter: formatYAxis, // Use the imported function for formatting Y axis labels
+      }
     }
   };
 
@@ -52,8 +61,8 @@ const DualNumberGraph: React.FC<DualNumberGraphProps> = ({ name1, data1, name2, 
   ];
 
   return (
-    <div className="chart-container" style={{width: '100%'}}>
-      <Chart options={options} series={series} type="line" height={350}/>
+    <div className="chart-container" style={{width: '100%', height: '100%'}}>
+      <Chart options={options} series={series} type="line"/>
     </div>
   );
 };

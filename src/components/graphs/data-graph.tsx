@@ -1,6 +1,7 @@
 import React from 'react';
 import {ApexOptions} from "apexcharts";
 import {Chart} from "@/components/core/chart";
+import {formatNumberWithPowerUnit} from "@/helper-functions";
 
 interface NumberGraphProps {
   name: string;
@@ -8,10 +9,13 @@ interface NumberGraphProps {
 }
 
 const NumberGraph: React.FC<NumberGraphProps> = ({ name, data }) => {
+  const formatYAxis = (value: number):string => {
+    return formatNumberWithPowerUnit(value);
+  };
+
   // Define the chart configuration
   const options: ApexOptions = {
     chart: {
-      height: 350,
       type: 'line', // Ensure this is a literal match to the expected type
       zoom: {
         enabled: false
@@ -34,7 +38,13 @@ const NumberGraph: React.FC<NumberGraphProps> = ({ name, data }) => {
       },
     },
     xaxis: {
-      categories: Array.from(data.keys()).map(key => key.toString()), // Convert keys to string array if needed
+      categories: Array.from(data.keys()).map(key => key.toString()),
+      tickAmount: 10,
+    },
+    yaxis: {
+      labels: {
+        formatter: formatYAxis // Use custom function for Y axis labels
+      }
     }
   };
 
@@ -44,8 +54,8 @@ const NumberGraph: React.FC<NumberGraphProps> = ({ name, data }) => {
   }];
 
   return (
-    <div className="chart-container" style={{width: '100%'}}>
-      <Chart options={options} series={series} type="line" height={350}/>
+    <div className="chart-container" style={{width: '100%', height: '100%'}}>
+      <Chart options={options} series={series} type="line" />
     </div>
   );
 };

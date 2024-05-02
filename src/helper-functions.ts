@@ -13,16 +13,30 @@ export function numberToDateString(javaTimeInMs: number): string {
   return date.toLocaleTimeString();
 }
 
-export function formatNumberWithPowerUnit(number: number): string {
-  if (number >= 1_000_000_000_000) {
-    return `${Math.round(number / 1_000_000_000_000).toString()}T`;
-  } else if (number >= 1_000_000_000) {
-    return `${Math.round(number / 1_000_000_000).toString()}G`;
-  } else if (number >= 1_000_000) {
-    return `${Math.round(number / 1_000_000).toString()}M`;
-  } else if (number >= 1_000) {
-    return `${Math.round(number / 1_000).toString()}K`;
+export function formatNumberWithPowerUnit(value: number): string {
+  // Helper function to determine decimals needed for four significant figures
+  const calculateDecimals = (number: number, divisor: number): number => {
+    const significantDigits = 4; // We want 4 significant digits
+    const integralPartLength = Math.floor(number / divisor).toString().length;
+    return Math.max(0, significantDigits - integralPartLength);
+  };
+
+  if (value >= 1_000_000_000_000) {
+    const decimals = calculateDecimals(value, 1_000_000_000_000);
+    return `${(value / 1_000_000_000_000).toFixed(decimals)}T`;
+  } else if (value >= 1_000_000_000) {
+    const decimals = calculateDecimals(value, 1_000_000_000);
+    return `${(value / 1_000_000_000).toFixed(decimals)}G`;
+  } else if (value >= 1_000_000) {
+    const decimals = calculateDecimals(value, 1_000_000);
+    return `${(value / 1_000_000).toFixed(decimals)}M`;
+  } else if (value >= 1_000) {
+    const decimals = calculateDecimals(value, 1_000);
+    return `${(value / 1_000).toFixed(decimals)}K`;
   }
-  return number.toString();
+  // For values less than 1000, handle to always show 4 digits
+  const decimals = 4 - value.toString().length;
+  return value.toFixed(Math.max(0, decimals));
 }
+
 
