@@ -21,7 +21,6 @@ export function ServerDetails () :  React.JSX.Element {
 
   const [cpuTime, setCpuTime] = useState<number[]>([]);
   const [freeMemoryData, setFreeMemoryData] = useState<number[]>([]);
-  const [threads, setNoOfThreads] = useState<number[]>([]);
   const [published, setPublished] = useState<number[]>([]);
   const [noInterest, setNoInterest] = useState<number[]>([]);
   const [delivered, setDelivered] = useState<number[]>([]);
@@ -37,7 +36,6 @@ export function ServerDetails () :  React.JSX.Element {
       };
       setCpuTime(prev => updateArray(prev, data.data.cpuPercent));
       setFreeMemoryData(prev => updateArray(prev, data.data.freeMemory));
-      setNoOfThreads(prev => updateArray(prev, data.data.numberOfThreads));
       setPublished(prev => updateArray(prev, data.data.serverStatistics?.publishedPerSecond || 0));
       setNoInterest(prev => updateArray(prev,data.data.serverStatistics?.noInterestPerSecond || 0))
       setDelivered(prev => updateArray(prev,data.data.serverStatistics?.deliveredPerSecond || 0))
