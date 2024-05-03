@@ -19,6 +19,7 @@ export function ServerDetails () :  React.JSX.Element {
     }
   });
 
+  const [cpuTime, setCpuTime] = useState<number[]>([]);
   const [freeMemoryData, setFreeMemoryData] = useState<number[]>([]);
   const [threads, setNoOfThreads] = useState<number[]>([]);
   const [published, setPublished] = useState<number[]>([]);
@@ -34,6 +35,7 @@ export function ServerDetails () :  React.JSX.Element {
         const newArray = [...prev, newValue];
         return newArray.length > 120 ? newArray.slice(newArray.length - 120) : newArray;
       };
+      setCpuTime(prev => updateArray(prev, data.data.cpuPercent));
       setFreeMemoryData(prev => updateArray(prev, data.data.freeMemory));
       setNoOfThreads(prev => updateArray(prev, data.data.numberOfThreads));
       setPublished(prev => updateArray(prev, data.data.serverStatistics?.publishedPerSecond || 0));
@@ -101,7 +103,7 @@ export function ServerDetails () :  React.JSX.Element {
           <DataGraph name='Free Memory' data={freeMemoryData} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <DataGraph name='Threads' data={threads} />
+          <DataGraph name='Cpu Time' data={cpuTime} />
         </Grid>
       </Grid>
     </Container>
