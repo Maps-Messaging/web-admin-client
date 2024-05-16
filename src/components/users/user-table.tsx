@@ -42,6 +42,11 @@ export function UserTable({
   const selectedSome = (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
   const selectedAll = rows.length > 0 && selected?.size === rows.length;
 
+  function getGroups(arr: string[]): string {
+    return arr.join(',');
+  }
+
+
   return (
     <Card>
       <Box sx={{ overflowX: 'auto' }}>
@@ -63,6 +68,7 @@ export function UserTable({
               </TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Unique Id</TableCell>
+              <TableCell>Groups</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -88,6 +94,9 @@ export function UserTable({
                   </TableCell>
                   <TableCell>
                     <Typography variant="subtitle2">{row.uniqueId}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="subtitle2">{getGroups(row.groupList||[])}</Typography>
                   </TableCell>
                 </TableRow>
               );

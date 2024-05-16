@@ -63,6 +63,7 @@ export function GroupTable({
               </TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Unique Id</TableCell>
+              <TableCell>Number of Users</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -88,6 +89,9 @@ export function GroupTable({
                   </TableCell>
                   <TableCell>
                     <Typography variant="subtitle2">{row.uniqueId}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="subtitle2">{row.usersList?.length || 0}</Typography>
                   </TableCell>
                 </TableRow>
               );
