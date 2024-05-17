@@ -1,6 +1,10 @@
 'use client';
 
-import type { User } from '@/types/user';
+import axios from 'axios';
+import {login, logout} from "@/generated/server-health/server-health";
+import {LoginResponse} from "@/generated/model";
+
+axios.defaults.baseURL = process.env.API_BASE_URL;
 
 function generateToken(): string {
   const arr = new Uint8Array(12);
@@ -8,89 +12,58 @@ function generateToken(): string {
   return Array.from(arr, (v) => v.toString(16).padStart(2, '0')).join('');
 }
 
-const user = {
-  id: 'USR-000',
-  avatar: '/assets/avatar.png',
-  firstName: 'Sofia',
-  lastName: 'Rivers',
-  email: 'sofia@devias.io',
-} satisfies User;
-
-export interface SignUpParams {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
-
-export interface SignInWithOAuthParams {
-  provider: 'google' | 'discord';
-}
-
 export interface SignInWithPasswordParams {
-  email: string;
+  username: string;
   password: string;
-}
-
-export interface ResetPasswordParams {
-  email: string;
 }
 
 class AuthClient {
-  async signUp(_: SignUpParams): Promise<{ error?: string }> {
-    // Make API request
-
-    // We do not handle the API, so we'll just generate a token and store it in localStorage.
-    const token = generateToken();
-    localStorage.setItem('custom-auth-token', token);
-
-    return {};
-  }
-
-  async signInWithOAuth(_: SignInWithOAuthParams): Promise<{ error?: string }> {
-    return { error: 'Social authentication not implemented' };
-  }
 
   async signInWithPassword(params: SignInWithPasswordParams): Promise<{ error?: string }> {
-    const { email, password } = params;
+    const { username, password } = params;
 
-    // Make API request
+    // Set the browser's basic auth headers
+    axios.defaults.headers.common['Authorization'] = `Basic ${btoa(`${username}:${password}`)}`;
 
-    // We do not handle the API, so we'll check if the credentials match with the hardcoded ones.
-    if (email !== 'sofia@devias.io' || password !== 'Secret1') {
-      return { error: 'Invalid credentials' };
+    try {
+      // Call the login function
+      const response = await login();
+
+      // Check if the response is a JSON object with the expected properties
+      if (response.status === 200 && response.data?.status) {
+        const token = generateToken();
+        localStorage.setItem('custom-auth-token', token);
+        localStorage.setItem('user', JSON.stringify(response.data));
+        return {};
+      } else {
+        return { error: 'Invalid credentials' };
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        return { error: 'Invalid credentials' };
+      }
+      return { error: 'An error occurred during login' };
     }
-
-    const token = generateToken();
-    localStorage.setItem('custom-auth-token', token);
-
-    return {};
   }
 
-  async resetPassword(_: ResetPasswordParams): Promise<{ error?: string }> {
-    return { error: 'Password reset not implemented' };
-  }
-
-  async updatePassword(_: ResetPasswordParams): Promise<{ error?: string }> {
-    return { error: 'Update reset not implemented' };
-  }
-
-  async getUser(): Promise<{ data?: User | null; error?: string }> {
-    // Make API request
-
-    // We do not handle the API, so just check if we have a token in localStorage.
-    const token = localStorage.getItem('custom-auth-token');
-
-    if (!token) {
-      return { data: null };
+  async getUser(): Promise<{ data?: LoginResponse | null}> {
+    const user = localStorage.getItem('user');
+    let parsedUser: LoginResponse | null = null;
+    if (user) {
+      try {
+        parsedUser = JSON.parse(user) as LoginResponse;
+      } catch {
+        return { };
+      }
     }
-
-    return { data: user };
+    return { data: parsedUser };
   }
 
   async signOut(): Promise<{ error?: string }> {
+    const response = await logout();
     localStorage.removeItem('custom-auth-token');
-
+    localStorage.removeItem('user');
+    axios.defaults.headers.common['Authorization'] = '';
     return {};
   }
 }
