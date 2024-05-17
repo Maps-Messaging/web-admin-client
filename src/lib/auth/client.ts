@@ -60,7 +60,7 @@ class AuthClient {
   }
 
   async signOut(): Promise<{ error?: string }> {
-    const response = await logout();
+    await logout();
     localStorage.removeItem('custom-auth-token');
     localStorage.removeItem('user');
     axios.defaults.headers.common['Authorization'] = '';

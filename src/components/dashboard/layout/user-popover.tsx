@@ -15,7 +15,8 @@ import { paths } from '@/paths';
 import { authClient } from '@/lib/auth/client';
 import { logger } from '@/lib/default-logger';
 import { useUser } from '@/hooks/use-user';
-import {LoginResponse} from "@/generated/model";
+import type { LoginResponse } from '@/generated/model';
+
 
 export interface UserPopoverProps {
   anchorEl: Element | null;
@@ -28,17 +29,19 @@ export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): Reac
   const router = useRouter();
 
   const [user, setUser] = React.useState<LoginResponse | null>(null);
-  React.useEffect(() => {
-    const fetchUser = async () => {
-      const { data } = await authClient.getUser();
-      if (data) {
-        setUser(data);
+
+  React.useEffect((): void => {
+    void (async () => {
+      try {
+        const { data } = await authClient.getUser();
+        if (data) {
+          setUser(data);
+        }
+      } catch (error) {
+        logger.error('Failed to fetch user', error);
       }
-    };
-
-    fetchUser();
+    })();
   }, []);
-
 
   const handleSignOut = React.useCallback(async (): Promise<void> => {
     try {
