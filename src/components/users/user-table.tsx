@@ -15,6 +15,7 @@ import Typography from '@mui/material/Typography';
 
 import { useSelection } from '@/hooks/use-selection';
 import {User} from "@/generated/model";
+import Link from "next/link";
 
 function noop(): void {
   // do nothing
@@ -90,7 +91,9 @@ export function UserTable({
                     />
                   </TableCell>
                   <TableCell>
+                    <Link href={`/dashboard/authentication/user?username=${encodeURIComponent(row.username||'')}`} passHref>
                       <Typography variant="subtitle2">{row.username}</Typography>
+                    </Link>
                   </TableCell>
                   <TableCell>
                     <Typography variant="subtitle2">{row.uniqueId}</Typography>

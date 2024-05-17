@@ -3,7 +3,7 @@
 import * as React from 'react';
 import {useState} from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import UserDetails from "@/components/users/user-details";
+import UsersDetails from "@/components/users/users-details";
 import GroupDetails from "@/components/users/group-details";
 import { Tab, Tabs } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -49,7 +49,7 @@ export default function Page(): React.JSX.Element {
         ))}
       </Tabs>
       <Box sx={{mt: 3}}>
-        {currentTab === 'users' && <UserDetails/>}
+        {currentTab === 'users' && <UsersDetails/>}
         {currentTab === 'groups' && <GroupDetails />}
       </Box>
     </QueryClientProvider>

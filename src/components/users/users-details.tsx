@@ -14,7 +14,7 @@ import {
   useGetAllUsers
 } from "@/generated/authentication-and-authorisation-management/authentication-and-authorisation-management";
 
-export default function UserDetails(): React.JSX.Element {
+export default function UsersDetails(): React.JSX.Element {
   const page = 0;
   const rowsPerPage = 10;
 
