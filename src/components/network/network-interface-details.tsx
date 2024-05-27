@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 
-import {type InterfaceInfo } from "@/generated/model";
+import {type GetAllInterfacesParams, type InterfaceInfo} from "@/generated/model";
 import {useGetAllInterfaces} from "@/generated/server-interface-management/server-interface-management";
 import Typography from "@mui/material/Typography";
 import {NetworkInterfaceTable} from "@/components/network/network-interface-table";
@@ -12,7 +12,8 @@ export default function NetworkInterfaceDetails(): React.JSX.Element {
   const page = 0;
   const rowsPerPage = 10;
 
-  const { data, error, isLoading } = useGetAllInterfaces({
+  const params: GetAllInterfacesParams = { filter: '' };
+  const { data, error, isLoading } = useGetAllInterfaces(params,{
     query:{
       refetchInterval: 60000
     }

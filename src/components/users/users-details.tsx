@@ -9,7 +9,7 @@ import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
 import { Upload as UploadIcon } from '@phosphor-icons/react/dist/ssr/Upload';
 
 import {UserTable} from "@/components/users/user-table";
-import {User} from "@/generated/model";
+import {GetAllUsersParams, User} from "@/generated/model";
 import {
   useGetAllUsers
 } from "@/generated/authentication-and-authorisation-management/authentication-and-authorisation-management";
@@ -18,7 +18,8 @@ export default function UsersDetails(): React.JSX.Element {
   const page = 0;
   const rowsPerPage = 10;
 
-  const { data, error, isLoading } = useGetAllUsers({
+  const params: GetAllUsersParams = { filter: '' };
+  const { data, error, isLoading } = useGetAllUsers( params,{
     query:{
       refetchInterval: 120000
     }

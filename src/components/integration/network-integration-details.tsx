@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 
-import {type IntegrationInfo} from "@/generated/model";
+import {type GetAllIntegrationsParams, type IntegrationInfo} from "@/generated/model";
 import Typography from "@mui/material/Typography";
 import {NetworkIntegrationTable} from "@/components/integration/network-integration-table";
 import {useGetAllIntegrations} from "@/generated/server-integration-management/server-integration-management";
@@ -12,7 +12,8 @@ export default function NetworkIntegrationDetails(): React.JSX.Element {
   const page = 0;
   const rowsPerPage = 10;
 
-  const { data, error, isLoading } = useGetAllIntegrations({
+  const params: GetAllIntegrationsParams= { filter: '' };
+  const { data, error, isLoading } = useGetAllIntegrations(params,{
     query:{
       refetchInterval: 60000
     }

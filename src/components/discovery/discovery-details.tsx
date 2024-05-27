@@ -10,10 +10,12 @@ import Table from '@mui/material/Table';
 import { TableContainer } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { MinusCircle, PlusCircle } from '@phosphor-icons/react';
-import {ServiceData} from "@/generated/model";
+import {type GetAllDiscoveredServersParams, ServiceData} from "@/generated/model";
 
 export default function DiscoveryDetails(): React.ReactElement {
-  const { data, error, isLoading } = useGetAllDiscoveredServers({
+
+  const params: GetAllDiscoveredServersParams = { filter: '' };
+  const { data, error, isLoading } = useGetAllDiscoveredServers(params,{
     query: {
       refetchInterval: 60000,
     },

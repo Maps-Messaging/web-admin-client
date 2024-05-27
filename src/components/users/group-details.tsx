@@ -8,7 +8,7 @@ import { Download as DownloadIcon } from '@phosphor-icons/react/dist/ssr/Downloa
 import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
 import { Upload as UploadIcon } from '@phosphor-icons/react/dist/ssr/Upload';
 
-import {type Group} from "@/generated/model";
+import {type GetAllGroupsParams, type Group} from "@/generated/model";
 import {
   useGetAllGroups} from "@/generated/authentication-and-authorisation-management/authentication-and-authorisation-management";
 import {GroupTable} from "@/components/users/group-table";
@@ -16,8 +16,8 @@ import {GroupTable} from "@/components/users/group-table";
 export default function GroupDetails(): React.JSX.Element {
   const page = 0;
   const rowsPerPage = 10;
-
-  const { data, error, isLoading } = useGetAllGroups({
+  const params: GetAllGroupsParams = { filter: '' };
+  const { data, error, isLoading } = useGetAllGroups(params,{
     query:{
       refetchInterval: 120000
     }

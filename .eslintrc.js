@@ -16,7 +16,8 @@ module.exports = {
         '@typescript-eslint/consistent-indexed-object-style': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
         'eslint-comments/require-description': 'off',
-        'tsdoc/syntax': 'off'
+        'tsdoc/syntax': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off'
 
         // any other rules you want to disable for these files
       },

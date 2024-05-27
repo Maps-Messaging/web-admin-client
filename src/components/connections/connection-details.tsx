@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 
-import {type EndPointDetails} from "@/generated/model";
+import {type EndPointDetails, type GetAllConnectionsParams} from "@/generated/model";
 import Typography from "@mui/material/Typography";
 import {useGetAllConnections} from "@/generated/connection-management/connection-management";
 import {ConnectionTable} from "@/components/connections/connection-table";
@@ -11,8 +11,8 @@ import {ConnectionTable} from "@/components/connections/connection-table";
 export default function ConnectionDetails(): React.JSX.Element {
   const page = 0;
   const rowsPerPage = 20;
-
-  const { data, error, isLoading } = useGetAllConnections({
+  const params: GetAllConnectionsParams = { filter: '' };
+  const { data, error, isLoading } = useGetAllConnections(params,{
     query:{
       refetchInterval: 2000
     }

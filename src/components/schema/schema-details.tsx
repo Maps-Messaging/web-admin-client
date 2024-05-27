@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 
-import {type SchemaConfig} from "@/generated/model";
+import { type GetAllSchemasParams, type SchemaConfig} from "@/generated/model";
 import Typography from "@mui/material/Typography";
 import {useGetAllSchemas} from "@/generated/schema-management/schema-management";
 import {SchemaTable} from "@/components/schema/schema-table";
@@ -11,8 +11,8 @@ import {SchemaTable} from "@/components/schema/schema-table";
 export default function SchemaDetails(): React.JSX.Element {
   const page = 0;
   const rowsPerPage = 10;
-
-  const { data, error, isLoading } = useGetAllSchemas({
+  const params: GetAllSchemasParams = { filter: '' };
+  const { data, error, isLoading } = useGetAllSchemas(params,{
     query:{
       refetchInterval: 60000
     }
