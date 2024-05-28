@@ -14,9 +14,10 @@
     "typecheck": "tsc --noEmit",
     "format:write": "prettier --write \"**/*.{js,jsx,mjs,ts,tsx,mdx}\" --cache",
     "format:check": "prettier --check \"**/*.{js,jsx,mjs,ts,tsx,mdx}\" --cache",
-    "generate": "orval --config orval.config.js",
+    "generate": "orval --config orval.config.js && npm run update-client",
     "update": "npm update",
-    "audit": "npm audit fix --force"
+    "audit": "npm audit fix --force",
+    "update-client": "node scripts/updateGeneratedClient.js"
   },
   "dependencies": {
     "@emotion/cache": "11.11.0",

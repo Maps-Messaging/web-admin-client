@@ -3,6 +3,7 @@
 import axios from 'axios';
 import {login, logout} from "@/generated/server-health/server-health";
 import {LoginResponse} from "@/generated/model";
+import axiosInstance from "@/axiosInstance";
 
 axios.defaults.baseURL = process.env.API_BASE_URL;
 
@@ -23,7 +24,7 @@ class AuthClient {
     const { username, password } = params;
 
     // Set the browser's basic auth headers
-    axios.defaults.headers.common['Authorization'] = `Basic ${btoa(`${username}:${password}`)}`;
+    axiosInstance.defaults.headers.common['Authorization'] = `Basic ${btoa(`${username}:${password}`)}`;
 
     try {
       // Call the login function
@@ -63,7 +64,7 @@ class AuthClient {
     await logout();
     localStorage.removeItem('custom-auth-token');
     localStorage.removeItem('user');
-    axios.defaults.headers.common['Authorization'] = '';
+    axiosInstance.defaults.headers.common['Authorization'] = '';
     return {};
   }
 }
