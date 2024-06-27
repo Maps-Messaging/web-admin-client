@@ -39,7 +39,7 @@ export default function EndPointConfiguration({
         </Stack>
       </Stack>
       <div>
-        <YamlEditor value={data?.data.config || ''} onChange={onConfigChange} />
+
       </div>
     </Stack>
   );

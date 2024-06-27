@@ -51,7 +51,7 @@ export function NetworkIntegrationTable({
             {rows.map((row) => {
               return (
                 <NetworkIntegrationRow
-                  key={row?.name || ''}
+                  key={row?.config?.name || ''}
                   networkInfo={row}
                 />
               );

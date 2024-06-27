@@ -10,7 +10,7 @@ import Table from '@mui/material/Table';
 import { TableContainer } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { MinusCircle, PlusCircle } from '@phosphor-icons/react';
-import {type GetAllDiscoveredServersParams, ServiceData} from "@/generated/model";
+import {type GetAllDiscoveredServersParams, type Services} from "@/generated/model";
 
 export default function DiscoveryDetails(): React.ReactElement {
 
@@ -34,25 +34,6 @@ export default function DiscoveryDetails(): React.ReactElement {
   if (isLoading) return <div>Loading details...</div>;
   if (error) return <div>Error loading details: {error.message}</div>;
 
-  function getProtocolSupport(serviceData: ServiceData): string {
-    let versions = '';
-    if(serviceData.application === 'mqtt'){
-      if( serviceData.properties?.['version 5.0']){
-        versions = 'V5.0'
-      }
-      if( serviceData.properties?.['version 3.1.1']){
-        versions += ' V3.1.1'
-      }
-      if( serviceData.properties?.['version 3.1']){
-        versions += ' V3.1'
-      }
-    }
-    else if(serviceData.application === 'maps'){
-      versions += serviceData.properties?.['version'] || '';
-    }
-    return versions;
-  }
-
   return (
     <Stack spacing={3}>
       <Typography variant="h4">Discovered Servers</Typography>
@@ -65,24 +46,25 @@ export default function DiscoveryDetails(): React.ReactElement {
                 <React.Fragment key={key}>
                   <TableRow>
                     <TableCell>
-                      <IconButton onClick={() => toggleOpen(key)}>
-                        {open[key] ? <MinusCircle /> : <PlusCircle />}
-                      </IconButton>
-                      <Typography variant="subtitle2">{server.server}</Typography>
+                      <div style={{display: 'flex', alignItems: 'center'}}>
+                        <IconButton onClick={() => toggleOpen(key)}>
+                          {open[key] ? <MinusCircle/> : <PlusCircle/>}
+                        </IconButton>
+                        <Typography variant="subtitle2">{server.serverName} - Services : {server.services?.length}</Typography>
+                      </div>
                     </TableCell>
                   </TableRow>
-                  {open[key] && server.serviceInfo && (
+                  {open[key] && server.serverName && (
                     <TableRow>
                       <TableCell style={{ paddingLeft: 40 }}>
                         <Table size="small">
                           <TableBody>
-                            {server.serviceInfo.map((service) => (
-                              <TableRow key={service.application}>
-                                <TableCell>{service.application}</TableCell>
-                                <TableCell>{service.domain}</TableCell>
-                                <TableCell>{service.hostAddresses?.join(', ')}</TableCell>
+                            {server?.services?.map((service) => (
+                              <TableRow key={service.protocol}>
+                                <TableCell>{service.protocol}</TableCell>
+                                <TableCell>{service.addresses}</TableCell>
                                 <TableCell>{service.port}</TableCell>
-                                <TableCell>{getProtocolSupport(service)}</TableCell>
+                                <TableCell>{service.transport}</TableCell>
                               </TableRow>
                             ))}
                           </TableBody>

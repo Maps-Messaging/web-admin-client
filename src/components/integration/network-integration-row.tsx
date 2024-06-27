@@ -16,7 +16,7 @@ export function NetworkIntegrationRow({
                                       key=''
                                       }: NetworkIntegrationRowProps): React.JSX.Element {
 
-  const { data, error, isLoading } = useGetIntegrationStatus(networkInfo.name ||'',{
+  const { data, error, isLoading } = useGetIntegrationStatus(networkInfo.config?.name ||'',{
     query:{
       refetchInterval: 10000
     }
@@ -31,13 +31,13 @@ export function NetworkIntegrationRow({
       id={key}
     >
       <TableCell>
-        <Typography variant="subtitle2">{networkInfo.name}</Typography>
+        <Typography variant="subtitle2">{networkInfo.config?.name}</Typography>
       </TableCell>
       <TableCell>
-        <Typography variant="subtitle2">{networkInfo.remoteUrl}</Typography>
+        <Typography variant="subtitle2">{networkInfo.config?.protocols}</Typography>
       </TableCell>
       <TableCell>
-        { formatNumberWithPowerUnit(networkInfo.mappings || 0)}
+        { formatNumberWithPowerUnit(networkInfo.config?.protocolConfigs?.length || 0)}
       </TableCell>
       <TableCell>
         {formatNumberWithPowerUnit(data?.data.messagesReceived || 0)}
