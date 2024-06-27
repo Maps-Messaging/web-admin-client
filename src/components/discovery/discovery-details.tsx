@@ -7,10 +7,25 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Table from '@mui/material/Table';
-import { TableContainer } from '@mui/material';
+import {Paper, TableContainer} from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { MinusCircle, PlusCircle } from '@phosphor-icons/react';
-import {type GetAllDiscoveredServersParams, type Services} from "@/generated/model";
+import {type GetAllDiscoveredServersParams, type Services, type ServicesProperties} from "@/generated/model";
+
+const PropertiesTable: React.FC<{ properties: ServicesProperties }> = ({ properties }) => (
+  <TableContainer component={Paper}>
+    <Table size="small">
+      <TableBody>
+        {Object.entries(properties).map(([key, value]) => (
+          <TableRow key={key}>
+            <TableCell>{key}</TableCell>
+            <TableCell>{value}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+);
 
 export default function DiscoveryDetails(): React.ReactElement {
 
@@ -52,6 +67,9 @@ export default function DiscoveryDetails(): React.ReactElement {
                         </IconButton>
                         <Typography variant="subtitle2">{server.serverName} - Services : {server.services?.length}</Typography>
                       </div>
+                      <Typography variant="subtitle2">Schema Prefix : {server.schemaPrefix} - System Topic Prefix: {server.systemTopics}</Typography>
+                      <Typography variant="subtitle2">Build Date : {server.buildDate} - Version : {server.version}</Typography>
+
                     </TableCell>
                   </TableRow>
                   {open[key] && server.serverName && (
@@ -65,6 +83,13 @@ export default function DiscoveryDetails(): React.ReactElement {
                                 <TableCell>{service.addresses}</TableCell>
                                 <TableCell>{service.port}</TableCell>
                                 <TableCell>{service.transport}</TableCell>
+                                <TableCell>
+                                  {service.properties ? (
+                                    <PropertiesTable properties={service.properties} />
+                                  ) : (
+                                    'No properties'
+                                  )}
+                                </TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
