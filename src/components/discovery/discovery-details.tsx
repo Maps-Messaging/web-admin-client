@@ -57,6 +57,9 @@ export default function DiscoveryDetails(): React.ReactElement {
           <TableBody>
             {data?.data.map((server, index) => {
               const key = `server-${index.toString()}`;
+              const mapsService = server.services?.find(service => service.protocol === 'maps');
+              const link = mapsService ? `${mapsService.transport}://${mapsService.addresses?.[0]}:${mapsService.port}/admin/` : null;
+
               return (
                 <React.Fragment key={key}>
                   <TableRow>
@@ -65,7 +68,13 @@ export default function DiscoveryDetails(): React.ReactElement {
                         <IconButton onClick={() => toggleOpen(key)}>
                           {open[key] ? <MinusCircle/> : <PlusCircle/>}
                         </IconButton>
-                        <Typography variant="subtitle2">{server.serverName} - Services : {server.services?.length}</Typography>
+                        {link ? (
+                          <a href={link} target="_blank" rel="noopener noreferrer">
+                            <Typography variant="subtitle2">{server.serverName} - Services: {server.services?.length}</Typography>
+                          </a>
+                        ) : (
+                          <Typography variant="subtitle2">{server.serverName} - Services: {server.services?.length}</Typography>
+                        )}
                       </div>
                       <Typography variant="subtitle2">Schema Prefix : {server.schemaPrefix} - System Topic Prefix: {server.systemTopics}</Typography>
                       <Typography variant="subtitle2">Build Date : {server.buildDate} - Version : {server.version}</Typography>
@@ -82,7 +91,6 @@ export default function DiscoveryDetails(): React.ReactElement {
                                 <TableCell>{service.protocol}</TableCell>
                                 <TableCell>{service.addresses}</TableCell>
                                 <TableCell>{service.port}</TableCell>
-                                <TableCell>{service.transport}</TableCell>
                                 <TableCell>
                                   {service.properties ? (
                                     <PropertiesTable properties={service.properties} />
