@@ -10,7 +10,7 @@ import Table from '@mui/material/Table';
 import {Paper, TableContainer} from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { MinusCircle, PlusCircle } from '@phosphor-icons/react';
-import {type GetAllDiscoveredServersParams, type Services, type ServicesProperties} from "@/generated/model";
+import {type GetAllDiscoveredServersParams, type ServicesProperties} from "@/generated/model";
 
 const PropertiesTable: React.FC<{ properties: ServicesProperties }> = ({ properties }) => (
   <TableContainer component={Paper}>
@@ -58,7 +58,9 @@ export default function DiscoveryDetails(): React.ReactElement {
             {data?.data.map((server, index) => {
               const key = `server-${index.toString()}`;
               const mapsService = server.services?.find(service => service.protocol === 'maps');
-              const link = mapsService ? `${mapsService.transport}://${mapsService.addresses?.[0]}:${mapsService.port}/admin/` : null;
+              const link = mapsService
+                ? `${mapsService.transport ?? ''}://${mapsService.addresses?.[0] ?? ''}:${mapsService.port !== undefined ? String(mapsService.port) : ''}/admin/`
+                : null;
 
               return (
                 <React.Fragment key={key}>
