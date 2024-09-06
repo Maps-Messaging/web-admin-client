@@ -11,6 +11,11 @@ interface Registry {
   flush: () => { name: string; isGlobal: boolean }[];
 }
 
+interface InsertedItem {
+  name: string;
+  isGlobal: boolean;
+}
+
 export interface NextAppDirEmotionCacheProviderProps {
   options: Omit<OptionsOfCreateCache, 'insertionPoint'>;
   CacheProvider?: (props: { value: EmotionCache; children: React.ReactNode }) => React.JSX.Element | null;
@@ -56,12 +61,12 @@ export default function NextAppDirEmotionCacheProvider(props: NextAppDirEmotionC
 
     const globals: { name: string; style: string }[] = [];
 
-    inserted.forEach(({ name, isGlobal }) => {
+    inserted.forEach(({ name, isGlobal }: InsertedItem) => {
       const style = registry.cache.inserted[name];
 
       if (typeof style !== 'boolean') {
         if (isGlobal) {
-          globals.push({ name, style });
+          globals.push({ name, style: style || "" });
         } else {
           styles += style;
           dataEmotionAttribute += ` ${name}`;
