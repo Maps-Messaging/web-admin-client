@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import { formatNumberWithPowerUnit } from "@/helper-functions";
 import TableRow from "@mui/material/TableRow";
 import {useGetIntegrationStatus} from "@/generated/server-integration-management/server-integration-management";
+import Link from "next/link";
 
 interface NetworkIntegrationRowProps {
   key: string;
@@ -31,7 +32,10 @@ export function NetworkIntegrationRow({
       id={key}
     >
       <TableCell>
-        <Typography variant="subtitle2">{networkInfo.config?.name}</Typography>
+        <Link href={`/dashboard/integrations/connection?connectionName=${encodeURIComponent(networkInfo.config?.name||'')}`} passHref>
+          <Typography variant="subtitle2">{networkInfo.config?.name}</Typography>
+        </Link>
+
       </TableCell>
       <TableCell>
         <Typography variant="subtitle2">{networkInfo.config?.protocols}</Typography>

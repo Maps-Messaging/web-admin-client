@@ -94,7 +94,7 @@ const NamespaceTree = () : React.JSX.Element => {
     }
   };
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex',  height: '80vh' }}>
       <Box sx={{ width: 300, overflowY: 'auto', bgcolor: 'background.paper', borderRight: 1, borderColor: 'divider' }}>
         <RichTreeView
           multiSelect={false}
