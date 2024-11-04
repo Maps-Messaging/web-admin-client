@@ -1,38 +1,24 @@
-'use client'
-
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
-
-import {
-  useGetInterface,
-} from "@/generated/server-interface-management/server-interface-management";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import {EndPointStatus} from "@/components/network/endPoint/end-point-status";
-import EndPointActionController from "@/components/network/endPoint/end-point-action-controller";
-import {
-  useGetAllIntegrationStatus,
-  useGetIntegrationStatus
-} from "@/generated/server-integration-management/server-integration-management";
+import Grid from "@mui/material/Grid";
+import { useGetIntegrationStatus } from "@/generated/server-integration-management/server-integration-management";
+import { formatNumberWithPowerUnit } from "@/helper-functions";
 import {ConnectionStatus} from "@/components/integration/connection/connection-status";
-import TableCell from "@mui/material/TableCell";
-import {formatNumberWithPowerUnit} from "@/helper-functions";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableRow from "@mui/material/TableRow";
 
 interface ConnectionDetailsProps {
   name: string;
 }
 
 export default function ConnectionDetails({
-                                          name=''
-                                        }: ConnectionDetailsProps): React.JSX.Element {
+                                            name = ''
+                                          }: ConnectionDetailsProps): React.JSX.Element {
 
-  const { data, error, isLoading } = useGetIntegrationStatus(name ||'',{
-    query:{
-      refetchInterval: 60000
+  const { data, error, isLoading } = useGetIntegrationStatus(name || '', {
+    query: {
+      refetchInterval: 10000
     }
   });
 
@@ -43,37 +29,34 @@ export default function ConnectionDetails({
     <Stack spacing={3}>
       <Card variant="outlined">
         <CardContent>
-          <Typography variant="h5" component="div">
-            <Table>
-              <TableBody>
-              <TableRow
-                id={data?.data.interfaceName}
-              >
-                <TableCell>
-                  Msg In: {formatNumberWithPowerUnit(data?.data.messagesReceived || 0)}
-                </TableCell>
-                <TableCell>
-                  Msg Out: {formatNumberWithPowerUnit(data?.data.messagesSent || 0)}
-                </TableCell>
-                <TableCell>
-                  Byte In : {formatNumberWithPowerUnit(data?.data.bytesReceived || 0)}
-                </TableCell>
-                <TableCell>
-                  Bytes out : {formatNumberWithPowerUnit(data?.data.bytesSent || 0)}
-                </TableCell>
-                <TableCell>
-                  State : <Typography variant="subtitle2">{data?.data.state}</Typography>
-                </TableCell>
-              </TableRow>
-              </TableBody>
-            </Table>
+          <Typography variant="h5" component="div" gutterBottom>
+            {data?.data.interfaceName}
           </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={6} sm={3}>
+              <Typography variant="body2" color="textSecondary">Msg In:</Typography>
+              <Typography variant="body1">{formatNumberWithPowerUnit(data?.data.messagesReceived || 0)}</Typography>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Typography variant="body2" color="textSecondary">Msg Out:</Typography>
+              <Typography variant="body1">{formatNumberWithPowerUnit(data?.data.messagesSent || 0)}</Typography>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Typography variant="body2" color="textSecondary">Byte In:</Typography>
+              <Typography variant="body1">{formatNumberWithPowerUnit(data?.data.bytesReceived || 0)}</Typography>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Typography variant="body2" color="textSecondary">Bytes Out:</Typography>
+              <Typography variant="body1">{formatNumberWithPowerUnit(data?.data.bytesSent || 0)}</Typography>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Typography variant="body2" color="textSecondary">State:</Typography>
+              <Typography variant="subtitle2">{data?.data.state}</Typography>
+            </Grid>
+          </Grid>
         </CardContent>
       </Card>
-      <ConnectionStatus
-        status={data?.data}
-      />
+      <ConnectionStatus status={data?.data} />
     </Stack>
   );
 }
-

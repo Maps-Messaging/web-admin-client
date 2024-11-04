@@ -194,7 +194,7 @@ const NamespaceTree = (): React.JSX.Element => {
               {selectedFiles.map((file) => (
                 <TableRow
                   key={file.id}
-                  onClick={() => file.isFolder && handleFolderClick(file.id)}
+                  onClick={() => { if (file.isFolder) handleFolderClick(file.id); }}
                   style={{ cursor: file.isFolder ? 'pointer' : 'default' }}
                 >
                   <TableCell component="th" scope="row">

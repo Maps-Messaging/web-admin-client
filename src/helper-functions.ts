@@ -13,15 +13,31 @@ export function numberToDateString(javaTimeInMs: number): string {
   return date.toLocaleTimeString();
 }
 
-export const jsonToDateTime = (json:any) :String =>{
+interface DateJson {
+  date: {
+    year: number;
+    month: number;
+    day: number;
+  };
+  time: {
+    hour: number;
+    minute: number;
+    second: number;
+    nano: number;
+  };
+}
+
+export const jsonToDateTime = (jsonStr: string): string => {
+  const json = JSON.parse(jsonStr) as DateJson;  // Explicitly cast to DateJson
   const { year, month, day } = json.date;
   const { hour, minute, second, nano } = json.time;
 
   // JavaScript months are zero-indexed, so subtract 1 from the month
-  let date = new Date(year, month - 1, day, hour, minute, second, nano / 1e6);
+  const date = new Date(year, month - 1, day, hour, minute, second, nano / 1e6);
 
-  return (date.toLocaleDateString() +" "+ date.toLocaleTimeString());
-}
+  return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+};
+
 
 export function formatNumberWithPowerUnit(value: number): string {
   // Helper function to determine decimals needed for four significant figures

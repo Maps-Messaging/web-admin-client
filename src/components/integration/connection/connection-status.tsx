@@ -3,9 +3,7 @@
 import React, {useEffect, useState} from 'react';
 import Container from "@mui/material/Container";
 import {Grid} from "@mui/material";
-import Typography from "@mui/material/Typography";
 import DataGraph from "@/components/graphs/data-graph";
-import {useGetInterfaceStatus} from "@/generated/server-interface-management/server-interface-management";
 import {IntegrationStatus} from "@/generated/model";
 
 interface ConnectionStatusProps {
@@ -18,8 +16,6 @@ export function ConnectionStatus ({
 
   const [bytesReceived, setBytesReceived] = useState<number[]>([]);
   const [bytesSent, setBytesSent] = useState<number[]>([]);
-  const [connections, setConnections] = useState<number[]>([]);
-  const [errors, setErrors] = useState<number[]>([]);
   const [messagesReceived, setMessagesReceived] = useState<number[]>([]);
   const [messagesSent, setMessagesSent] = useState<number[]>([]);
 
@@ -33,7 +29,6 @@ export function ConnectionStatus ({
       };
       setBytesReceived(prev => updateArray(prev, status.bytesReceived))
       setBytesSent(prev => updateArray(prev, status.bytesSent))
-      setErrors(prev => updateArray(prev,status.errors))
       setMessagesReceived(prev => updateArray(prev,status.messagesReceived))
       setMessagesSent(prev => updateArray(prev,status.messagesSent))
     }

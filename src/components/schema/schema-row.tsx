@@ -14,8 +14,6 @@ export function SchemaRow({
                             schema,
                                       key=''
                                       }: SchemaRowProps): React.JSX.Element {
-
-  console.log(  jsonToDateTime(schema.creation));
   return (
     <TableRow
       id={key}
@@ -30,7 +28,7 @@ export function SchemaRow({
         <Typography variant="subtitle2">{schema.uniqueId}</Typography>
       </TableCell>
       <TableCell>
-        <Typography variant="subtitle2">{jsonToDateTime(schema.creation)}</Typography>
+        <Typography variant="subtitle2">{jsonToDateTime(schema.creation||"")}</Typography>
       </TableCell>
       <TableCell>
         <Typography variant="subtitle2">{schema.version || 1}</Typography>
