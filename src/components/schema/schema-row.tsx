@@ -3,6 +3,7 @@ import * as React from "react";
 import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
 import TableRow from "@mui/material/TableRow";
+import {jsonToDateTime} from "@/helper-functions";
 
 interface SchemaRowProps {
   key: string;
@@ -14,6 +15,7 @@ export function SchemaRow({
                                       key=''
                                       }: SchemaRowProps): React.JSX.Element {
 
+  console.log(  jsonToDateTime(schema.creation));
   return (
     <TableRow
       id={key}
@@ -28,7 +30,7 @@ export function SchemaRow({
         <Typography variant="subtitle2">{schema.uniqueId}</Typography>
       </TableCell>
       <TableCell>
-        <Typography variant="subtitle2">{schema.creation}</Typography>
+        <Typography variant="subtitle2">{jsonToDateTime(schema.creation)}</Typography>
       </TableCell>
       <TableCell>
         <Typography variant="subtitle2">{schema.version || 1}</Typography>
