@@ -1,0 +1,154 @@
+import React from 'react';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  TextField,
+} from '@mui/material';
+import {MqttConfig} from "@/generated/model";
+
+interface MqttConfigComponentProps {
+  config: MqttConfig;
+  onChange: (updatedConfig: MqttConfig) => void;
+}
+
+const MqttConfigComponent: React.FC<MqttConfigComponentProps> = ({ config, onChange }) => {
+  // Define initial values and validation schema using Yup
+  const formik = useFormik({
+    initialValues: {
+      type: config.type || 'mqtt',
+      maximumSessionExpiry: config.maximumSessionExpiry || 86400,
+      maximumBufferSize: config.maximumBufferSize || 10485760,
+      serverReceiveMaximum: config.serverReceiveMaximum || 10,
+      clientReceiveMaximum: config.clientReceiveMaximum || 65535,
+      clientMaximumTopicAlias: config.clientMaximumTopicAlias || 32767,
+      serverMaximumTopicAlias: config.serverMaximumTopicAlias || 0,
+      strictClientId: config.strictClientId || false,
+    },
+    validationSchema: Yup.object({
+      maximumSessionExpiry: Yup.number().min(0, 'Must be at least 0').required('Required'),
+      maximumBufferSize: Yup.number().min(0, 'Must be at least 0').required('Required'),
+      serverReceiveMaximum: Yup.number().min(0, 'Must be at least 0').required('Required'),
+      clientReceiveMaximum: Yup.number().min(0, 'Must be at least 0').required('Required'),
+      clientMaximumTopicAlias: Yup.number().min(0, 'Must be at least 0').required('Required'),
+      serverMaximumTopicAlias: Yup.number().min(0, 'Must be at least 0').required('Required'),
+    }),
+    onSubmit: (values) => {
+      onChange(values); // Pass updated config back to parent component
+    },
+  });
+
+  return (
+    <form onSubmit={formik.handleSubmit}>
+      <Box sx={{ maxWidth: 600, margin: '0 auto', padding: 2 }}>
+        {/* MQTT Config Fields */}
+        <TextField
+          fullWidth
+          label="Maximum Session Expiry (seconds)"
+          margin="normal"
+          name="maximumSessionExpiry"
+          type="number"
+          value={formik.values.maximumSessionExpiry}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={Boolean(formik.touched.maximumSessionExpiry && formik.errors.maximumSessionExpiry)}
+          helperText={formik.touched.maximumSessionExpiry && formik.errors.maximumSessionExpiry}
+        />
+
+        <TextField
+          fullWidth
+          label="Maximum Buffer Size (bytes)"
+          margin="normal"
+          name="maximumBufferSize"
+          type="number"
+          value={formik.values.maximumBufferSize}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={Boolean(formik.touched.maximumBufferSize && formik.errors.maximumBufferSize)}
+          helperText={formik.touched.maximumBufferSize && formik.errors.maximumBufferSize}
+        />
+
+        <TextField
+          fullWidth
+          label="Server Receive Maximum"
+          margin="normal"
+          name="serverReceiveMaximum"
+          type="number"
+          value={formik.values.serverReceiveMaximum}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={Boolean(formik.touched.serverReceiveMaximum && formik.errors.serverReceiveMaximum)}
+          helperText={formik.touched.serverReceiveMaximum && formik.errors.serverReceiveMaximum}
+        />
+
+        <TextField
+          fullWidth
+          label="Client Receive Maximum"
+          margin="normal"
+          name="clientReceiveMaximum"
+          type="number"
+          value={formik.values.clientReceiveMaximum}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={Boolean(formik.touched.clientReceiveMaximum && formik.errors.clientReceiveMaximum)}
+          helperText={formik.touched.clientReceiveMaximum && formik.errors.clientReceiveMaximum}
+        />
+
+        <TextField
+          fullWidth
+          label="Client Maximum Topic Alias"
+          margin="normal"
+          name="clientMaximumTopicAlias"
+          type="number"
+          value={formik.values.clientMaximumTopicAlias}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={Boolean(formik.touched.clientMaximumTopicAlias && formik.errors.clientMaximumTopicAlias)}
+          helperText={formik.touched.clientMaximumTopicAlias && formik.errors.clientMaximumTopicAlias}
+        />
+
+        <TextField
+          fullWidth
+          label="Server Maximum Topic Alias"
+          margin="normal"
+          name="serverMaximumTopicAlias"
+          type="number"
+          value={formik.values.serverMaximumTopicAlias}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={Boolean(formik.touched.serverMaximumTopicAlias && formik.errors.serverMaximumTopicAlias)}
+          helperText={formik.touched.serverMaximumTopicAlias && formik.errors.serverMaximumTopicAlias}
+        />
+
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={formik.values.strictClientId}
+              name="strictClientId"
+              onChange={formik.handleChange}
+            />
+          }
+          label="Strict Client ID"
+        />
+
+        {/* MQTT V5 Additional Fields */}
+
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={formik.isSubmitting}
+          >
+            Save Configuration
+          </Button>
+        </Box>
+      </Box>
+    </form>
+  );
+};
+
+export default MqttConfigComponent;
