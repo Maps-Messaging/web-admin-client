@@ -10,8 +10,9 @@ import {
   useGetInterface,
 } from "@/generated/server-interface-management/server-interface-management";
 import ProtocolConfigRenderer from "@/components/network/config/protocol/protocol-config-renderer";
-import {ProtocolConfig} from "@/generated/model";
-import {useEffect, useState} from "react";
+import { EndPointConfig, ProtocolConfig } from "@/generated/model";
+import { useEffect, useState } from "react";
+import NetworkConfigRenderer from "@/components/network/config/network/network-config-renderer";
 
 interface EndPointConfigurationProps {
   name: string;
@@ -27,18 +28,24 @@ export default function EndPointConfiguration({
     }
   });
 
+  const [deviceConfig, setDeviceConfig] = useState<EndPointConfig | null>(null);
   const [protocolConfigs, setProtocolConfigs] = useState<ProtocolConfig[]>([]);
+
   useEffect(() => {
-    // Initialize protocol configs when data is fetched
-    if (data?.data.config?.protocolConfigs) {
-      setProtocolConfigs(data.data.config.protocolConfigs);
+    if (data?.data.config) {
+      setDeviceConfig(data.data.config.endPointConfig ?? null);
+      setProtocolConfigs(data.data.config.protocolConfigs || []);
     }
   }, [data]);
 
-  if (isLoading) return <div>Loading name...</div>;
-  if (error) return <div>Error loading name: {error.message}</div>;
+  if (isLoading) return <div>Loading configuration...</div>;
+  if (error) return <div>Error loading configuration: {error.message}</div>;
 
-  const handleConfigChange = (updatedConfig: ProtocolConfig) => {
+  const handleDeviceConfigChange = (updatedConfig: EndPointConfig) => {
+    setDeviceConfig(updatedConfig);
+  };
+
+  const handleProtocolConfigChange = (updatedConfig: ProtocolConfig) => {
     setProtocolConfigs((prevConfigs) =>
       prevConfigs.map((config) =>
         config.type === updatedConfig.type ? updatedConfig : config
@@ -55,27 +62,68 @@ export default function EndPointConfiguration({
         </Stack>
       </Stack>
 
-      <div>
-        {protocolConfigs?.map((config, index) => (
-          <Accordion key={index}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls={`panel${index.toString()}-content`}
-              id={`panel${index.toString()}-header`}
-            >
-              <Typography variant="h6">
-                {`${typeof config.type === 'string' ? config.type.toUpperCase() : 'Unknown'} Configuration`}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <ProtocolConfigRenderer
-                config={config}
-                onChange={handleConfigChange}
-              />
-            </AccordionDetails>
-          </Accordion>
-        ))}
-      </div>
+      {/* Device Configuration Accordion */}
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="device-config-content"
+          id="device-config-header"
+        >
+          <Typography variant="h6" sx={{ width: '10%' }}>Device</Typography>
+          <Typography variant="h6" sx={{ flexShrink: 0 }}>
+            {`${deviceConfig?.type?.toUpperCase() || 'Unknown'} Configuration`}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {deviceConfig ? (
+            <NetworkConfigRenderer
+              config={deviceConfig}
+              onChange={handleDeviceConfigChange}
+            />
+          ) : (
+            <Typography>No device configuration available.</Typography>
+          )}
+        </AccordionDetails>
+      </Accordion>
+
+      {/* Protocol Configuration with Individual Protocol Accordions */}
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="protocol-config-content"
+          id="protocol-config-header"
+        >
+          <Typography variant="h6" sx={{ width: '10%' }}>Protocol</Typography>
+          <Typography variant="h6" sx={{ flexShrink: 0 }}>
+            Protocol Configurations
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {protocolConfigs.length > 0 ? (
+            protocolConfigs.map((config, index) => (
+              <Accordion key={index.toString()}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`protocol-panel${index.toString()}-content`}
+                  id={`protocol-panel${index.toString()}-header`}
+                >
+                  <Typography variant="subtitle1">
+                    {`${config.type?.toUpperCase() || 'Unknown'} Protocol`}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <ProtocolConfigRenderer
+                    config={config}
+                    onChange={handleProtocolConfigChange}
+                  />
+                </AccordionDetails>
+              </Accordion>
+            ))
+          ) : (
+            <Typography>No protocol configurations available.</Typography>
+          )}
+        </AccordionDetails>
+      </Accordion>
     </Stack>
   );
 }
