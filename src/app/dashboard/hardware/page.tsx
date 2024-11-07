@@ -3,14 +3,14 @@
 import * as React from 'react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import '../../../hostname-lookup'
-import Typography from "@mui/material/Typography";
+import {DeviceInfoTable} from "@/components/devices/device-info-table";
 
 const queryClient = new QueryClient();
 
 export default function Page(): React.JSX.Element {
   return (
     <QueryClientProvider client={queryClient}>
-      <Typography variant="h4">Connected Hardware</Typography>
+      <DeviceInfoTable />
     </QueryClientProvider>
   );
 }
