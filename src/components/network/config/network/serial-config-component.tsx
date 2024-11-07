@@ -1,20 +1,182 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
-import { SerialConfig } from '@/generated/model'; // Adjust import path as necessary
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
+import { Box, Button, TextField, MenuItem, Typography } from '@mui/material';
+import { SerialConfig } from '@/generated/model';
 
 interface SerialConfigComponentProps {
   config: SerialConfig;
   onChange: (updatedConfig: SerialConfig) => void;
 }
 
-const SerialConfigComponent: React.FC<SerialConfigComponentProps> = () => {
+const SerialConfigComponent: React.FC<SerialConfigComponentProps> = ({ config, onChange }) => {
+  const formik = useFormik({
+    initialValues: {
+      type: config.type || 'serial',
+      port: config.port || '',
+      baudRate: config.baudRate || 9600,
+      dataBits: config.dataBits || 8,
+      stopBits: config.stopBits || '1',
+      parity: config.parity || 'n',
+      flowControl: config.flowControl || 0,
+      readTimeOut: config.readTimeOut || 1000,
+      writeTimeOut: config.writeTimeOut || 1000,
+      bufferSize: config.bufferSize || 1024,
+    },
+    validationSchema: Yup.object({
+      port: Yup.string().required('Port is required'),
+      baudRate: Yup.number().min(0, 'Baud rate must be positive').required('Required'),
+      dataBits: Yup.number().min(5).max(8).required('Required'),
+      stopBits: Yup.mixed().oneOf(['1', '1.5', '2'], 'Invalid stop bit value').required('Required'),
+      parity: Yup.mixed().oneOf(['o', 'e', 'm', 's', 'n'], 'Invalid parity option').required('Required'),
+      flowControl: Yup.number().min(0).max(3).required('Required'),
+      readTimeOut: Yup.number().min(0).required('Required'),
+      writeTimeOut: Yup.number().min(0).required('Required'),
+      bufferSize: Yup.number().min(0).required('Required'),
+    }),
+    onSubmit: (values) => {
+      onChange(values);
+    },
+  });
+
   return (
-    <Box sx={{ maxWidth: 600, margin: '0 auto', padding: 2 }}>
-      <Typography variant="h6">Serial Port Configuration</Typography>
-      <Typography variant="body1" sx={{ mt: 2 }}>
-        No additional configuration required for Serial Port.
-      </Typography>
-    </Box>
+    <form onSubmit={formik.handleSubmit}>
+      <Box sx={{ maxWidth: 600, margin: '0 auto', padding: 2 }}>
+        <Typography variant="h6">Serial Port Configuration</Typography>
+
+        <TextField
+          fullWidth
+          label="Port"
+          margin="normal"
+          name="port"
+          value={formik.values.port}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={Boolean(formik.touched.port && formik.errors.port)}
+          helperText={formik.touched.port && formik.errors.port}
+        />
+
+        <TextField
+          fullWidth
+          label="Baud Rate"
+          margin="normal"
+          name="baudRate"
+          type="number"
+          value={formik.values.baudRate}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={Boolean(formik.touched.baudRate && formik.errors.baudRate)}
+          helperText={formik.touched.baudRate && formik.errors.baudRate}
+        />
+
+        <TextField
+          fullWidth
+          label="Data Bits"
+          margin="normal"
+          name="dataBits"
+          type="number"
+          value={formik.values.dataBits}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={Boolean(formik.touched.dataBits && formik.errors.dataBits)}
+          helperText={formik.touched.dataBits && formik.errors.dataBits}
+        />
+
+        <TextField
+          fullWidth
+          select
+          label="Stop Bits"
+          margin="normal"
+          name="stopBits"
+          value={formik.values.stopBits}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={Boolean(formik.touched.stopBits && formik.errors.stopBits)}
+          helperText={formik.touched.stopBits && formik.errors.stopBits}
+        >
+          <MenuItem value="1">1</MenuItem>
+          <MenuItem value="1.5">1.5</MenuItem>
+          <MenuItem value="2">2</MenuItem>
+        </TextField>
+
+        <TextField
+          fullWidth
+          select
+          label="Parity"
+          margin="normal"
+          name="parity"
+          value={formik.values.parity}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={Boolean(formik.touched.parity && formik.errors.parity)}
+          helperText={formik.touched.parity && formik.errors.parity}
+        >
+          <MenuItem value="o">Odd</MenuItem>
+          <MenuItem value="e">Even</MenuItem>
+          <MenuItem value="m">Mark</MenuItem>
+          <MenuItem value="s">Space</MenuItem>
+          <MenuItem value="n">None</MenuItem>
+        </TextField>
+
+        <TextField
+          fullWidth
+          label="Flow Control"
+          margin="normal"
+          name="flowControl"
+          type="number"
+          value={formik.values.flowControl}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={Boolean(formik.touched.flowControl && formik.errors.flowControl)}
+          helperText={formik.touched.flowControl && formik.errors.flowControl}
+        />
+
+        <TextField
+          fullWidth
+          label="Read Timeout (ms)"
+          margin="normal"
+          name="readTimeOut"
+          type="number"
+          value={formik.values.readTimeOut}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={Boolean(formik.touched.readTimeOut && formik.errors.readTimeOut)}
+          helperText={formik.touched.readTimeOut && formik.errors.readTimeOut}
+        />
+
+        <TextField
+          fullWidth
+          label="Write Timeout (ms)"
+          margin="normal"
+          name="writeTimeOut"
+          type="number"
+          value={formik.values.writeTimeOut}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={Boolean(formik.touched.writeTimeOut && formik.errors.writeTimeOut)}
+          helperText={formik.touched.writeTimeOut && formik.errors.writeTimeOut}
+        />
+
+        <TextField
+          fullWidth
+          label="Buffer Size (bytes)"
+          margin="normal"
+          name="bufferSize"
+          type="number"
+          value={formik.values.bufferSize}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={Boolean(formik.touched.bufferSize && formik.errors.bufferSize)}
+          helperText={formik.touched.bufferSize && formik.errors.bufferSize}
+        />
+
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+          <Button type="submit" variant="contained" color="primary" disabled={formik.isSubmitting}>
+            Save Configuration
+          </Button>
+        </Box>
+      </Box>
+    </form>
   );
 };
 

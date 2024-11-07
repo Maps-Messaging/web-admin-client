@@ -8,14 +8,14 @@ import {
   TlsConfig,
   DtlsConfig,
   SerialConfig,
-  LoRaDeviceConfig
+  LoRaConfig
 } from "@/generated/model";
 import UdpConfigComponent from "@/components/network/config/network/udp-config-component";
 import TcpConfigComponent from "@/components/network/config/network/tcp-config-component";
 import TlsConfigComponent from "@/components/network/config/network/tls-config-component";
 import DtlsConfigComponent from "@/components/network/config/network/DtlsConfigComponent";
-import LoRaDeviceConfigComponent from "@/components/network/config/network/lora-device-config-component";
-import SerialConfigComponent from "@/components/network/config/network/serial-config-component"; // Adjust import path as necessary
+import SerialConfigComponent from "@/components/network/config/network/serial-config-component";
+import LoRaConfigComponent from "@/components/network/config/network/lora-config-renderer"; // Adjust import path as necessary
 
 interface InterfaceConfigRendererProps {
   config: EndPointConfig;
@@ -43,7 +43,7 @@ function isSerialConfig(config: EndPointConfig): config is SerialConfig {
   return config.type === 'serial';
 }
 
-function isLoRaDeviceConfig(config: EndPointConfig): config is LoRaDeviceConfig {
+function isLoraConfig(config: EndPointConfig): config is LoRaConfig {
   return config.type === 'lora';
 }
 
@@ -73,8 +73,8 @@ const InterfaceConfigRenderer: React.FC<InterfaceConfigRendererProps> = ({ confi
       config={config}
       onChange={onChange}
     />;
-  } else if (isLoRaDeviceConfig(config)) {
-    return <LoRaDeviceConfigComponent
+  } else if (isLoraConfig(config)) {
+    return <LoRaConfigComponent
       config={config}
       onChange={onChange}
     />;
