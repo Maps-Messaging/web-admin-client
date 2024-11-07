@@ -28,7 +28,7 @@ export function SchemaRow({
         <Typography variant="subtitle2">{schema.uniqueId}</Typography>
       </TableCell>
       <TableCell>
-        <Typography variant="subtitle2">{jsonToDateTime(schema.creation||"")}</Typography>
+        <Typography variant="subtitle2">{schema.creation ? jsonToDateTime(schema.creation) : ""}</Typography>
       </TableCell>
       <TableCell>
         <Typography variant="subtitle2">{schema.version || 1}</Typography>

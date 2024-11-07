@@ -27,16 +27,19 @@ interface DateJson {
   };
 }
 
-export const jsonToDateTime = (jsonStr: string): string => {
-  const json = JSON.parse(jsonStr) as DateJson;  // Explicitly cast to DateJson
-  const { year, month, day } = json.date;
-  const { hour, minute, second, nano } = json.time;
+export function jsonToDateTime(data: string | DateJson): string {
+  // Check if data is a string; if so, parse it to an object
+  const parsedData = typeof data === "string" ? JSON.parse(data) : data;
+
+
+  const { year, month, day } = parsedData.date;
+  const { hour, minute, second, nano } = parsedData.time;
 
   // JavaScript months are zero-indexed, so subtract 1 from the month
   const date = new Date(year, month - 1, day, hour, minute, second, nano / 1e6);
 
   return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
-};
+}
 
 
 export function formatNumberWithPowerUnit(value: number): string {
