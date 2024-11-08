@@ -27,15 +27,47 @@ interface DateJson {
   };
 }
 
-export function jsonToDateTime(data: string | DateJson): string {
-  // Check if data is a string; if so, parse it to an object
-  const parsedData = typeof data === "string" ? JSON.parse(data) : data;
+interface DateJson {
+  date: {
+    year: number;
+    month: number;
+    day: number;
+  };
+  time: {
+    hour: number;
+    minute: number;
+    second: number;
+    nano: number;
+  };
+}
 
+export function jsonToDateTime(data: string | DateJson): string {
+  let parsedData: DateJson;
+
+  try {
+    // Parse if input is a string
+    parsedData = typeof data === "string" ? JSON.parse(data) as DateJson : data;
+
+    // Validate parsedData structure
+    if (
+      typeof parsedData.date?.year !== 'number' ||
+      typeof parsedData.date?.month !== 'number' ||
+      typeof parsedData.date?.day !== 'number' ||
+      typeof parsedData.time?.hour !== 'number' ||
+      typeof parsedData.time?.minute !== 'number' ||
+      typeof parsedData.time?.second !== 'number' ||
+      typeof parsedData.time?.nano !== 'number'
+    ) {
+      throw new Error("Invalid DateJson format");
+    }
+  } catch (error) {
+    throw new Error("Invalid JSON data provided");
+  }
 
   const { year, month, day } = parsedData.date;
   const { hour, minute, second, nano } = parsedData.time;
 
-  // JavaScript months are zero-indexed, so subtract 1 from the month
+  // Construct date with zero-indexed month
   const date = new Date(year, month - 1, day, hour, minute, second, nano / 1e6);
 
   return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;

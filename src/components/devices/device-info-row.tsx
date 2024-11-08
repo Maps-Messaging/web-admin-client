@@ -3,8 +3,7 @@ import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import Collapse from "@mui/material/Collapse";
-import {DeviceInfo} from "@/generated/model";
-
+import { DeviceInfo } from "@/generated/model";
 
 interface DeviceInfoRowProps {
   device: DeviceInfo;
@@ -15,7 +14,7 @@ export function DeviceInfoRow({ device }: DeviceInfoRowProps): React.JSX.Element
 
   return (
     <>
-      <TableRow onClick={() => setOpen(!open)} style={{ cursor: 'pointer' }}>
+      <TableRow onClick={() => { setOpen(!open); }} style={{ cursor: 'pointer' }}>
         <TableCell>{device.name}</TableCell>
         <TableCell>{device.description}</TableCell>
         <TableCell>{device.type}</TableCell>
