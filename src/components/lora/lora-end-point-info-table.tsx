@@ -24,7 +24,9 @@ function LoRaEndPointInfoTable({ endPoints, deviceName }: { endPoints: LoRaEndPo
                 </TableHead>
                 <TableBody>
                   {endPoints.map((endPoint) => (
-                  <TableRow>
+                  <TableRow
+                    key={endPoint.nodeId}
+                  >
                     <TableCell>
                       <Link href={`/dashboard/lora/name?deviceName=${encodeURIComponent(deviceName||'')}&nodeId=${encodeURIComponent(endPoint.nodeId||'')} ` } passHref>
                         {endPoint.nodeId}
