@@ -4,6 +4,7 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import Collapse from "@mui/material/Collapse";
 import { DeviceInfo } from "@/generated/model";
+import Link from "next/link";
 
 interface DeviceInfoRowProps {
   device: DeviceInfo;
@@ -15,7 +16,11 @@ export function DeviceInfoRow({ device }: DeviceInfoRowProps): React.JSX.Element
   return (
     <>
       <TableRow onClick={() => { setOpen(!open); }} style={{ cursor: 'pointer' }}>
-        <TableCell>{device.name}</TableCell>
+        <TableCell>
+          <Link href={`/dashboard/lora/name?loraName=${encodeURIComponent(device.name||'')}`} passHref>
+            {device.name}
+          </Link>
+        </TableCell>
         <TableCell>{device.description}</TableCell>
         <TableCell>{device.type}</TableCell>
       </TableRow>
