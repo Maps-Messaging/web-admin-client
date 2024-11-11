@@ -17,12 +17,14 @@ import { Database as DatabaseIcon } from '@phosphor-icons/react/dist/ssr/Databas
 import { Circuitry as CircuitryIcon } from '@phosphor-icons/react/dist/ssr/Circuitry';
 import { ComputerTower as ComputerTowerIcon } from '@phosphor-icons/react/dist/ssr/ComputerTower';
 import { Archive as ArchiveIcon } from '@phosphor-icons/react/dist/ssr/Archive';
+import {WifiHigh as WiFiHighIcon} from '@phosphor-icons/react/dist/ssr/WifiHigh'
 
 
 export const navIcons = {
   'chart-pie': ChartPieIcon,
   'gear-six': GearSixIcon,
   'plugs-connected': PlugsConnectedIcon,
+  'lora': WiFiHighIcon,
   'x-square': XSquare,
   'folder': FolderIcon,
   'cpu': CpuIcon,

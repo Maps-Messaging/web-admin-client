@@ -31,6 +31,7 @@ export const navItems = [
       { key: 'interfaces', title: 'Interfaces', href: paths.dashboard.network, icon: 'network' },
       { key: 'integrations', title: 'Integrations', href: paths.dashboard.integrations, icon: 'repeat' },
       { key: 'connections', title: 'Connections', href: paths.dashboard.connections, icon: 'plugs-connected' },
+      { key: 'lora', title: 'LoRa', href: paths.dashboard.lora, icon: 'lora' },
       { key: 'discovery', title: 'Discovery', href: paths.dashboard.discovery, icon: 'magnifying-glass' }
     ]
   }

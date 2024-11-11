@@ -6,8 +6,8 @@ import * as React from "react";
 import {useState} from "react";
 import {Tab, Tabs} from "@mui/material";
 import Box from "@mui/material/Box";
-import EndPointConnectionDetails from "@/components/connections/end-point-connection-details";
 import LoraEndPointConnectionTable from "@/components/lora/lora-end-point-connection-table";
+import LoRaDeviceConfiguration from "@/components/lora/lora-device-config";
 
 const queryClient = new QueryClient();
 
@@ -59,7 +59,7 @@ const LoRaEndPointPage = () => {
           deviceName={deviceName||''}
           nodeId={nodeId || '0'}
         />}
-        {currentTab === 'config' && <EndPointConnectionDetails name={deviceName||''}/>}
+        {currentTab === 'config' && <LoRaDeviceConfiguration name={deviceName||''}/>}
       </Box>
     </QueryClientProvider>
   );

@@ -11,6 +11,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import {useGetLoRaEndPointConnections} from "@/generated/lora-device-management/lora-device-management";
+import {numberToDateString} from "@/helper-functions";
 
 function noop(): void {
   // do nothing
@@ -44,10 +45,10 @@ export function LoRaEndPointConnectionTable({
         <Table sx={{ minWidth: '800px' }}>
           <TableHead>
             <TableRow>
+              <TableCell>Remote Node ID</TableCell>
               <TableCell>RSSI</TableCell>
               <TableCell>Missed Packets</TableCell>
               <TableCell>Received Packets</TableCell>
-              <TableCell>Remote Node ID</TableCell>
               <TableCell>Last Packet ID</TableCell>
               <TableCell>Last Read Time</TableCell>
               <TableCell>Last Write Time</TableCell>
@@ -56,13 +57,13 @@ export function LoRaEndPointConnectionTable({
           <TableBody>
             {data?.data.map((row, index) => (
               <TableRow key={index}>
+                <TableCell>{row.remoteNodeId}</TableCell>
                 <TableCell>{row.rssi}</TableCell>
                 <TableCell>{row.missedPackets}</TableCell>
                 <TableCell>{row.receivedPackets}</TableCell>
-                <TableCell>{row.remoteNodeId}</TableCell>
                 <TableCell>{row.lastPacketId}</TableCell>
-                <TableCell>{row.lastReadTime}</TableCell>
-                <TableCell>{row.lastWriteTime}</TableCell>
+                <TableCell>{numberToDateString(row.lastReadTime||0)}</TableCell>
+                <TableCell>{numberToDateString(row.lastWriteTime||0)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

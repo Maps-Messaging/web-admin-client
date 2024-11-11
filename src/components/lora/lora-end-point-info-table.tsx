@@ -7,10 +7,9 @@ import Link from "next/link";
 function LoRaEndPointInfoTable({ endPoints, deviceName }: { endPoints: LoRaEndPointInfo[], deviceName: string }) {
   return (
     <>
-      {endPoints.map((endPoint) => (
-        <Accordion key={endPoint.nodeId}>
+        <Accordion key={deviceName}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography>Endpoint Node ID: {endPoint.nodeId}</Typography>
+            <Typography>Endpoint List : {deviceName}</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <TableContainer component={Paper}>
@@ -24,6 +23,7 @@ function LoRaEndPointInfoTable({ endPoints, deviceName }: { endPoints: LoRaEndPo
                   </TableRow>
                 </TableHead>
                 <TableBody>
+                  {endPoints.map((endPoint) => (
                   <TableRow>
                     <TableCell>
                       <Link href={`/dashboard/lora/name?deviceName=${encodeURIComponent(deviceName||'')}&nodeId=${encodeURIComponent(endPoint.nodeId||'')} ` } passHref>
@@ -34,12 +34,12 @@ function LoRaEndPointInfoTable({ endPoints, deviceName }: { endPoints: LoRaEndPo
                     <TableCell>{endPoint.incomingQueueSize}</TableCell>
                     <TableCell>{endPoint.connectionSize}</TableCell>
                   </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </TableContainer>
           </AccordionDetails>
         </Accordion>
-      ))}
     </>
   );
 }

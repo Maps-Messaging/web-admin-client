@@ -11,6 +11,7 @@ export const paths = {
     namespace: '/dashboard/namespace',
     network: '/dashboard/network',
     connections: '/dashboard/connections',
+    lora: '/dashboard/lora',
     integrations: '/dashboard/integrations',
     schemas: '/dashboard/schema',
     settings: '/dashboard/settings',
