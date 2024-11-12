@@ -1,4 +1,4 @@
-import type {InterfaceInfo} from "@/generated/model";
+import type {InterfaceInfoDTO} from "@/generated/model";
 import * as React from "react";
 import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
@@ -12,7 +12,7 @@ import EndPointActionController from "@/components/network/endPoint/end-point-ac
 
 interface NetworkInterfaceRowProps {
   key: string;
-  networkInfo: InterfaceInfo;
+  networkInfo: InterfaceInfoDTO;
 }
 
 export function NetworkInterfaceRow({

@@ -8,14 +8,14 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import type {Destination} from "@/generated/model";
 import ForumIcon from '@mui/icons-material/Forum';
 import QueueIcon from '@mui/icons-material/Queue';
 import FolderIcon from '@mui/icons-material/Folder';
+import {DestinationDTO, DestinationDTOType} from "@/generated/model";
 
 interface DestinationDetailsProps {
   name:string,
-  destination: Destination,
+  destination: DestinationDTO,
   isFolder: boolean
 }
 
@@ -38,9 +38,9 @@ function DestinationDetails( props : DestinationDetailsProps ): React.JSX.Elemen
       return <FolderIcon />;
     }
     switch (props.destination.type) {
-      case 'Topic':
+      case DestinationDTOType.topic:
         return <ForumIcon />;
-      case 'Queue':
+      case DestinationDTOType.queue:
         return <QueueIcon />;
       default:
         return <FolderIcon />;

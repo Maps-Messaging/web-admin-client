@@ -3,7 +3,7 @@
 import { useGetAllDestinations } from "@/generated/destination-management/destination-management";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField } from '@mui/material';
 import React, { useState } from "react";
-import type { Destination } from "@/generated/model";
+import {DestinationDTO, DestinationDTOType} from "@/generated/model";
 import { RichTreeView } from "@mui/x-tree-view";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -22,7 +22,7 @@ interface TreeNode {
 interface TreeFile {
   id: string;
   label: string;
-  destination?: Destination;
+  destination?: DestinationDTO;
   isFolder?: boolean;
   delayedMessages?: number;
   pendingMessages?: number;
@@ -30,7 +30,7 @@ interface TreeFile {
 }
 
 // Function to build directory tree and file mappings with aggregate calculations
-const buildTree = (destinations: Destination[]): [TreeNode[], Map<string, TreeFile[]>] => {
+const buildTree = (destinations: DestinationDTO[]): [TreeNode[], Map<string, TreeFile[]>] => {
   const root: TreeNode[] = [];
   const filesMap: Map<string, TreeFile[]> = new Map<string, TreeFile[]>();
   const pathMap = new Map<string, TreeNode>();
@@ -130,9 +130,9 @@ const NamespaceTree = (): React.JSX.Element => {
   const getIcon = (item: TreeFile): React.ReactElement | null => {
     if (item.isFolder) return <FolderIcon />; // Folder icon for folders
     switch (item.destination?.type) {
-      case 'Topic':
+      case DestinationDTOType.topic:
         return <ForumIcon />;
-      case 'Queue':
+      case DestinationDTOType.queue:
         return <QueueIcon />;
       default:
         return <ForumIcon />;

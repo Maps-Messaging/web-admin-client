@@ -1,4 +1,4 @@
-import type {IntegrationInfo} from "@/generated/model";
+import type {IntegrationInfoDTO} from "@/generated/model";
 import * as React from "react";
 import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
@@ -9,7 +9,7 @@ import Link from "next/link";
 
 interface NetworkIntegrationRowProps {
   key: string;
-  networkInfo: IntegrationInfo;
+  networkInfo: IntegrationInfoDTO;
 }
 
 export function NetworkIntegrationRow({

@@ -4,10 +4,10 @@ import React, {useEffect, useState} from 'react';
 import Container from "@mui/material/Container";
 import {Grid} from "@mui/material";
 import DataGraph from "@/components/graphs/data-graph";
-import {IntegrationStatus} from "@/generated/model";
+import {IntegrationStatusDTO} from "@/generated/model";
 
 interface ConnectionStatusProps {
-  status?: IntegrationStatus;
+  status?: IntegrationStatusDTO;
 }
 
 export function ConnectionStatus ({

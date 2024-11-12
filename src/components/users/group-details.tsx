@@ -8,7 +8,7 @@ import { Download as DownloadIcon } from '@phosphor-icons/react/dist/ssr/Downloa
 import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
 import { Upload as UploadIcon } from '@phosphor-icons/react/dist/ssr/Upload';
 
-import {type GetAllGroupsParams, type Group} from "@/generated/model";
+import {type GetAllGroupsParams, type GroupDTO} from "@/generated/model";
 import {
   useGetAllGroups} from "@/generated/authentication-and-authorisation-management/authentication-and-authorisation-management";
 import {GroupTable} from "@/components/users/group-table";
@@ -59,6 +59,6 @@ export default function GroupDetails(): React.JSX.Element {
   );
 }
 
-function applyPagination(rows: Group[], page: number, rowsPerPage: number): Group[] {
+function applyPagination(rows: GroupDTO[], page: number, rowsPerPage: number): GroupDTO[] {
   return rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 }

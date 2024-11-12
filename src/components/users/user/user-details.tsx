@@ -48,7 +48,7 @@ export default function UserDetails({
       <Divider></Divider>
       <UserAttributesTable attributes={ data?.data.attributes || {}} />
       <Divider></Divider>
-      <UserGroupGrid groups={data?.data.groupList || []} onDelete={onDelete} />
+      <UserGroupGrid groups={(data?.data.groupList || []).filter((group): group is string => group !== null)} onDelete={onDelete} />
     </div>
   );
 }

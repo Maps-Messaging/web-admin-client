@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { Accordion, AccordionSummary, AccordionDetails, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { type LoRaEndPointInfo } from "@/generated/model";
-import Link from "next/link";
 
-function LoRaEndPointInfoTable({ endPoints, deviceName }: { endPoints: LoRaEndPointInfo[], deviceName: string }) {
+import Link from "next/link";
+import {LoRaEndPointInfoDTO} from "@/generated/model";
+
+function LoRaEndPointInfoTable({ endPoints, deviceName }: { endPoints: LoRaEndPointInfoDTO[], deviceName: string }) {
   return (
     <>
         <Accordion key={deviceName}>
@@ -25,16 +26,16 @@ function LoRaEndPointInfoTable({ endPoints, deviceName }: { endPoints: LoRaEndPo
                 <TableBody>
                   {endPoints.map((endPoint) => (
                   <TableRow
-                    key={endPoint.nodeId}
+                    key={endPoint?.nodeId}
                   >
                     <TableCell>
-                      <Link href={`/dashboard/lora/name?deviceName=${encodeURIComponent(deviceName||'')}&nodeId=${encodeURIComponent(endPoint.nodeId||'')} ` } passHref>
-                        {endPoint.nodeId}
+                      <Link href={`/dashboard/lora/name?deviceName=${encodeURIComponent(deviceName||'')}&nodeId=${encodeURIComponent(endPoint?.nodeId||'')} ` } passHref>
+                        {endPoint?.nodeId}
                       </Link>
                     </TableCell>
-                    <TableCell>{endPoint.lastRSSI}</TableCell>
-                    <TableCell>{endPoint.incomingQueueSize}</TableCell>
-                    <TableCell>{endPoint.connectionSize}</TableCell>
+                    <TableCell>{endPoint?.lastRSSI}</TableCell>
+                    <TableCell>{endPoint?.incomingQueueSize}</TableCell>
+                    <TableCell>{endPoint?.connectionSize}</TableCell>
                   </TableRow>
                   ))}
                 </TableBody>

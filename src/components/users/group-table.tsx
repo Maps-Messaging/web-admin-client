@@ -14,7 +14,7 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 
 import { useSelection } from '@/hooks/use-selection';
-import {type Group} from "@/generated/model";
+import {type GroupDTO} from "@/generated/model";
 
 function noop(): void {
   // do nothing
@@ -23,7 +23,7 @@ function noop(): void {
 interface GroupTableProps {
   count?: number;
   page?: number;
-  rows?: Group[];
+  rows?: GroupDTO[];
   rowsPerPage?: number;
 }
 

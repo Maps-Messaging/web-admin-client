@@ -14,7 +14,7 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 
 import { useSelection } from '@/hooks/use-selection';
-import {User} from "@/generated/model";
+import {UserDTO} from "@/generated/model";
 import Link from "next/link";
 
 function noop(): void {
@@ -24,7 +24,7 @@ function noop(): void {
 interface UserTableProps {
   count?: number;
   page?: number;
-  rows?: User[];
+  rows?: UserDTO[];
   rowsPerPage?: number;
 }
 
@@ -43,8 +43,8 @@ export function UserTable({
   const selectedSome = (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
   const selectedAll = rows.length > 0 && selected?.size === rows.length;
 
-  function getGroups(arr: string[]): string {
-    return arr.join(',');
+  function getGroups(arr: (string | null)[]): string {
+    return arr.filter((group): group is string => group !== null).join(',');
   }
 
 
@@ -99,7 +99,7 @@ export function UserTable({
                     <Typography variant="subtitle2">{row.uniqueId}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="subtitle2">{getGroups(row.groupList||[])}</Typography>
+                    <Typography variant="subtitle2">{getGroups(row.groupList || [])}</Typography>
                   </TableCell>
                 </TableRow>
               );

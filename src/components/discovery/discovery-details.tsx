@@ -57,7 +57,10 @@ export default function DiscoveryDetails(): React.ReactElement {
           <TableBody>
             {data?.data.map((server, index) => {
               const key = `server-${index.toString()}`;
-              const mapsService = server.services?.find(service => service.protocol === 'maps');
+              const mapsService = server.services
+                ? Object.values(server.services).find((service) => service?.protocol === 'maps')
+                : null;
+
               const link = mapsService
                 ? `${mapsService.transport ?? ''}://${mapsService.addresses?.[0] ?? ''}:${mapsService.port !== undefined ? String(mapsService.port) : ''}/admin/`
                 : null;
@@ -72,13 +75,13 @@ export default function DiscoveryDetails(): React.ReactElement {
                         </IconButton>
                         {link ? (
                           <a href={link} target="_blank" rel="noopener noreferrer">
-                            <Typography variant="subtitle2">{server.serverName} - Services: {server.services?.length}</Typography>
+                            <Typography variant="subtitle2">{server.serverName} - Services: {server.services ? Object.keys(server.services).length : 0}</Typography>
                           </a>
                         ) : (
-                          <Typography variant="subtitle2">{server.serverName} - Services: {server.services?.length}</Typography>
+                          <Typography variant="subtitle2">{server.serverName} - Services: {server.services ? Object.keys(server.services).length : 0}</Typography>
                         )}
                       </div>
-                      <Typography variant="subtitle2">Schema Prefix : {server.schemaPrefix} - System Topic Prefix: {server.systemTopics}</Typography>
+                      <Typography variant="subtitle2">Schema Prefix : {server.schemaPrefix} - System Topic Prefix: {server.systemTopicPrefix}</Typography>
                       <Typography variant="subtitle2">Build Date : {server.buildDate} - Version : {server.version}</Typography>
 
                     </TableCell>
@@ -88,13 +91,13 @@ export default function DiscoveryDetails(): React.ReactElement {
                       <TableCell style={{ paddingLeft: 40 }}>
                         <Table size="small">
                           <TableBody>
-                            {server?.services?.map((service) => (
-                              <TableRow key={service.protocol}>
-                                <TableCell>{service.protocol}</TableCell>
-                                <TableCell>{service.addresses}</TableCell>
-                                <TableCell>{service.port}</TableCell>
+                            {server?.services && Object.values(server.services).map((service) => (
+                              <TableRow key={service?.protocol}>
+                                <TableCell>{service?.protocol}</TableCell>
+                                <TableCell>{service?.addresses}</TableCell>
+                                <TableCell>{service?.port}</TableCell>
                                 <TableCell>
-                                  {service.properties ? (
+                                  {service?.properties ? (
                                     <PropertiesTable properties={service.properties} />
                                   ) : (
                                     'No properties'
@@ -103,6 +106,7 @@ export default function DiscoveryDetails(): React.ReactElement {
                               </TableRow>
                             ))}
                           </TableBody>
+
                         </Table>
                       </TableCell>
                     </TableRow>

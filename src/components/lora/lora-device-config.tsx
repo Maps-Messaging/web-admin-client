@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import {LoRaDeviceConfigInfo} from "@/generated/model";
+import {LoRaDeviceConfigInfoDTO} from "@/generated/model";
 import { useEffect, useState } from "react";
 import {useGetLoRaDeviceConfig} from "@/generated/lora-device-management/lora-device-management";
 import LoRaDeviceConfigComponent from "@/components/network/config/lora/lora-device-config-component";
@@ -21,7 +21,7 @@ export default function LoRaDeviceConfiguration({
     }
   });
 
-  const [deviceConfig, setDeviceConfig] = useState<LoRaDeviceConfigInfo | null>(null);
+  const [deviceConfig, setDeviceConfig] = useState<LoRaDeviceConfigInfoDTO | null>(null);
 
   useEffect(() => {
     if (data?.data) {
@@ -32,7 +32,7 @@ export default function LoRaDeviceConfiguration({
   if (isLoading) return <div>Loading configuration...</div>;
   if (error) return <div>Error loading configuration: {error.message}</div>;
 
-  const handleDeviceConfigChange = (updatedConfig: LoRaDeviceConfigInfo) => {
+  const handleDeviceConfigChange = (updatedConfig: LoRaDeviceConfigInfoDTO) => {
     setDeviceConfig(updatedConfig);
   };
 

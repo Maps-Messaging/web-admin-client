@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react';
 import { Grid, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import type { Theme } from '@mui/material/styles';
-import type {ServerStatistics} from "@/generated/model";
+import type {ServerStatisticsDTO} from "@/generated/model";
 import {useGetStats} from "@/generated/server-management/server-management";
 
 interface ArrowBoxProps {
@@ -49,7 +49,7 @@ const ArrowBox = styled(Paper, {
     }),
   }}));
 
-function calculateStatDiff(current: ServerStatistics, previous: ServerStatistics): ServerStatistics {
+function calculateStatDiff(current: ServerStatisticsDTO, previous: ServerStatisticsDTO): ServerStatisticsDTO {
   return {
     packetsReceived: (current.packetsReceived ?? 0) - (previous.packetsReceived ?? 0),
     packetsSent: (current.packetsSent ?? 0) - (previous.packetsSent ?? 0),
@@ -74,8 +74,8 @@ export default function MessagingServerDiagram(): React.JSX.Element {
       refetchInterval: 2000
     }
   });
-  const [previousUpdate, setPreviousUpdate] = useState<ServerStatistics>({});
-  const [diff, setDiff] = useState<ServerStatistics>({});
+  const [previousUpdate, setPreviousUpdate] = useState<ServerStatisticsDTO>({});
+  const [diff, setDiff] = useState<ServerStatisticsDTO>({});
 
 
   useEffect(() => {

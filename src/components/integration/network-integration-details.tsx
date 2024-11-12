@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 
-import {type GetAllIntegrationsParams, type IntegrationInfo} from "@/generated/model";
+import {type GetAllIntegrationsParams, type IntegrationInfoDTO} from "@/generated/model";
 import Typography from "@mui/material/Typography";
 import {NetworkIntegrationTable} from "@/components/integration/network-integration-table";
 import {useGetAllIntegrations} from "@/generated/server-integration-management/server-integration-management";
@@ -22,7 +22,7 @@ export default function NetworkIntegrationDetails(): React.JSX.Element {
   if (isLoading) return <div>Loading name...</div>;
   if (error) return <div>Error loading name: {error.message}</div>;
 
-  const paginatedInterfaces :IntegrationInfo[] = applyPagination((data?.data.data || []), page, rowsPerPage);
+  const paginatedInterfaces :IntegrationInfoDTO[] = applyPagination((data?.data.data || []), page, rowsPerPage);
 
   return (
     <Stack spacing={3}>
@@ -41,6 +41,6 @@ export default function NetworkIntegrationDetails(): React.JSX.Element {
   );
 }
 
-function applyPagination(rows: IntegrationInfo[], page: number, rowsPerPage: number): IntegrationInfo[] {
+function applyPagination(rows: IntegrationInfoDTO[], page: number, rowsPerPage: number): IntegrationInfoDTO[] {
   return rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 }

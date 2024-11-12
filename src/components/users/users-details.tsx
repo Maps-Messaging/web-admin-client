@@ -9,7 +9,7 @@ import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
 import { Upload as UploadIcon } from '@phosphor-icons/react/dist/ssr/Upload';
 
 import {UserTable} from "@/components/users/user-table";
-import {GetAllUsersParams, User} from "@/generated/model";
+import {GetAllUsersParams, UserDTO} from "@/generated/model";
 import {
   useGetAllUsers
 } from "@/generated/authentication-and-authorisation-management/authentication-and-authorisation-management";
@@ -61,6 +61,6 @@ export default function UsersDetails(): React.JSX.Element {
   );
 }
 
-function applyPagination(rows: User[], page: number, rowsPerPage: number): User[] {
+function applyPagination(rows: UserDTO[], page: number, rowsPerPage: number): UserDTO[] {
   return rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 }

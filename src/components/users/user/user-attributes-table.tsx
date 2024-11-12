@@ -1,12 +1,20 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
-import {UserAttributes} from "@/generated/model";
+import { UserDTOAttributes } from "@/generated/model";
 
 interface UserAttributesTableProps {
-  attributes: UserAttributes;
+  attributes: UserDTOAttributes;
 }
 
 const UserAttributesTable: React.FC<UserAttributesTableProps> = ({ attributes }) => {
+  if (!attributes) {
+    return (
+      <Typography variant="body1">
+        No attributes available.
+      </Typography>
+    );
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -24,7 +32,7 @@ const UserAttributesTable: React.FC<UserAttributesTableProps> = ({ attributes })
           {Object.entries(attributes).map(([key, value]) => (
             <TableRow key={key}>
               <TableCell>{key}</TableCell>
-              <TableCell>{value}</TableCell>
+              <TableCell>{value || 'N/A'}</TableCell>
             </TableRow>
           ))}
         </TableBody>

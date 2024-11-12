@@ -13,7 +13,7 @@ import {
   Typography,
   Paper, Tabs, Tab
 } from '@mui/material';
-import { type LoRaDeviceInfo, type LoRaEndPointInfo } from "@/generated/model";
+import {LoRaDeviceInfoDTO, LoRaEndPointInfoDTO} from "@/generated/model";
 import LoRaEndPointInfoTable from "@/components/lora/lora-end-point-info-table";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -78,7 +78,7 @@ function LoRaDeviceDetailsInner(): React.JSX.Element {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data?.data.data?.map((device: LoRaDeviceInfo) => (
+              {data?.data.data?.map((device: LoRaDeviceInfoDTO) => (
                 <React.Fragment key={device.name}>
                   <TableRow>
                     <TableCell>{device.name}</TableCell>
@@ -93,7 +93,7 @@ function LoRaDeviceDetailsInner(): React.JSX.Element {
                       {currentTab === 'configuration' && <LoRaDeviceConfiguration name={device?.name || ''} />}
                       {currentTab === 'devices' &&
                         <LoRaEndPointInfoTable
-                          endPoints={device?.endPointInfoList || [] as LoRaEndPointInfo[]}
+                          endPoints={device?.endPointInfoList || [] as LoRaEndPointInfoDTO[]}
                           deviceName={device.name || ''}
                         />
                       }

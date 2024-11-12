@@ -3,11 +3,11 @@ import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import Collapse from "@mui/material/Collapse";
-import { DeviceInfo } from "@/generated/model";
+import { DeviceInfoDTO } from "@/generated/model";
 import Link from "next/link";
 
 interface DeviceInfoRowProps {
-  device: DeviceInfo;
+  device: DeviceInfoDTO;
 }
 
 export function DeviceInfoRow({ device }: DeviceInfoRowProps): React.JSX.Element {

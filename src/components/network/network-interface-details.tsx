@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 
-import {type GetAllInterfacesParams, type InterfaceInfo} from "@/generated/model";
+import {type GetAllInterfacesParams, type InterfaceInfoDTO} from "@/generated/model";
 import {useGetAllInterfaces} from "@/generated/server-interface-management/server-interface-management";
 import Typography from "@mui/material/Typography";
 import {NetworkInterfaceTable} from "@/components/network/network-interface-table";
@@ -41,6 +41,6 @@ export default function NetworkInterfaceDetails(): React.JSX.Element {
   );
 }
 
-function applyPagination(rows: InterfaceInfo[], page: number, rowsPerPage: number): InterfaceInfo[] {
+function applyPagination(rows: InterfaceInfoDTO[], page: number, rowsPerPage: number): InterfaceInfoDTO[] {
   return rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 }

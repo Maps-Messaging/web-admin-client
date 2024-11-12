@@ -11,7 +11,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
-import {type InterfaceInfo} from "@/generated/model";
+import {type InterfaceInfoDTO} from "@/generated/model";
 import {NetworkInterfaceRow} from "@/components/network/network-interface-row";
 
 function noop(): void {
@@ -21,7 +21,7 @@ function noop(): void {
 interface NetworkInterfaceTableProps {
   count?: number;
   page?: number;
-  rows?: InterfaceInfo[];
+  rows?: InterfaceInfoDTO[];
   rowsPerPage?: number;
 }
 
