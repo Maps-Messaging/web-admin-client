@@ -59,7 +59,7 @@ export function NetworkIntegrationRow({
         <Typography variant="subtitle2">{networkInfo.config?.protocols}</Typography>
       </TableCell>
       <TableCell>
-        { formatNumberWithPowerUnit(networkInfo.config?.protocolConfigs?.length || 0)}
+        { formatNumberWithPowerUnit(networkInfo.config?.linkConfigs?.length || 0)}
       </TableCell>
       <TableCell>
         {formatNumberWithPowerUnit(data?.data.messagesReceived || 0)}
