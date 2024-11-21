@@ -59,19 +59,23 @@ export function NetworkInterfaceRow({
         <Typography variant="subtitle2">{networkInfo.host}:{networkInfo.port}</Typography>
       </TableCell>
       <TableCell>
-        { formatNumberWithPowerUnit(data?.data.connections || 0)}
+        { data?.data.connections || 0}
       </TableCell>
       <TableCell>
-        {formatNumberWithPowerUnit(data?.data.messagesReceived || 0)}
+        {formatNumberWithPowerUnit(data?.data.totalMessagesReceived || 0)}<br/>
+        {formatNumberWithPowerUnit(data?.data.messagesReceived || 0)} /sec
       </TableCell>
       <TableCell>
-        {formatNumberWithPowerUnit(data?.data.messagesSent || 0)}
+        {formatNumberWithPowerUnit(data?.data.totalMessagesSent || 0)}<br/>
+        {formatNumberWithPowerUnit(data?.data.messagesSent || 0)} /sec
       </TableCell>
       <TableCell>
-        {formatNumberWithPowerUnit(data?.data.bytesReceived || 0)}
+        {formatNumberWithPowerUnit(data?.data.totalBytesReceived || 0)}<br/>
+        {formatNumberWithPowerUnit(data?.data.bytesReceived || 0)} /sec
       </TableCell>
       <TableCell>
-        {formatNumberWithPowerUnit(data?.data.bytesSent || 0)}
+        {formatNumberWithPowerUnit(data?.data.totalBytesSent || 0)}<br/>
+        {formatNumberWithPowerUnit(data?.data.bytesSent || 0)} /sec
       </TableCell>
       <TableCell>
         <EndPointActionController name={networkInfo.name||''} />

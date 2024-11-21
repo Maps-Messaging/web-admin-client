@@ -24,6 +24,8 @@ import { formatNumberWithPowerUnit } from "@/helper-functions";
 import TableRow from "@mui/material/TableRow";
 import {useGetIntegrationStatus} from "@/generated/server-integration-management/server-integration-management";
 import Link from "next/link";
+import EndPointActionController from "@/components/network/endPoint/end-point-action-controller";
+import ConnectionActionController from "@/components/integration/connection/connection-action-controller";
 
 interface NetworkIntegrationRowProps {
   key: string;
@@ -75,6 +77,9 @@ export function NetworkIntegrationRow({
       </TableCell>
       <TableCell>
         <Typography variant="subtitle2">{data?.data.state}</Typography>
+      </TableCell>
+      <TableCell>
+        <ConnectionActionController name={data?.data.interfaceName ||''} />
       </TableCell>
     </TableRow>
   );

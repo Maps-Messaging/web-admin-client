@@ -63,6 +63,7 @@ export function NetworkIntegrationTable({
               <TableCell>Bytes In</TableCell>
               <TableCell>Bytes Out</TableCell>
               <TableCell>State</TableCell>
+              <TableCell>Control</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
