@@ -1,3 +1,4 @@
+'use client'
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
  * Copyright [ 2024 - 2024 ] [Maps Messaging B.V.]
@@ -24,17 +25,19 @@ import Typography from '@mui/material/Typography';
 import { config } from '@/config';
 import { Notifications } from '@/components/dashboard/settings/notifications';
 import { UpdatePasswordForm } from '@/components/dashboard/settings/update-password-form';
+import MessagingServerConfig from "@/components/server/messaging-server-config";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
-export const metadata = { title: `Settings | Dashboard | ${config.site.name}` } satisfies Metadata;
-
+const queryClient = new QueryClient();
 export default function Page(): React.JSX.Element {
   return (
-    <Stack spacing={3}>
-      <div>
-        <Typography variant="h4">Settings</Typography>
-      </div>
-      <Notifications />
-      <UpdatePasswordForm />
-    </Stack>
+    <QueryClientProvider client={queryClient}>
+      <Stack spacing={3}>
+        <div>
+          <Typography variant="h4">Server Configurations</Typography>
+        </div>
+        <MessagingServerConfig />
+      </Stack>
+    </QueryClientProvider>
   );
 }
