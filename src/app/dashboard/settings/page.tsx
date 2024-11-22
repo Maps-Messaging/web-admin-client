@@ -27,6 +27,7 @@ import { Notifications } from '@/components/dashboard/settings/notifications';
 import { UpdatePasswordForm } from '@/components/dashboard/settings/update-password-form';
 import MessagingServerConfig from "@/components/server/messaging-server-config";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import ServerConfig from "@/components/server/server-config";
 
 const queryClient = new QueryClient();
 export default function Page(): React.JSX.Element {
@@ -36,7 +37,7 @@ export default function Page(): React.JSX.Element {
         <div>
           <Typography variant="h4">Server Configurations</Typography>
         </div>
-        <MessagingServerConfig />
+        <ServerConfig />
       </Stack>
     </QueryClientProvider>
   );

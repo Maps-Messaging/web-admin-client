@@ -31,37 +31,20 @@ import {
   updateServerConfig,
   useGetServerConfig,
 } from "@/generated/server-config-management/server-config-management";
-import {MessageDaemonConfigDTO} from "@/generated/model";
+import { MessageDaemonConfigDTO} from "@/generated/model";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
-const MessagingServerConfig: React.FC = () => {
 
-  const { data, error, isLoading } = useGetServerConfig({
-    query:{
-      refetchInterval: 60000
-    }
-  });
-  // Fallback for initial values to avoid issues with undefined data
-  const initialConfig = data?.data || {
-    delayedPublishInterval: 0,
-    sessionPipeLines: 1,
-    transactionExpiry: 0,
-    transactionScan: 0,
-    compressionName: '',
-    compressMessageMinSize: 0,
-    enableResourceStatistics: false,
-    enableSystemTopics: false,
-    enableSystemStatusTopics: false,
-    enableSystemTopicAverages: false,
-    enableJMX: false,
-    enableJMXStatistics: false,
-    tagMetaData: false,
-    latitude: 0.0,
-    longitude: 0.0,
-  };
+interface MessagingServerConfigProps {
+  config: MessageDaemonConfigDTO;
+}
+
+export function  MessagingServerConfig({config}: MessagingServerConfigProps): React.JSX.Element {
+
+  const initialConfig = config;
 
   const formik = useFormik({
     initialValues: initialConfig,

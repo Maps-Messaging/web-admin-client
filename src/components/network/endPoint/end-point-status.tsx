@@ -75,17 +75,17 @@ export function EndPointStatus ({
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
-          <DataGraph name='Bytes Read' data={bytesReceived} />
+          <DataGraph name='Bytes Read/sec' data={bytesReceived} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <DataGraph name='Bytes Sent' data={bytesSent} />
+          <DataGraph name='Bytes Sent/sec' data={bytesSent} />
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <DataGraph name='Msg Received' data={messagesReceived} />
+          <DataGraph name='Msg Received/sec' data={messagesReceived} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <DataGraph name='Msg Sent' data={messagesSent} />
+          <DataGraph name='Msg Sent/sec' data={messagesSent} />
         </Grid>
         <Grid item xs={12} md={6}>
           <DataGraph name='Connections' data={connections} />
