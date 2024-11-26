@@ -31,7 +31,8 @@ const ServerConfig: React.FC = () => {
       refetchInterval: 60000
     }
   });
-  if(isLoading)return (<div></div>);
+  if(isLoading) return (<div></div>);
+  if(error) return (<div>Unable to load server config</div>);
   return (
     <div>
       <ServerControl/>

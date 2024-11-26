@@ -22,18 +22,15 @@ import React, {useEffect, useState} from 'react';
 import {useGetBuildInfo} from "@/generated/server-management/server-management";
 import Container from "@mui/material/Container";
 import {Grid} from "@mui/material";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
 import DataGraph from "@/components/graphs/data-graph";
-import {formatUptime} from "@/helper-functions";
 import DualNumberGraph from "@/components/graphs/dual-number-graph";
+import {ServerTopLevelStatus} from "@/components/server/server-top-level-status";
 
 export function ServerDetails () :  React.JSX.Element {
 
   const { data, error, isLoading } = useGetBuildInfo({
     query:{
-      refetchInterval: 2000
+      refetchInterval: 5000
     }
   });
 
@@ -67,47 +64,7 @@ export function ServerDetails () :  React.JSX.Element {
 
   return (
     <Container maxWidth="lg">
-      <Typography variant="h3" component="h1" gutterBottom>
-        Server : {data?.data.serverName}
-      </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Server Overview</Typography>
-              <Typography variant="body2">Version: {data?.data.version}</Typography>
-              <Typography variant="body2">Build Date: {data?.data.buildDate}</Typography>
-              <Typography variant="body2">Uptime: {formatUptime(data?.data.uptime || 0)}</Typography>
-              <Typography variant="body2">CPU Time: {formatUptime(data?.data.cpuTime || 0)}</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Memory usage */}
-        <Grid item xs={12} sm={6} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Memory Usage</Typography>
-              <Typography variant="body2">Total Memory: {((data?.data.totalMemory || 0) / 1024 / 1024).toFixed(0)} MB</Typography>
-              <Typography variant="body2">Free Memory: {((data?.data.freeMemory|| 0) / 1024 / 1024).toFixed(0)} MB</Typography>
-              <Typography variant="body2">Max Memory: {((data?.data.maxMemory|| 0) / 1024 / 1024).toFixed(0)} MB</Typography>
-              <Typography variant="body2">&nbsp;</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Thread States</Typography>
-              {Object.entries(data?.data.threadState || {}).map(([state, count]) => (
-                <Typography key={state} variant="body2">{state}: {count}</Typography>
-              ))}
-              <Typography variant="body2">Total Threads: {data?.data.numberOfThreads}</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      <ServerTopLevelStatus />
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <DualNumberGraph name1='Published' data1={published} name2='No Interest' data2={noInterest} />

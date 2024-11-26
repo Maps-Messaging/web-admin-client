@@ -18,14 +18,9 @@
  */
 
 import * as React from 'react';
-import type { Metadata } from 'next';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import { config } from '@/config';
-import { Notifications } from '@/components/dashboard/settings/notifications';
-import { UpdatePasswordForm } from '@/components/dashboard/settings/update-password-form';
-import MessagingServerConfig from "@/components/server/messaging-server-config";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import ServerConfig from "@/components/server/server-config";
 

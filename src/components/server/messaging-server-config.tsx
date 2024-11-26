@@ -27,10 +27,7 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
-import {
-  updateServerConfig,
-  useGetServerConfig,
-} from "@/generated/server-config-management/server-config-management";
+import {updateServerConfig} from "@/generated/server-config-management/server-config-management";
 import { MessageDaemonConfigDTO} from "@/generated/model";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -60,8 +57,8 @@ export function  MessagingServerConfig({config}: MessagingServerConfigProps): Re
       latitude: Yup.number().min(-90).max(90).required('Required'),
       longitude: Yup.number().min(-180).max(180).required('Required'),
     }),
-    onSubmit: (values) => {
-      updateServerConfig(values);
+    onSubmit: async (values) => {
+      await updateServerConfig(values); // Await the promise
     },
   });
 
