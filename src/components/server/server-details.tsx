@@ -19,7 +19,7 @@
 'use client'
 
 import React, {useEffect, useState} from 'react';
-import {useGetBuildInfo} from "@/generated/server-management/server-management";
+import {useGetBuildInfo, useGetStats} from "@/generated/server-management/server-management";
 import Container from "@mui/material/Container";
 import {Grid} from "@mui/material";
 import DataGraph from "@/components/graphs/data-graph";
@@ -28,40 +28,62 @@ import {ServerTopLevelStatus} from "@/components/server/server-top-level-status"
 
 export function ServerDetails () :  React.JSX.Element {
 
-  const { data, error, isLoading } = useGetBuildInfo({
-    query:{
-      refetchInterval: 5000
-    }
+  const { data: statsData, error: statsError, isLoading: statsLoading } = useGetStats({
+    query: {
+      refetchInterval: 5000,
+    },
+  });
+
+  // Fetch build info
+  const { data: buildInfoData, error: buildInfoError, isLoading: buildInfoLoading } = useGetBuildInfo({
+    query: {
+      refetchInterval: 5000,
+    },
   });
 
   const [cpuTime, setCpuTime] = useState<number[]>([]);
   const [freeMemoryData, setFreeMemoryData] = useState<number[]>([]);
-  const [published, setPublished] = useState<number[]>([]);
   const [noInterest, setNoInterest] = useState<number[]>([]);
+  const [published, setPublished] = useState<number[]>([]);
   const [delivered, setDelivered] = useState<number[]>([]);
   const [retrieved, setRetrieved] = useState<number[]>([]);
 
   // Update arrays whenever new data is fetched
   useEffect(() :void => {
-    if (data) {
+    if (statsData) {
       const updateArray = (prev: number[], newValue: number | undefined) => {
         if (typeof newValue !== 'number') return prev;  // skip update if newValue is undefined or invalid
         const newArray = [...prev, newValue];
         return newArray.length > 120 ? newArray.slice(newArray.length - 120) : newArray;
       };
-      setCpuTime(prev => updateArray(prev, data.data.cpuPercent));
-      setFreeMemoryData(prev => updateArray(prev, data.data.freeMemory));
-      setPublished(prev => updateArray(prev, data.data.serverStatistics?.publishedPerSecond || 0));
-      setNoInterest(prev => updateArray(prev,data.data.serverStatistics?.noInterestPerSecond || 0))
-      setDelivered(prev => updateArray(prev,data.data.serverStatistics?.deliveredPerSecond || 0))
-      setRetrieved(prev => updateArray(prev,data.data.serverStatistics?.retrievedPerSecond || 0))
+      setNoInterest(prev => updateArray(prev, statsData.data.data?.noInterestPerSecond || 0));
+      setPublished(prev => updateArray(prev, statsData.data.data?.publishedPerSecond || 0));
+      setDelivered(prev => updateArray(prev,statsData.data.data?.deliveredPerSecond || 0))
+      setRetrieved(prev => updateArray(prev,statsData.data.data?.retrievedPerSecond || 0))
     }
-  }, [data]);
+  }, [statsData]);
 
-  if (isLoading) return <div>Loading name...</div>;
-  if (error) return <div>Error loading name: {error.message}</div>;
+  useEffect(() :void => {
+    if (buildInfoData) {
+      const updateArray = (prev: number[], newValue: number | undefined) => {
+        if (typeof newValue !== 'number') return prev;  // skip update if newValue is undefined or invalid
+        const newArray = [...prev, newValue];
+        return newArray.length > 120 ? newArray.slice(newArray.length - 120) : newArray;
+      };
+      setCpuTime(prev => updateArray(prev, buildInfoData.data.cpuPercent));
+      setFreeMemoryData(prev => updateArray(prev, buildInfoData.data.freeMemory));
+    }
+  }, [buildInfoData]);
 
 
+  // Display loading state if either query is loading
+  if (statsLoading || buildInfoLoading) return <div>Loading data...</div>;
+
+  // Display error if either query fails
+  if (statsError || buildInfoError) {
+    const errorMessage = statsError?.message || buildInfoError?.message;
+    return <div>Error loading data: {errorMessage}</div>;
+  }
   return (
     <Container maxWidth="lg">
       <ServerTopLevelStatus />

@@ -18,17 +18,60 @@
 
 'use client'
 
-import React from 'react';
+import React, {useState} from 'react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import MessagingServerDiagram from "@/components/server/messaging-server-diagram";
+import {ServerTopLevelStatus} from "@/components/server/server-top-level-status";
+import {Tab, Tabs} from "@mui/material";
+import Box from "@mui/material/Box";
+import ConnectionDetails from "@/components/connections/connection-details";
 
 const queryClient = new QueryClient();
-
+const tabs = [
+  {
+    label: 'Connections',
+    value: 'connections'
+  },
+  {
+    label: 'Destinations',
+    value: 'destinations'
+  },
+  {
+    label: 'Overview',
+    value: 'overview'
+  }
+]
 export default function StatusPage (): React.JSX.Element {
+  const [currentTab, setCurrentTab] = useState<string>('overview');
+
+  const handleTabsChange = (event: React.SyntheticEvent, value: string): void => {
+    setCurrentTab(value);
+  };
 
   return (
     <QueryClientProvider client={queryClient}>
-      <MessagingServerDiagram/>
+      <ServerTopLevelStatus />
+      <Tabs
+        indicatorColor="primary"
+        onChange={handleTabsChange}
+        scrollButtons="auto"
+        sx={{px: 3}}
+        textColor="primary"
+        value={currentTab}
+        variant="scrollable"
+      >
+        {tabs.map((tab) => (
+          <Tab
+            key={tab.value}
+            label={tab.label}
+            value={tab.value}
+          />
+        ))}
+      </Tabs>
+      <Box sx={{mt: 3}}>
+        {currentTab === 'connections' && <ConnectionDetails />}
+        {currentTab === 'overview' && <MessagingServerDiagram/>}
+      </Box>
     </QueryClientProvider>
   );
 }
