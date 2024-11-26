@@ -25,6 +25,7 @@ import {ServerTopLevelStatus} from "@/components/server/server-top-level-status"
 import {Tab, Tabs} from "@mui/material";
 import Box from "@mui/material/Box";
 import ConnectionDetails from "@/components/connections/connection-details";
+import {NameSpaceTable} from "@/components/destination/namespace-table";
 
 const queryClient = new QueryClient();
 const tabs = [
@@ -70,6 +71,7 @@ export default function StatusPage (): React.JSX.Element {
       </Tabs>
       <Box sx={{mt: 3}}>
         {currentTab === 'connections' && <ConnectionDetails />}
+        {currentTab === 'destinations' && <NameSpaceTable />}
         {currentTab === 'overview' && <MessagingServerDiagram/>}
       </Box>
     </QueryClientProvider>
