@@ -1,21 +1,3 @@
-/*
- * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2024 ] [Maps Messaging B.V.]
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
 'use client';
 
 import * as React from 'react';
@@ -28,9 +10,10 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import TableSortLabel from '@mui/material/TableSortLabel';
 
-import {useGetAllDestinations} from "@/generated/destination-management/destination-management";
-import {DestinationRow} from "@/components/destination/destination-row";
+import { useGetAllDestinations } from "@/generated/destination-management/destination-management";
+import { DestinationRow } from "@/components/destination/destination-row";
 
 function noop(): void {
   // do nothing
@@ -43,20 +26,28 @@ interface NameSpaceTableProps {
 }
 
 export function NameSpaceTable({
-                                        count = 0,
-                                        page = 0,
-                                        rowsPerPage = 0,
-                                      }: NameSpaceTableProps): React.JSX.Element {
+                                 count = 0,
+                                 page = 0,
+                                 rowsPerPage = 20, // Default to 20 rows per page
+                               }: NameSpaceTableProps): React.JSX.Element {
+  const [sortBy, setSortBy] = React.useState<string>('Name');
 
-  const filter = {
-    filter: ''
-  }
+  const params = {
+    filter: '',
+    size: rowsPerPage,
+    sortBy,
+  };
 
-  const { data, error, isLoading } = useGetAllDestinations(filter,{
-    query:{
-      refetchInterval: 10000
-    }
+  const { data, error, isLoading, refetch } = useGetAllDestinations(params, {
+    query: {
+      refetchInterval: 10000,
+    },
   });
+
+  const handleSort = async (column: string): Promise<void> => {
+    setSortBy(column);
+    await refetch(); // Await the promise returned by refetch
+  };
 
   if (isLoading) return <div>Loading name...</div>;
   if (error) return <div>Error loading name: {error.message}</div>;
@@ -67,32 +58,93 @@ export function NameSpaceTable({
         <Table sx={{ minWidth: '800px' }}>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === 'Name'}
+                  direction="asc" // Server should handle direction if needed
+                  onClick={() => {
+                    void handleSort('Name'); // Explicitly ignore the promise
+                  }}
+                >
+                  Name
+                </TableSortLabel>
+              </TableCell>
               <TableCell>Type</TableCell>
-              <TableCell>Published</TableCell>
-              <TableCell>Delivered</TableCell>
-              <TableCell>Stored</TableCell>
-              <TableCell>Pending</TableCell>
-
-              <TableCell>Delayed</TableCell>
-              <TableCell>Expired</TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === 'Published'}
+                  direction="asc"
+                  onClick={() => {
+                    void handleSort('Published');
+                  }}
+                >
+                  Published
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === 'Delivered'}
+                  direction="asc"
+                  onClick={() => {
+                    void handleSort('Delivered');
+                  }}
+                >
+                  Delivered
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === 'Stored'}
+                  direction="asc"
+                  onClick={() => {
+                    void handleSort('Stored');
+                  }}
+                >
+                  Stored
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === 'Pending'}
+                  direction="asc"
+                  onClick={() => {
+                    void handleSort('Pending');
+                  }}
+                >
+                  Pending
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === 'Delayed'}
+                  direction="asc"
+                  onClick={() => {
+                    void handleSort('Delayed');
+                  }}
+                >
+                  Delayed
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === 'Expired'}
+                  direction="asc"
+                  onClick={() => {
+                    void handleSort('Expired');
+                  }}
+                >
+                  Expired
+                </TableSortLabel>
+              </TableCell>
               <TableCell>Read Time(ns)</TableCell>
               <TableCell>Write Time(ns)</TableCell>
               <TableCell>Delete Time(ns)</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {data?.data.data?.map((destination) => {
-              if (destination?.name) {
-                return (
-                  <DestinationRow
-                    key={destination.name}
-                    destination={destination}
-                  />
-                );
-              }
-              return null; // Explicitly return null when the condition fails.
-            })}
+            {data?.data.data?.map((destination): React.JSX.Element => (
+              <DestinationRow key={destination.name} destination={destination} />
+            ))}
           </TableBody>
         </Table>
       </Box>
@@ -104,7 +156,7 @@ export function NameSpaceTable({
         onRowsPerPageChange={noop}
         page={page}
         rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[5, 10, 20, 50]}
       />
     </Card>
   );
