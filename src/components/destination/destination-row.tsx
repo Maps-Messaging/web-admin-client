@@ -17,12 +17,11 @@
  */
 
 'use client';
-import type {DestinationDTO} from "@/generated/model";
 import * as React from "react";
 import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
 import TableRow from "@mui/material/TableRow";
-import {useGetDestinationStats} from "@/generated/destination-management/destination-management";
+import {DestinationDTO} from "@/generated/model";
 
 interface DestinationRowProps {
   key: string;
@@ -33,19 +32,6 @@ export function DestinationRow({
                                  destination,
                                       key=''
                                     }: DestinationRowProps): React.JSX.Element {
-
-  const lookup={
-    destinationName:destination.name
-  }
-  const { data, error, isLoading } = useGetDestinationStats(lookup,{
-    query:{
-      refetchInterval: 10000
-    }
-  });
-
-  if (isLoading) return <div>Loading topic...</div>;
-  if (error) return <div>Error loading topic: {error.message}</div>;
-
 
   return (
     <TableRow
@@ -58,31 +44,31 @@ export function DestinationRow({
         <Typography variant="subtitle2">{destination?.type ||'topic'}</Typography>
       </TableCell>
       <TableCell>
-        {data?.data.storedMessages || 0}
+        {destination?.publishedMessages || 0}
+      </TableCell>
+      <TableCell>
+        {destination?.deliveredMessages || 0}
+      </TableCell>
+      <TableCell>
+        {destination?.storedMessages || 0}
       </TableCell>
       <TableCell>
         {destination?.pendingMessages || 0}
       </TableCell>
       <TableCell>
-        {data?.data.publishedMessages || 0}
+        {destination?.delayedMessages || 0}
       </TableCell>
       <TableCell>
-        {data?.data.deliveredMessages || 0}
+        {destination?.expiredMessages || 0}
       </TableCell>
       <TableCell>
-        {data?.data.delayedMessages || 0}
+        {destination?.readTimeAveNs || 0}
       </TableCell>
       <TableCell>
-        {data?.data.expiredMessages || 0}
+        {destination?.writeTimeAveNs || 0}
       </TableCell>
       <TableCell>
-        {data?.data.readTimeAveNs || 0}
-      </TableCell>
-      <TableCell>
-        {data?.data.writeTimeAveNs || 0}
-      </TableCell>
-      <TableCell>
-        {data?.data.deleteTimeAveNs || 0}
+        {destination?.deleteTimeAveNs || 0}
       </TableCell>
     </TableRow>
   );

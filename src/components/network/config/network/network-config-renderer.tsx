@@ -20,13 +20,13 @@
 import React from 'react';
 
 import {
-  EndPointConfig,
-  UdpConfig,
-  TcpConfig,
-  TlsConfig,
-  DtlsConfig,
-  SerialConfig,
-  LoRaConfig
+  EndPointConfigDTO,
+  UdpConfigDTO,
+  TcpConfigDTO,
+  TlsConfigDTO,
+  DtlsConfigDTO,
+  SerialConfigDTO,
+  LoRaConfigDTO
 } from "@/generated/model";
 import UdpConfigComponent from "@/components/network/config/network/udp-config-component";
 import TcpConfigComponent from "@/components/network/config/network/tcp-config-component";
@@ -36,32 +36,32 @@ import SerialConfigComponent from "@/components/network/config/network/serial-co
 import LoRaConfigComponent from "@/components/network/config/network/lora-config-renderer"; // Adjust import path as necessary
 
 interface InterfaceConfigRendererProps {
-  config: EndPointConfig;
-  onChange: (updatedConfig: EndPointConfig) => void;
+  config: EndPointConfigDTO;
+  onChange: (updatedConfig: EndPointConfigDTO) => void;
 }
 
 // Define type guards for each specific config type
-function isUdpConfig(config: EndPointConfig): config is UdpConfig {
+function isUdpConfig(config: EndPointConfigDTO): config is UdpConfigDTO {
   return config.type === 'udp';
 }
 
-function isTcpConfig(config: EndPointConfig): config is TcpConfig {
+function isTcpConfig(config: EndPointConfigDTO): config is TcpConfigDTO {
   return config.type === 'tcp';
 }
 
-function isTlsConfig(config: EndPointConfig): config is TlsConfig {
-  return config.type === 'tls';
+function isTlsConfig(config: EndPointConfigDTO): config is TlsConfigDTO {
+  return config.type === 'ssl';
 }
 
-function isDtlsConfig(config: EndPointConfig): config is DtlsConfig {
+function isDtlsConfig(config: EndPointConfigDTO): config is DtlsConfigDTO {
   return config.type === 'dtls';
 }
 
-function isSerialConfig(config: EndPointConfig): config is SerialConfig {
+function isSerialConfig(config: EndPointConfigDTO): config is SerialConfigDTO {
   return config.type === 'serial';
 }
 
-function isLoraConfig(config: EndPointConfig): config is LoRaConfig {
+function isLoraConfig(config: EndPointConfigDTO): config is LoRaConfigDTO {
   return config.type === 'lora';
 }
 

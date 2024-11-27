@@ -54,7 +54,7 @@ export function NameSpaceTable({
 
   const { data, error, isLoading } = useGetAllDestinations(filter,{
     query:{
-      refetchInterval: 60000
+      refetchInterval: 10000
     }
   });
 
@@ -69,10 +69,10 @@ export function NameSpaceTable({
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>Type</TableCell>
-              <TableCell>Stored</TableCell>
-              <TableCell>Pending</TableCell>
               <TableCell>Published</TableCell>
               <TableCell>Delivered</TableCell>
+              <TableCell>Stored</TableCell>
+              <TableCell>Pending</TableCell>
 
               <TableCell>Delayed</TableCell>
               <TableCell>Expired</TableCell>

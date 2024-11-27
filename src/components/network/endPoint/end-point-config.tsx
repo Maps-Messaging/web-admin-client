@@ -28,7 +28,7 @@ import {
   useGetInterface,
 } from "@/generated/server-interface-management/server-interface-management";
 import ProtocolConfigRenderer from "@/components/network/config/protocol/protocol-config-renderer";
-import { EndPointConfig, ProtocolConfig } from "@/generated/model";
+import { EndPointConfigDTO, ProtocolConfigDTO } from "@/generated/model";
 import { useEffect, useState } from "react";
 import NetworkConfigRenderer from "@/components/network/config/network/network-config-renderer";
 
@@ -46,8 +46,8 @@ export default function EndPointConfiguration({
     }
   });
 
-  const [deviceConfig, setDeviceConfig] = useState<EndPointConfig | null>(null);
-  const [protocolConfigs, setProtocolConfigs] = useState<ProtocolConfig[]>([]);
+  const [deviceConfig, setDeviceConfig] = useState<EndPointConfigDTO | null>(null);
+  const [protocolConfigs, setProtocolConfigs] = useState<ProtocolConfigDTO[]>([]);
 
   useEffect(() => {
     if (data?.data.config) {
@@ -59,11 +59,11 @@ export default function EndPointConfiguration({
   if (isLoading) return <div>Loading configuration...</div>;
   if (error) return <div>Error loading configuration: {error.message}</div>;
 
-  const handleDeviceConfigChange = (updatedConfig: EndPointConfig) => {
+  const handleDeviceConfigChange = (updatedConfig: EndPointConfigDTO) => {
     setDeviceConfig(updatedConfig);
   };
 
-  const handleProtocolConfigChange = (updatedConfig: ProtocolConfig) => {
+  const handleProtocolConfigChange = (updatedConfig: ProtocolConfigDTO) => {
     setProtocolConfigs((prevConfigs) =>
       prevConfigs.map((config) =>
         config.type === updatedConfig.type ? updatedConfig : config

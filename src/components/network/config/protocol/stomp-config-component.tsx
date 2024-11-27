@@ -24,11 +24,11 @@ import {
   Button,
   TextField,
 } from '@mui/material';
-import { StompConfig } from '@/generated/model'; // Adjust import to match the path to your generated types
+import { StompConfigDTO } from '@/generated/model'; // Adjust import to match the path to your generated types
 
 interface StompConfigComponentProps {
-  config: StompConfig;
-  onChange: (updatedConfig: StompConfig) => void;
+  config: StompConfigDTO;
+  onChange: (updatedConfig: StompConfigDTO) => void;
 }
 
 const StompConfigComponent: React.FC<StompConfigComponentProps> = ({ config, onChange }) => {

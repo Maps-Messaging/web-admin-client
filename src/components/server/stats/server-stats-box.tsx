@@ -20,11 +20,11 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import React from "react";
-import {StatusMessageDTO} from "@/generated/model";
+import {type ServerInfoDTO} from "@/generated/model";
 import {useGetStats} from "@/generated/server-management/server-management";
 
 interface ServerStatsBoxProps {
-  info: StatusMessageDTO;
+  info: ServerInfoDTO;
 }
 
 export function ServerStatsBox ({

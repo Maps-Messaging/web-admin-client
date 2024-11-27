@@ -20,10 +20,10 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import React from "react";
-import {StatusMessageDTO} from "@/generated/model";
+import {type ServerInfoDTO} from "@/generated/model";
 
 interface ServerThreadUsageBoxProps {
-  data: StatusMessageDTO;
+  data: ServerInfoDTO;
 }
 
 export function ServerThreadUsageBox ({

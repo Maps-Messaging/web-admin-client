@@ -21,10 +21,10 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import {formatUptime} from "@/helper-functions";
 import React from "react";
-import {StatusMessageDTO} from "@/generated/model";
+import {type ServerInfoDTO} from "@/generated/model";
 
 interface ServerOverviewBoxProps {
-  data: StatusMessageDTO;
+  data: ServerInfoDTO;
 }
 
 export function ServerOverviewBox ({

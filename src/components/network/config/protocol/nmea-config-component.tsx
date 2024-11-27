@@ -17,9 +17,9 @@
  */
 
 import React from 'react';
-import {NmeaConfig} from "@/generated/model";
+import {NmeaConfigDTO} from "@/generated/model";
 
-const NmeaConfigComponent: React.FC<{ config: NmeaConfig }> = ({ config }) => {
+const NmeaConfigComponent: React.FC<{ config: NmeaConfigDTO }> = ({ config }) => {
   return <div>NMEA Config: {config.type}</div>;
 };
 

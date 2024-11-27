@@ -20,12 +20,12 @@ import React from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { Box, Button, TextField } from '@mui/material';
-import {UdpConfig} from "@/generated/model";
+import {UdpConfigDTO} from "@/generated/model";
 
 
 interface UdpConfigComponentProps {
-  config: UdpConfig;
-  onChange: (updatedConfig: UdpConfig) => void;
+  config: UdpConfigDTO;
+  onChange: (updatedConfig: UdpConfigDTO) => void;
 }
 
 const UdpConfigComponent: React.FC<UdpConfigComponentProps> = ({ config, onChange }) => {

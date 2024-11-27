@@ -17,9 +17,9 @@
  */
 
 import React from 'react';
-import {MqttSnConfig} from "@/generated/model";
+import {MqttSnConfigDTO} from "@/generated/model";
 
-const MqttSnConfigComponent: React.FC<{ config: MqttSnConfig }> = ({ config }) => {
+const MqttSnConfigComponent: React.FC<{ config: MqttSnConfigDTO }> = ({ config }) => {
   return <div>Mqtt-SN Config: {config.type}</div>;
 };
 

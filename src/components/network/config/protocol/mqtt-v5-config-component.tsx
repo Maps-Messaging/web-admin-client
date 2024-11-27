@@ -26,11 +26,11 @@ import {
   FormControlLabel,
   TextField,
 } from '@mui/material';
-import {MqttV5Config} from "@/generated/model";
+import {MqttV5ConfigDTO} from "@/generated/model";
 
 interface MqttV5ConfigComponentProps {
-  config: MqttV5Config;
-  onChange: (updatedConfig: MqttV5Config) => void;
+  config: MqttV5ConfigDTO;
+  onChange: (updatedConfig: MqttV5ConfigDTO) => void;
 }
 
 const MqttV5ConfigComponent: React.FC<MqttV5ConfigComponentProps> = ({ config, onChange }) => {

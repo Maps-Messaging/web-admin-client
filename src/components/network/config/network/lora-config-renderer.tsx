@@ -20,11 +20,11 @@ import React from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { Box, Button, TextField, Typography, FormControlLabel, Checkbox } from '@mui/material';
-import { LoRaConfig } from '@/generated/model'; // Adjust the import path as necessary
+import { LoRaConfigDTO } from '@/generated/model'; // Adjust the import path as necessary
 
 interface LoRaConfigComponentProps {
-  config: LoRaConfig;
-  onChange: (updatedConfig: LoRaConfig) => void;
+  config: LoRaConfigDTO;
+  onChange: (updatedConfig: LoRaConfigDTO) => void;
 }
 
 const LoRaConfigComponent: React.FC<LoRaConfigComponentProps> = ({ config, onChange }) => {

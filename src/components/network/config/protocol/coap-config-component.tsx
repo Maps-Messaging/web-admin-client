@@ -18,9 +18,9 @@
 
 // CoapConfigComponent.tsx
 import React from 'react';
-import {CoapConfig} from "@/generated/model";
+import {CoapConfigDTO} from "@/generated/model";
 
-const CoapConfigComponent: React.FC<{ config: CoapConfig }> = ({ config }) => {
+const CoapConfigComponent: React.FC<{ config: CoapConfigDTO}> = ({ config }) => {
   return <div>Coap Config: {config.type}</div>;
 };
 

@@ -17,9 +17,9 @@
  */
 
 import React from 'react';
-import {SemtechConfig} from "@/generated/model";
+import {SemtechConfigDTO} from "@/generated/model";
 
-const SemtechConfigComponent: React.FC<{ config: SemtechConfig }> = ({ config }) => {
+const SemtechConfigComponent: React.FC<{ config: SemtechConfigDTO }> = ({ config }) => {
   return <div>Semtech Config: {config.type}</div>;
 };
 

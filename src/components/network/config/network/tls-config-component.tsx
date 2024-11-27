@@ -20,11 +20,11 @@ import React from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { Box, Button, TextField, FormControlLabel, Checkbox, Typography } from '@mui/material';
-import { TlsConfig } from '@/generated/model'; // Adjust import path as necessary
+import { TlsConfigDTO } from '@/generated/model'; // Adjust import path as necessary
 
 interface TlsConfigComponentProps {
-  config: TlsConfig;
-  onChange: (updatedConfig: TlsConfig) => void;
+  config: TlsConfigDTO;
+  onChange: (updatedConfig: TlsConfigDTO) => void;
 }
 
 const TlsConfigComponent: React.FC<TlsConfigComponentProps> = ({ config, onChange }) => {

@@ -26,11 +26,11 @@ import {
   FormControlLabel,
   TextField,
 } from '@mui/material';
-import {MqttConfig} from "@/generated/model";
+import {MqttConfigDTO} from "@/generated/model";
 
 interface MqttConfigComponentProps {
-  config: MqttConfig;
-  onChange: (updatedConfig: MqttConfig) => void;
+  config: MqttConfigDTO;
+  onChange: (updatedConfig: MqttConfigDTO) => void;
 }
 
 const MqttConfigComponent: React.FC<MqttConfigComponentProps> = ({ config, onChange }) => {

@@ -20,11 +20,11 @@ import React from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { Box, Button, TextField, MenuItem, Typography } from '@mui/material';
-import { SerialConfig } from '@/generated/model';
+import {SerialConfigDTO, SerialConfigDTOAllOfFlowControl} from '@/generated/model';
 
 interface SerialConfigComponentProps {
-  config: SerialConfig;
-  onChange: (updatedConfig: SerialConfig) => void;
+  config: SerialConfigDTO;
+  onChange: (updatedConfig: SerialConfigDTO) => void;
 }
 
 const SerialConfigComponent: React.FC<SerialConfigComponentProps> = ({ config, onChange }) => {
@@ -36,7 +36,7 @@ const SerialConfigComponent: React.FC<SerialConfigComponentProps> = ({ config, o
       dataBits: config.dataBits || 8,
       stopBits: config.stopBits || '1',
       parity: config.parity || 'n',
-      flowControl: config.flowControl || 0,
+      flowControl: config.flowControl ?? SerialConfigDTOAllOfFlowControl.NUMBER_0,
       readTimeOut: config.readTimeOut || 1000,
       writeTimeOut: config.writeTimeOut || 1000,
       bufferSize: config.bufferSize || 1024,
@@ -47,7 +47,7 @@ const SerialConfigComponent: React.FC<SerialConfigComponentProps> = ({ config, o
       dataBits: Yup.number().min(5).max(8).required('Required'),
       stopBits: Yup.mixed().oneOf(['1', '1.5', '2'], 'Invalid stop bit value').required('Required'),
       parity: Yup.mixed().oneOf(['o', 'e', 'm', 's', 'n'], 'Invalid parity option').required('Required'),
-      flowControl: Yup.number().min(0).max(3).required('Required'),
+      flowControl: Yup.number().oneOf(Object.values(SerialConfigDTOAllOfFlowControl), 'Invalid flow control').required('Required'),
       readTimeOut: Yup.number().min(0).required('Required'),
       writeTimeOut: Yup.number().min(0).required('Required'),
       bufferSize: Yup.number().min(0).required('Required'),
@@ -137,18 +137,22 @@ const SerialConfigComponent: React.FC<SerialConfigComponentProps> = ({ config, o
         </TextField>
 
         <TextField
+          select
           fullWidth
           label="Flow Control"
           margin="normal"
           name="flowControl"
-          type="number"
           value={formik.values.flowControl}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={Boolean(formik.touched.flowControl && formik.errors.flowControl)}
           helperText={formik.touched.flowControl && formik.errors.flowControl}
-        />
-
+        >
+          <MenuItem value={SerialConfigDTOAllOfFlowControl.NUMBER_0}>None</MenuItem>
+          <MenuItem value={SerialConfigDTOAllOfFlowControl.NUMBER_1}>Hardware In</MenuItem>
+          <MenuItem value={SerialConfigDTOAllOfFlowControl.NUMBER_2}>Hardware Out</MenuItem>
+          <MenuItem value={SerialConfigDTOAllOfFlowControl.NUMBER_3}>Xon Xoff</MenuItem>
+        </TextField>
         <TextField
           fullWidth
           label="Read Timeout (ms)"

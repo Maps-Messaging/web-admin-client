@@ -17,9 +17,9 @@
  */
 
 import React from 'react';
-import {WebSocketConfig} from "@/generated/model";
+import {WebSocketConfigDTO} from "@/generated/model";
 
-const WebsocketConfigComponent: React.FC<{ config: WebSocketConfig }> = ({ config }) => {
+const WebsocketConfigComponent: React.FC<{ config: WebSocketConfigDTO }> = ({ config }) => {
   return <div>WebSocket Config: {config.type}</div>;
 };
 

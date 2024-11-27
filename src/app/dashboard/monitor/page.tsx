@@ -20,7 +20,6 @@
 
 import React, {useState} from 'react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import MessagingServerDiagram from "@/components/server/messaging-server-diagram";
 import {ServerTopLevelStatus} from "@/components/server/server-top-level-status";
 import {Tab, Tabs} from "@mui/material";
 import Box from "@mui/material/Box";
@@ -36,14 +35,10 @@ const tabs = [
   {
     label: 'Destinations',
     value: 'destinations'
-  },
-  {
-    label: 'Overview',
-    value: 'overview'
   }
 ]
 export default function StatusPage (): React.JSX.Element {
-  const [currentTab, setCurrentTab] = useState<string>('overview');
+  const [currentTab, setCurrentTab] = useState<string>('connections');
 
   const handleTabsChange = (event: React.SyntheticEvent, value: string): void => {
     setCurrentTab(value);
@@ -72,7 +67,6 @@ export default function StatusPage (): React.JSX.Element {
       <Box sx={{mt: 3}}>
         {currentTab === 'connections' && <ConnectionDetails />}
         {currentTab === 'destinations' && <NameSpaceTable />}
-        {currentTab === 'overview' && <MessagingServerDiagram/>}
       </Box>
     </QueryClientProvider>
   );

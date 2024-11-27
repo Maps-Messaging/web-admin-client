@@ -20,11 +20,11 @@ import React from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { Box, Button, TextField, FormControlLabel, Checkbox } from '@mui/material';
-import { TcpConfig } from '@/generated/model'; // Adjust the import path as necessary
+import { TcpConfigDTO } from '@/generated/model'; // Adjust the import path as necessary
 
 interface TcpConfigComponentProps {
-  config: TcpConfig;
-  onChange: (updatedConfig: TcpConfig) => void;
+  config: TcpConfigDTO;
+  onChange: (updatedConfig: TcpConfigDTO) => void;
 }
 
 const TcpConfigComponent: React.FC<TcpConfigComponentProps> = ({ config, onChange }) => {

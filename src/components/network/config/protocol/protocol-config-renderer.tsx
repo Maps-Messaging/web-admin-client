@@ -29,58 +29,58 @@ import WebsocketConfigComponent from "@/components/network/config/protocol/webso
 import AmqpConfigComponent from "@/components/network/config/protocol/amqp-config-component";
 import CoapConfigComponent from "@/components/network/config/protocol/coap-config-component";
 import {
-  AmqpConfig,
-  CoapConfig,
-  LoRaConfig,
-  MqttConfig,
-  MqttSnConfig,
-  MqttV5Config,
-  NmeaConfig,
-  ProtocolConfig,
-  SemtechConfig,
-  StompConfig,
-  WebSocketConfig
+  AmqpConfigDTO,
+  CoapConfigDTO,
+  LoRaConfigDTO,
+  MqttConfigDTO,
+  MqttSnConfigDTO,
+  MqttV5ConfigDTO,
+  NmeaConfigDTO,
+  ProtocolConfigDTO,
+  SemtechConfigDTO,
+  StompConfigDTO,
+  WebSocketConfigDTO
 } from "@/generated/model";
 import MqttSnConfigComponent from "@/components/network/config/protocol/mqtt-sn-config-component";
 
 interface ProtocolConfigRendererProps {
-  config: ProtocolConfig;
-  onChange: (updatedConfig: ProtocolConfig) => void;
+  config: ProtocolConfigDTO;
+  onChange: (updatedConfig: ProtocolConfigDTO) => void;
 }
 
 // Define type guards for each specific config type
-function isAmqpConfig(config: ProtocolConfig): config is AmqpConfig {
+function isAmqpConfig(config: ProtocolConfigDTO): config is AmqpConfigDTO {
   return config.type === 'amqp';
 }
 
-function isCoapConfig(config: ProtocolConfig): config is CoapConfig {
+function isCoapConfig(config: ProtocolConfigDTO): config is CoapConfigDTO {
   return config.type === 'coap';
 }
 
-function isMqttSnConfig(config: ProtocolConfig): config is MqttSnConfig {
+function isMqttSnConfig(config: ProtocolConfigDTO): config is MqttSnConfigDTO {
   return config.type === 'mqtt-sn';
 }
 
 // Continue with similar type guards for each protocol type
-function isLoraConfig(config: ProtocolConfig): config is LoRaConfig {
+function isLoraConfig(config: ProtocolConfigDTO): config is LoRaConfigDTO {
   return config.type === 'lora';
 }
-function isMqttConfig(config: ProtocolConfig): config is MqttConfig {
+function isMqttConfig(config: ProtocolConfigDTO): config is MqttConfigDTO {
   return config.type === 'mqtt';
 }
-function isMqttV5Config(config: ProtocolConfig): config is MqttV5Config {
-  return config.type === 'mqtt-v5';
+function isMqttV5Config(config: ProtocolConfigDTO): config is MqttV5ConfigDTO {
+  return config.type === 'mqttV5';
 }
-function isNmeaConfig(config: ProtocolConfig): config is NmeaConfig {
+function isNmeaConfig(config: ProtocolConfigDTO): config is NmeaConfigDTO {
   return config.type === 'nmea';
 }
-function isSemtechConfig(config: ProtocolConfig): config is SemtechConfig {
+function isSemtechConfig(config: ProtocolConfigDTO): config is SemtechConfigDTO {
   return config.type === 'semtech';
 }
-function isStompConfig(config: ProtocolConfig): config is StompConfig {
+function isStompConfig(config: ProtocolConfigDTO): config is StompConfigDTO {
   return config.type === 'stomp';
 }
-function isWebSocketConfig(config: ProtocolConfig): config is WebSocketConfig {
+function isWebSocketConfig(config: ProtocolConfigDTO): config is WebSocketConfigDTO {
   return config.type === 'websocket';
 }
 

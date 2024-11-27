@@ -26,11 +26,11 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
-import { AmqpConfig } from '@/generated/model'; // Adjust import path as necessary
+import { AmqpConfigDTO } from '@/generated/model'; // Adjust import path as necessary
 
 interface AmqpConfigComponentProps {
-  config: AmqpConfig;
-  onChange: (updatedConfig: AmqpConfig) => void;
+  config: AmqpConfigDTO;
+  onChange: (updatedConfig: AmqpConfigDTO) => void;
 }
 
 const AmqpConfigComponent: React.FC<AmqpConfigComponentProps> = ({ config, onChange }) => {
