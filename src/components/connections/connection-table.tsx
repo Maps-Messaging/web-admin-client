@@ -29,7 +29,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
-import {type EndPointDetails} from "@/generated/model";
+import {type EndPointSummaryDTO} from "@/generated/model";
 import {ConnectionRow} from "@/components/connections/connection-row";
 
 function noop(): void {
@@ -39,7 +39,7 @@ function noop(): void {
 interface ConnectionTableProps {
   count?: number;
   page?: number;
-  rows?: EndPointDetails[];
+  rows?: EndPointSummaryDTO[];
   rowsPerPage?: number;
 }
 

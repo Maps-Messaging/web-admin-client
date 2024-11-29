@@ -16,7 +16,7 @@
  *
  */
 
-import type {EndPointDetails} from "@/generated/model";
+import type {EndPointSummaryDTO} from "@/generated/model";
 import * as React from "react";
 import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
@@ -25,7 +25,7 @@ import TableRow from "@mui/material/TableRow";
 
 interface ConnectionRowProps {
   key: string;
-  connection: EndPointDetails;
+  connection: EndPointSummaryDTO;
 }
 
 export function ConnectionRow({

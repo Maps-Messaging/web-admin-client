@@ -21,7 +21,7 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 
-import {type EndPointDetails, type GetAllConnectionsParams} from "@/generated/model";
+import {type EndPointSummaryDTO, type GetAllConnectionsParams} from "@/generated/model";
 import Typography from "@mui/material/Typography";
 import {useGetAllConnections} from "@/generated/connection-management/connection-management";
 import {ConnectionTable} from "@/components/connections/connection-table";
@@ -58,6 +58,6 @@ export default function ConnectionDetails(): React.JSX.Element {
   );
 }
 
-function applyPagination(rows: EndPointDetails[], page: number, rowsPerPage: number): EndPointDetails[] {
+function applyPagination(rows: EndPointSummaryDTO[], page: number, rowsPerPage: number): EndPointSummaryDTO[] {
   return rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 }
