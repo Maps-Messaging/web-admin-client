@@ -11,6 +11,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { Grid } from '@mui/material';
 import { formatNumberWithPowerUnit, formatUptime, numberToDateString } from '@/helper-functions';
+import ProtocolInformationRenderer from "@/components/connections/connection/protocol-information-renderer";
 
 const queryClient = new QueryClient();
 
@@ -227,11 +228,7 @@ export function ConnectionDetail({ connectionId = '' }: ConnectionDetailProps): 
 
       {/* Tab Content */}
       <Box sx={{ mt: 3 }}>
-        {currentTab === 'state' && (
-          <div>
-            {/* Render state-related information here */}
-          </div>
-        )}
+        {currentTab === 'state' && <ProtocolInformationRenderer protocol={connectionData?.protocolInformation || {type:'coap'}} /> }
         {currentTab === 'subscriptions' && (
           <div>
             {/* Render subscription-related information here */}
