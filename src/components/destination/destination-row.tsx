@@ -22,6 +22,7 @@ import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
 import TableRow from "@mui/material/TableRow";
 import {DestinationDTO} from "@/generated/model";
+import Link from "next/link";
 
 interface DestinationRowProps {
   key: string;
@@ -38,7 +39,9 @@ export function DestinationRow({
       id={key}
     >
       <TableCell>
-        <Typography variant="subtitle2">{destination?.name ||''}</Typography>
+        <Link href={`/dashboard/namespace/destination?destinationName=${encodeURIComponent(destination?.name ||'')}`} passHref>
+          <Typography variant="subtitle2">{destination?.name ||''}</Typography>
+        </Link>
       </TableCell>
       <TableCell>
         <Typography variant="subtitle2">{destination?.type ||'topic'}</Typography>
