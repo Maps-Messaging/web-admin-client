@@ -20,10 +20,8 @@ import type {InterfaceInfoDTO} from "@/generated/model";
 import * as React from "react";
 import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
-import {
-  useGetInterfaceStatus
-} from "@/generated/server-interface-management/server-interface-management";
-import { formatNumberWithPowerUnit } from "@/helper-functions";
+import {useGetInterfaceStatus} from "@/generated/server-interface-management/server-interface-management";
+import {formatNumberWithPowerUnit} from "@/helper-functions";
 import TableRow from "@mui/material/TableRow";
 import Link from "next/link";
 import EndPointActionController from "@/components/network/endPoint/end-point-action-controller";

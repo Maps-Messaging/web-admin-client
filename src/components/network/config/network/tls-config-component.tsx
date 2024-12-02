@@ -18,9 +18,9 @@
 
 import React from 'react';
 import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import { Box, Button, TextField, FormControlLabel, Checkbox, Typography } from '@mui/material';
-import { TlsConfigDTO } from '@/generated/model'; // Adjust import path as necessary
+import {useFormik} from 'formik';
+import {Box, Button, Checkbox, FormControlLabel, TextField, Typography} from '@mui/material';
+import {TlsConfigDTO} from '@/generated/model'; // Adjust import path as necessary
 
 interface TlsConfigComponentProps {
   config: TlsConfigDTO;

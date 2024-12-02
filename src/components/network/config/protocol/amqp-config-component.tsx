@@ -18,15 +18,9 @@
 
 import React from 'react';
 import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import {
-  Box,
-  Button,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-} from '@mui/material';
-import { AmqpConfigDTO } from '@/generated/model'; // Adjust import path as necessary
+import {useFormik} from 'formik';
+import {Box, Button, Checkbox, FormControlLabel, TextField,} from '@mui/material';
+import {AmqpConfigDTO} from '@/generated/model'; // Adjust import path as necessary
 
 interface AmqpConfigComponentProps {
   config: AmqpConfigDTO;

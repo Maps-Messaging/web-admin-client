@@ -25,8 +25,8 @@ import TableRow from "@mui/material/TableRow";
 import Card from "@mui/material/Card";
 import TablePagination from "@mui/material/TablePagination";
 import Divider from "@mui/material/Divider";
-import { useGetAllDiscoveredDevices } from "@/generated/hardware-management/hardware-management";
-import { DeviceInfoRow } from "@/components/devices/device-info-row";
+import {useGetAllDiscoveredDevices} from "@/generated/hardware-management/hardware-management";
+import {DeviceInfoRow} from "@/components/devices/device-info-row";
 
 export function DeviceInfoTable(): React.JSX.Element {
   const { data } = useGetAllDiscoveredDevices({

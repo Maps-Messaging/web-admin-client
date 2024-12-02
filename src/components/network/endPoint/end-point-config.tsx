@@ -19,17 +19,15 @@
 'use client';
 
 import * as React from 'react';
+import {useEffect, useState} from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import {Accordion, AccordionDetails, AccordionSummary} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import {
-  useGetInterface,
-} from "@/generated/server-interface-management/server-interface-management";
+import {useGetInterface,} from "@/generated/server-interface-management/server-interface-management";
 import ProtocolConfigRenderer from "@/components/network/config/protocol/protocol-config-renderer";
-import { EndPointConfigDTO, ProtocolConfigDTO } from "@/generated/model";
-import { useEffect, useState } from "react";
+import {EndPointConfigDTO, ProtocolConfigDTO} from "@/generated/model";
 import NetworkConfigRenderer from "@/components/network/config/network/network-config-renderer";
 
 interface EndPointConfigurationProps {

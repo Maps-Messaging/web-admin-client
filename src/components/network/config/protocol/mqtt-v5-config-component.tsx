@@ -18,14 +18,8 @@
 
 import React from 'react';
 import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  TextField,
-} from '@mui/material';
+import {useFormik} from 'formik';
+import {Box, Button, Checkbox, FormControlLabel, TextField,} from '@mui/material';
 import {MqttV5ConfigDTO} from "@/generated/model";
 
 interface MqttV5ConfigComponentProps {

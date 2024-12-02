@@ -21,9 +21,7 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 
-import {
-  useGetInterface,
-} from "@/generated/server-interface-management/server-interface-management";
+import {useGetInterface,} from "@/generated/server-interface-management/server-interface-management";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";

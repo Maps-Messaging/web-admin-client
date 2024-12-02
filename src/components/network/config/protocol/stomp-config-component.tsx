@@ -18,13 +18,9 @@
 
 import React from 'react';
 import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import {
-  Box,
-  Button,
-  TextField,
-} from '@mui/material';
-import { StompConfigDTO } from '@/generated/model'; // Adjust import to match the path to your generated types
+import {useFormik} from 'formik';
+import {Box, Button, TextField,} from '@mui/material';
+import {StompConfigDTO} from '@/generated/model'; // Adjust import to match the path to your generated types
 
 interface StompConfigComponentProps {
   config: StompConfigDTO;

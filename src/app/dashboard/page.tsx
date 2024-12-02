@@ -22,7 +22,7 @@ import * as React from 'react';
 
 import Grid from '@mui/material/Unstable_Grid2';
 import {ServerDetails} from "@/components/server/server-details";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
 

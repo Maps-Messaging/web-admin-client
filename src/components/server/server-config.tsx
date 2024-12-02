@@ -18,9 +18,7 @@
 'use client'
 
 import React from 'react';
-import {
-  useGetServerConfig,
-} from "@/generated/server-config-management/server-config-management";
+import {useGetServerConfig,} from "@/generated/server-config-management/server-config-management";
 import MessagingServerConfig from "@/components/server/messaging-server-config";
 import ServerControl from "@/components/server/server-control";
 

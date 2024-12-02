@@ -23,8 +23,11 @@ import * as React from 'react';
 import ActionController from "@/components/general/action-controller";
 import toast from "react-hot-toast";
 import {
-  pauseIntegration, resumeIntegration,
-  startIntegration, stopIntegration, useGetIntegration
+  pauseIntegration,
+  resumeIntegration,
+  startIntegration,
+  stopIntegration,
+  useGetIntegration
 } from "@/generated/server-integration-management/server-integration-management";
 
 interface ConnectionActionControllerProps {

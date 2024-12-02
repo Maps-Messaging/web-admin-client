@@ -20,8 +20,8 @@
 
 import * as React from 'react';
 
-import { authClient } from '@/lib/auth/client';
-import { logger } from '@/lib/default-logger';
+import {authClient} from '@/lib/auth/client';
+import {logger} from '@/lib/default-logger';
 import {LoginResponse} from "@/generated/model";
 
 export interface UserContextValue {

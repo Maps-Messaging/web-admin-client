@@ -19,16 +19,10 @@
 
 import React from 'react';
 import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import {
-  Box,
-  Button,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-} from '@mui/material';
+import {useFormik} from 'formik';
+import {Box, Button, Checkbox, FormControlLabel, TextField,} from '@mui/material';
 import {updateServerConfig} from "@/generated/server-config-management/server-config-management";
-import { MessageDaemonConfigDTO} from "@/generated/model";
+import {MessageDaemonConfigDTO} from "@/generated/model";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";

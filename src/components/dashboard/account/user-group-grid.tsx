@@ -17,7 +17,7 @@
  */
 
 import React from 'react';
-import { Grid, Typography } from '@mui/material';
+import {Grid, Typography} from '@mui/material';
 import IconButton from "@mui/material/IconButton";
 import {Trash} from "@phosphor-icons/react";
 import Box from "@mui/material/Box";

@@ -21,8 +21,8 @@
 import {useSearchParams} from "next/navigation";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import * as React from "react";
-import EndPointDetails from "@/components/network/endPoint/end-point-details";
 import {useState} from "react";
+import EndPointDetails from "@/components/network/endPoint/end-point-details";
 import {Tab, Tabs} from "@mui/material";
 import Box from "@mui/material/Box";
 import EndPointConnectionDetails from "@/components/connections/end-point-connection-details";

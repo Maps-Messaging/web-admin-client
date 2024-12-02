@@ -22,13 +22,14 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Download as DownloadIcon } from '@phosphor-icons/react/dist/ssr/Download';
-import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
-import { Upload as UploadIcon } from '@phosphor-icons/react/dist/ssr/Upload';
+import {Download as DownloadIcon} from '@phosphor-icons/react/dist/ssr/Download';
+import {Plus as PlusIcon} from '@phosphor-icons/react/dist/ssr/Plus';
+import {Upload as UploadIcon} from '@phosphor-icons/react/dist/ssr/Upload';
 
 import {type GetAllGroupsParams, type GroupDTO} from "@/generated/model";
 import {
-  useGetAllGroups} from "@/generated/authentication-and-authorisation-management/authentication-and-authorisation-management";
+  useGetAllGroups
+} from "@/generated/authentication-and-authorisation-management/authentication-and-authorisation-management";
 import {GroupTable} from "@/components/users/group-table";
 
 export default function GroupDetails(): React.JSX.Element {

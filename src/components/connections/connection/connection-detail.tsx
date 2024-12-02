@@ -1,8 +1,8 @@
 'use client';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import * as React from 'react';
-import { useGetConnectionDetails } from '@/generated/connection-management/connection-management';
+import {useGetConnectionDetails} from '@/generated/connection-management/connection-management';
 import ProtocolInformationRenderer from "@/components/connections/connection/protocol-information-renderer";
 
 const queryClient = new QueryClient();

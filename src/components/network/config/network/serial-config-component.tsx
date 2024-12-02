@@ -18,8 +18,8 @@
 
 import React from 'react';
 import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import { Box, Button, TextField, MenuItem, Typography } from '@mui/material';
+import {useFormik} from 'formik';
+import {Box, Button, MenuItem, TextField, Typography} from '@mui/material';
 import {SerialConfigDTO, SerialConfigDTOAllOfFlowControl} from '@/generated/model';
 
 interface SerialConfigComponentProps {

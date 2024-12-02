@@ -20,13 +20,13 @@
 import React from 'react';
 
 import {
+  DtlsConfigDTO,
   EndPointConfigDTO,
-  UdpConfigDTO,
+  LoRaConfigDTO,
+  SerialConfigDTO,
   TcpConfigDTO,
   TlsConfigDTO,
-  DtlsConfigDTO,
-  SerialConfigDTO,
-  LoRaConfigDTO
+  UdpConfigDTO
 } from "@/generated/model";
 import UdpConfigComponent from "@/components/network/config/network/udp-config-component";
 import TcpConfigComponent from "@/components/network/config/network/tcp-config-component";

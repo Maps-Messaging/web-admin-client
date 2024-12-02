@@ -17,7 +17,7 @@
  */
 
 import React from 'react';
-import { ApexOptions } from "apexcharts";
+import {ApexOptions} from "apexcharts";
 import {Chart} from "@/components/core/chart";
 import {formatNumberWithPowerUnit} from "@/helper-functions";
 

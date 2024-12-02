@@ -18,11 +18,11 @@
 
 'use client'
 
-import { useGetAllDestinations } from "@/generated/destination-management/destination-management";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField } from '@mui/material';
-import React, { useState } from "react";
+import {useGetAllDestinations} from "@/generated/destination-management/destination-management";
+import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField} from '@mui/material';
+import React, {useState} from "react";
 import {DestinationDTO, DestinationDTOType} from "@/generated/model";
-import { RichTreeView } from "@mui/x-tree-view";
+import {RichTreeView} from "@mui/x-tree-view";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import ForumIcon from "@mui/icons-material/Forum";

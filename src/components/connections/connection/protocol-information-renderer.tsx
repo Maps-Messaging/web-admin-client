@@ -21,7 +21,8 @@ import React from 'react';
 
 import {
   AmqpProtocolInformation,
-  CoapProtocolInformation, EndPointDetailsDTO,
+  CoapProtocolInformation,
+  EndPointDetailsDTO,
   LoraProtocolInformation,
   MqttSnProtocolInformation,
   MqttV5ProtocolInformation,

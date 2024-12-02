@@ -17,7 +17,19 @@
  */
 
 import * as React from 'react';
-import { Accordion, AccordionSummary, AccordionDetails, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import Link from "next/link";

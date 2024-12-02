@@ -18,8 +18,8 @@
 
 import React from 'react';
 import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import { Box, Button, TextField } from '@mui/material';
+import {useFormik} from 'formik';
+import {Box, Button, TextField} from '@mui/material';
 import {UdpConfigDTO} from "@/generated/model";
 
 

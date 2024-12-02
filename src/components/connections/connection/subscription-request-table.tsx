@@ -1,6 +1,6 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper } from '@mui/material';
-import { SubscriptionContextDTO } from '@/generated/model';
+import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from '@mui/material';
+import {SubscriptionContextDTO} from '@/generated/model';
 
 interface SubscriptionRequestTableProps {
   subscriptionContext: SubscriptionContextDTO[];

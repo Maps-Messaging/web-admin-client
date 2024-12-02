@@ -21,9 +21,9 @@ import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { Grid } from '@mui/material';
-import { formatNumberWithPowerUnit, formatUptime, numberToDateString } from '@/helper-functions';
-import { EndPointDetailsDTO } from '@/generated/model';
+import {Grid} from '@mui/material';
+import {formatNumberWithPowerUnit, formatUptime, numberToDateString} from '@/helper-functions';
+import {EndPointDetailsDTO} from '@/generated/model';
 
 interface ConnectionInfoDetailProps {
   connectionData: EndPointDetailsDTO;

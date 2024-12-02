@@ -19,7 +19,7 @@
 'use client'
 
 import React, {useState} from 'react';
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {ServerTopLevelStatus} from "@/components/server/server-top-level-status";
 import {Tab, Tabs} from "@mui/material";
 import Box from "@mui/material/Box";

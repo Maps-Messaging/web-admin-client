@@ -21,8 +21,10 @@
 import * as React from 'react';
 
 import {
-  pauseInterface, resumeInterface,
-  startInterface, stopInterface,
+  pauseInterface,
+  resumeInterface,
+  startInterface,
+  stopInterface,
   useGetInterface,
 } from "@/generated/server-interface-management/server-interface-management";
 import ActionController from "@/components/general/action-controller";

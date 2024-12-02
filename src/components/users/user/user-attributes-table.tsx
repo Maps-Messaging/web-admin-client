@@ -17,8 +17,8 @@
  */
 
 import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
-import { UserDTOAttributes } from "@/generated/model";
+import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from '@mui/material';
+import {UserDTOAttributes} from "@/generated/model";
 
 interface UserAttributesTableProps {
   attributes: UserDTOAttributes;

@@ -12,8 +12,8 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 
-import { useGetAllDestinations } from "@/generated/destination-management/destination-management";
-import { DestinationRow } from "@/components/destination/destination-row";
+import {useGetAllDestinations} from "@/generated/destination-management/destination-management";
+import {DestinationRow} from "@/components/destination/destination-row";
 
 function noop(): void {
   // do nothing

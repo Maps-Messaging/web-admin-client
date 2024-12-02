@@ -19,22 +19,24 @@
 'use client';
 
 import * as React from 'react';
-import { useGetAllLoRaDevices } from "@/generated/lora-device-management/lora-device-management";
+import {useState} from 'react';
+import {useGetAllLoRaDevices} from "@/generated/lora-device-management/lora-device-management";
 import {
   Container,
+  Paper,
+  Tab,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
-  Paper, Tabs, Tab
+  Tabs,
+  Typography
 } from '@mui/material';
 import {LoRaDeviceInfoDTO, LoRaEndPointInfoDTO} from "@/generated/model";
 import LoRaEndPointInfoTable from "@/components/lora/lora-end-point-info-table";
-import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import Box from "@mui/material/Box";
 import LoRaDeviceConfiguration from "@/components/lora/lora-device-config";
 

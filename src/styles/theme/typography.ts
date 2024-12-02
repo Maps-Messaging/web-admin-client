@@ -16,7 +16,7 @@
  *
  */
 
-import type { TypographyOptions } from '@mui/material/styles/createTypography';
+import type {TypographyOptions} from '@mui/material/styles/createTypography';
 
 export const typography = {
   fontFamily:

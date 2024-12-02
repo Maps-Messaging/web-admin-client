@@ -1,19 +1,16 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {
+  Alert,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  CircularProgress,
   Snackbar,
-  Alert,
 } from "@mui/material";
-import {
-  restartServer,
-  shutdownServer,
-} from "@/generated/server-management/server-management";
+import {restartServer, shutdownServer,} from "@/generated/server-management/server-management";
 
 const ServerControl: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);

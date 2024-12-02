@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, CardContent, Grid, Typography } from '@mui/material';
-import { SessionContextDTO } from '@/generated/model';
+import {Card, CardContent, Grid, Typography} from '@mui/material';
+import {SessionContextDTO} from '@/generated/model';
 import {formatUptime} from "@/helper-functions";
 
 interface SessionDetailsSummaryProps {

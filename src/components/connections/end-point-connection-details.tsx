@@ -24,9 +24,7 @@ import Stack from '@mui/material/Stack';
 import {type EndPointSummaryDTO} from "@/generated/model";
 import Typography from "@mui/material/Typography";
 import {ConnectionTable} from "@/components/connections/connection-table";
-import {
-  useGetInterfaceConnections
-} from "@/generated/server-interface-management/server-interface-management";
+import {useGetInterfaceConnections} from "@/generated/server-interface-management/server-interface-management";
 
 interface EndPointConnectionDetailsProps {
   name: string;

@@ -19,9 +19,9 @@
 'use client'
 
 import React, {useEffect, useState} from 'react';
-import { Grid, Paper, Typography } from '@mui/material';
-import { styled } from '@mui/system';
-import type { Theme } from '@mui/material/styles';
+import {Grid, Paper, Typography} from '@mui/material';
+import {styled} from '@mui/system';
+import type {Theme} from '@mui/material/styles';
 import type {ServerStatisticsDTO} from "@/generated/model";
 import {useGetStats} from "@/generated/server-management/server-management";
 

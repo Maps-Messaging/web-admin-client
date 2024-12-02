@@ -18,9 +18,9 @@
 
 import React from 'react';
 import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import { Box, Button, TextField } from '@mui/material';
-import { LoRaDeviceConfigInfoDTO } from '@/generated/model'; // Adjust import path as necessary
+import {useFormik} from 'formik';
+import {Box, Button, TextField} from '@mui/material';
+import {LoRaDeviceConfigInfoDTO} from '@/generated/model'; // Adjust import path as necessary
 
 interface LoRaDeviceConfigComponentProps {
   config: LoRaDeviceConfigInfoDTO;

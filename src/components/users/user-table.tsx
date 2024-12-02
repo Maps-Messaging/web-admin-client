@@ -31,7 +31,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 
-import { useSelection } from '@/hooks/use-selection';
+import {useSelection} from '@/hooks/use-selection';
 import {UserDTO} from "@/generated/model";
 import Link from "next/link";
 

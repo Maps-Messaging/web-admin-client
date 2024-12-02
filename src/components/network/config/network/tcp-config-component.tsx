@@ -18,9 +18,9 @@
 
 import React from 'react';
 import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import { Box, Button, TextField, FormControlLabel, Checkbox } from '@mui/material';
-import { TcpConfigDTO } from '@/generated/model'; // Adjust the import path as necessary
+import {useFormik} from 'formik';
+import {Box, Button, Checkbox, FormControlLabel, TextField} from '@mui/material';
+import {TcpConfigDTO} from '@/generated/model'; // Adjust the import path as necessary
 
 interface TcpConfigComponentProps {
   config: TcpConfigDTO;

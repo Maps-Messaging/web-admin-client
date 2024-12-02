@@ -19,20 +19,20 @@
 'use client';
 
 import * as React from 'react';
+import {useState} from 'react';
 import RouterLink from 'next/link';
-import { usePathname } from 'next/navigation';
+import {usePathname} from 'next/navigation';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import type { NavItemConfig } from '@/types/nav';
-import { paths } from '@/paths';
-import { isNavItemActive } from '@/lib/is-nav-item-active';
-import { Logo } from '@/components/core/logo';
+import type {NavItemConfig} from '@/types/nav';
+import {paths} from '@/paths';
+import {isNavItemActive} from '@/lib/is-nav-item-active';
+import {Logo} from '@/components/core/logo';
 
-import { navItems } from './config';
-import { navIcons } from './nav-icons';
-import {useState} from "react";
+import {navItems} from './config';
+import {navIcons} from './nav-icons';
 import {Collapse} from "@mui/material";
 import {CaretDown, CaretRight} from "@phosphor-icons/react";
 

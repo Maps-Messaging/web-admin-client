@@ -16,7 +16,7 @@
  *
  */
 
-import type { NavItemConfig } from '@/types/nav';
+import type {NavItemConfig} from '@/types/nav';
 
 export function isNavItemActive({
   disabled,

@@ -19,9 +19,9 @@
 'use client';
 
 import * as React from 'react';
+import {useEffect, useState} from 'react';
 
 import {LoRaDeviceConfigInfoDTO} from "@/generated/model";
-import { useEffect, useState } from "react";
 import {useGetLoRaDeviceConfig} from "@/generated/lora-device-management/lora-device-management";
 import LoRaDeviceConfigComponent from "@/components/network/config/lora/lora-device-config-component";
 

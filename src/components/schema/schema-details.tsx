@@ -21,7 +21,7 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 
-import { type GetAllSchemasParams, type SchemaConfig} from "@/generated/model";
+import {type GetAllSchemasParams, type SchemaConfig} from "@/generated/model";
 import Typography from "@mui/material/Typography";
 import {useGetAllSchemas} from "@/generated/schema-management/schema-management";
 import {SchemaTable} from "@/components/schema/schema-table";

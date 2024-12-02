@@ -19,10 +19,10 @@
 'use client';
 
 import * as React from 'react';
-import { useServerInsertedHTML } from 'next/navigation';
+import {useServerInsertedHTML} from 'next/navigation';
+import type {EmotionCache, Options as OptionsOfCreateCache} from '@emotion/cache';
 import createCache from '@emotion/cache';
-import type { EmotionCache, Options as OptionsOfCreateCache } from '@emotion/cache';
-import { CacheProvider as DefaultCacheProvider } from '@emotion/react';
+import {CacheProvider as DefaultCacheProvider} from '@emotion/react';
 
 interface Registry {
   cache: EmotionCache;

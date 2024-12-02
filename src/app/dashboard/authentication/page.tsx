@@ -19,11 +19,11 @@
 'use client'
 
 import * as React from 'react';
-import {useState} from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {useState} from 'react';
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import UsersDetails from "@/components/users/users-details";
 import GroupDetails from "@/components/users/group-details";
-import { Tab, Tabs } from "@mui/material";
+import {Tab, Tabs} from "@mui/material";
 import Box from "@mui/material/Box";
 
 const queryClient = new QueryClient();

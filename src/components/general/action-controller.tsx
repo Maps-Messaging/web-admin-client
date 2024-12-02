@@ -16,7 +16,7 @@
  *
  */
 
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {Pause, Play, Record, Stop} from "@phosphor-icons/react";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";

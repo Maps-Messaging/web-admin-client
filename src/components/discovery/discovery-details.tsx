@@ -17,17 +17,17 @@
  */
 
 import * as React from 'react';
-import { useState } from 'react';
+import {useState} from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useGetAllDiscoveredServers } from '@/generated/discovery-management/discovery-management';
+import {useGetAllDiscoveredServers} from '@/generated/discovery-management/discovery-management';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Table from '@mui/material/Table';
 import {Paper, TableContainer} from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import { MinusCircle, PlusCircle } from '@phosphor-icons/react';
+import {MinusCircle, PlusCircle} from '@phosphor-icons/react';
 import {type GetAllDiscoveredServersParams, type ServicesProperties} from "@/generated/model";
 
 const PropertiesTable: React.FC<{ properties: ServicesProperties }> = ({ properties }) => (
