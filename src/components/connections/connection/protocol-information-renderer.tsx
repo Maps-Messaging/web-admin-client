@@ -21,7 +21,7 @@ import React from 'react';
 
 import {
   AmqpProtocolInformation,
-  CoapProtocolInformation,
+  CoapProtocolInformation, EndPointDetailsDTO,
   LoraProtocolInformation,
   MqttSnProtocolInformation,
   MqttV5ProtocolInformation,
@@ -30,9 +30,10 @@ import {
   SemtechProtocolInformation,
   StompProtocolInformation
 } from "@/generated/model";
-import SubscriptionStateTable from "@/components/connections/connection/subscription-state-table";
+import SessionInfoDetails from "@/components/connections/connection/session-info-details";
 
 interface ProtocolInformationRendererProps {
+  endPointDetails: EndPointDetailsDTO;
   protocol: ProtocolInformationDTO;
 }
 
@@ -75,25 +76,49 @@ function isStompProtocol(protocol: ProtocolInformationDTO): protocol is StompPro
 }
 
 
-const ProtocolInformationRenderer:React.FC<ProtocolInformationRendererProps> = ({ protocol })  => {
+const ProtocolInformationRenderer:React.FC<ProtocolInformationRendererProps> = ({ protocol, endPointDetails })  => {
   if (isAMQPProtocol(protocol)) {
     return (<div>Not yet implemented</div>);
   } else if (isCoapProtocol(protocol)) {
-    return <SubscriptionStateTable subscriptionStates={protocol.sessionInfo?.subscriptionInfo?.subscriptionStateList || []}/>;
+    return <SessionInfoDetails
+      sessionInfo={protocol.sessionInfo || {}}
+      endPointDetails={endPointDetails}
+    />;
   } else if (isLoraProtocol(protocol)) {
-    return <SubscriptionStateTable subscriptionStates={protocol.sessionInfo?.subscriptionInfo?.subscriptionStateList || []}/>;
+    return <SessionInfoDetails
+      sessionInfo={protocol.sessionInfo || {}}
+      endPointDetails={endPointDetails}
+    />;
   } else if (isMqttProtocol(protocol)) {
-    return <SubscriptionStateTable subscriptionStates={protocol.sessionInfo?.subscriptionInfo?.subscriptionStateList || []}/>;
+    return <SessionInfoDetails
+      sessionInfo={protocol.sessionInfo || {}}
+      endPointDetails={endPointDetails}
+    />;
   } else if (isMqttV5Protocol(protocol)) {
-    return <SubscriptionStateTable subscriptionStates={protocol.sessionInfo?.subscriptionInfo?.subscriptionStateList || []}/>;
+    return <SessionInfoDetails
+      sessionInfo={protocol.sessionInfo || {}}
+      endPointDetails={endPointDetails}
+    />;
   } else if (isMqttSnProtocol(protocol)) {
-    return <SubscriptionStateTable subscriptionStates={protocol.sessionInfo?.subscriptionInfo?.subscriptionStateList || []}/>;
+    return <SessionInfoDetails
+      sessionInfo={protocol.sessionInfo || {}}
+      endPointDetails={endPointDetails}
+    />;
   } else if (isNmeaProtocol(protocol)) {
-    return <SubscriptionStateTable subscriptionStates={protocol.sessionInfo?.subscriptionInfo?.subscriptionStateList || []}/>;
+    return <SessionInfoDetails
+      sessionInfo={protocol.sessionInfo || {}}
+      endPointDetails={endPointDetails}
+    />;
   } else if (isSemtechProtocol(protocol)) {
-    return <SubscriptionStateTable subscriptionStates={protocol.sessionInfo?.subscriptionInfo?.subscriptionStateList || []}/>;
+    return <SessionInfoDetails
+      sessionInfo={protocol.sessionInfo || {}}
+      endPointDetails={endPointDetails}
+    />;
   } else if (isStompProtocol(protocol)) {
-    return <SubscriptionStateTable subscriptionStates={protocol.sessionInfo?.subscriptionInfo?.subscriptionStateList || []}/>;
+    return <SessionInfoDetails
+      sessionInfo={protocol.sessionInfo || {}}
+      endPointDetails={endPointDetails}
+    />;
   }
 };
 
