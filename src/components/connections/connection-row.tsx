@@ -22,6 +22,7 @@ import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
 import {formatNumberWithPowerUnit, numberToDateString} from "@/helper-functions";
 import TableRow from "@mui/material/TableRow";
+import Link from "next/link";
 
 interface ConnectionRowProps {
   key: string;
@@ -38,7 +39,10 @@ export function ConnectionRow({
       id={key}
     >
       <TableCell>
-        <Typography variant="subtitle2">{connection.name}</Typography>
+        <Link href={`/dashboard/connections/connection?connectionId=${encodeURIComponent(connection.name||'')}`} passHref>
+          <Typography variant="subtitle2">{connection.name}</Typography>
+        </Link>
+
       </TableCell>
       <TableCell>
         <Typography variant="subtitle2">{connection.user}</Typography>
