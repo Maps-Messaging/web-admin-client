@@ -25,6 +25,7 @@ import {Tab, Tabs} from "@mui/material";
 import Box from "@mui/material/Box";
 import ConnectionDetails from "@/components/connections/connection-details";
 import {NameSpaceTable} from "@/components/destination/namespace-table";
+import SubSystemStatusTable from "@/components/server/sub-system-status-table";
 
 const queryClient = new QueryClient();
 const tabs = [
@@ -35,6 +36,10 @@ const tabs = [
   {
     label: 'Destinations',
     value: 'destinations'
+  },
+  {
+    label: 'System Status',
+    value: 'status'
   }
 ]
 export default function StatusPage (): React.JSX.Element {
@@ -67,6 +72,8 @@ export default function StatusPage (): React.JSX.Element {
       <Box sx={{mt: 3}}>
         {currentTab === 'connections' && <ConnectionDetails />}
         {currentTab === 'destinations' && <NameSpaceTable />}
+        {currentTab === 'status' && <SubSystemStatusTable />}
+
       </Box>
     </QueryClientProvider>
   );
