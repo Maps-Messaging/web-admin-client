@@ -26,7 +26,6 @@ import DataGraph from "@/components/graphs/data-graph";
 import DualNumberGraph from "@/components/graphs/dual-number-graph";
 import {ServerTopLevelStatus} from "@/components/server/server-top-level-status";
 import SubSystemStatusTable from "@/components/server/sub-system-status-table";
-import ConnectionDetails from "@/components/connections/connection-details";
 
 
 const tabs = [
