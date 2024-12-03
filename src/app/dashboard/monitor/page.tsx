@@ -43,7 +43,7 @@ const tabs = [
   }
 ]
 export default function StatusPage (): React.JSX.Element {
-  const [currentTab, setCurrentTab] = useState<string>('connections');
+  const [currentTab, setCurrentTab] = useState<string>('status');
 
   const handleTabsChange = (event: React.SyntheticEvent, value: string): void => {
     setCurrentTab(value);

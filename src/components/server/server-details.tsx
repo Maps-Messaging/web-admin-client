@@ -21,12 +21,31 @@
 import React, {useEffect, useState} from 'react';
 import {useGetBuildInfo, useGetStats} from "@/generated/server-management/server-management";
 import Container from "@mui/material/Container";
-import {Grid} from "@mui/material";
+import {Grid, Tab, Tabs} from "@mui/material";
 import DataGraph from "@/components/graphs/data-graph";
 import DualNumberGraph from "@/components/graphs/dual-number-graph";
 import {ServerTopLevelStatus} from "@/components/server/server-top-level-status";
+import SubSystemStatusTable from "@/components/server/sub-system-status-table";
+import ConnectionDetails from "@/components/connections/connection-details";
+
+
+const tabs = [
+  {
+    label: 'Overview',
+    value: 'overview'
+  },
+  {
+    label: 'Graphs',
+    value: 'graphs'
+  },
+]
 
 export function ServerDetails () :  React.JSX.Element {
+  const [currentTab, setCurrentTab] = useState<string>('overview');
+  const handleTabsChange = (event: React.SyntheticEvent, value: string): void => {
+    setCurrentTab(value);
+  };
+
 
   const { data: statsData, error: statsError, isLoading: statsLoading } = useGetStats({
     query: {
@@ -87,6 +106,25 @@ export function ServerDetails () :  React.JSX.Element {
   return (
     <Container maxWidth="lg">
       <ServerTopLevelStatus />
+      <Tabs
+        indicatorColor="primary"
+        onChange={handleTabsChange}
+        scrollButtons="auto"
+        sx={{px: 3}}
+        textColor="primary"
+        value={currentTab}
+        variant="scrollable"
+      >
+        {tabs.map((tab) => (
+          <Tab
+            key={tab.value}
+            label={tab.label}
+            value={tab.value}
+          />
+        ))}
+      </Tabs>
+      {currentTab === 'overview' && <SubSystemStatusTable />}
+      {currentTab === 'graphs' &&
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <DualNumberGraph name1='Published' data1={published} name2='No Interest' data2={noInterest} />
@@ -101,6 +139,7 @@ export function ServerDetails () :  React.JSX.Element {
           <DataGraph name='Cpu Time' data={cpuTime} />
         </Grid>
       </Grid>
+      }
     </Container>
   );
 }

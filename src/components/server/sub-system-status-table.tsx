@@ -30,6 +30,8 @@ import {
 } from '@mui/material';
 import {useGetServerStatus} from "@/generated/server-management/server-management";
 
+const statusOrder = ["ERROR", "WARN", "STOPPED", "PAUSED", "OK", "DISABLED"];
+
 export function SubSystemStatusTable(): React.JSX.Element {
 
   const { data, error, isLoading } = useGetServerStatus({
@@ -41,7 +43,10 @@ export function SubSystemStatusTable(): React.JSX.Element {
   if (isLoading) return <div>Loading sub system status...</div>;
   if (error) return <div>Error loading sub system status: {error.message}</div>;
 
-  const statusList = data?.data || [];
+  const statusList = data?.data.sort((a, b) => {
+    const statusComparison = statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+    return statusComparison !== 0 ? statusComparison : a.name.localeCompare(b.name);
+  }) || [];
 
   const statusColors: Record<string, 'success' | 'error' | 'warning' | 'default'> = {
     OK: 'success',
