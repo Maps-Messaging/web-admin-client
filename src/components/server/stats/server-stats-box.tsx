@@ -38,8 +38,8 @@ export function ServerStatsBox ({
     }
   });
 
-  if (isLoading) return <div>Loading name...</div>;
-  if (error) return <div>Error loading name: {error.message}</div>;
+  if (isLoading) return <div>Loading stats...</div>;
+  if (error) return <div>Error loading stats: {error.message}</div>;
 
   return (
 

@@ -25,9 +25,10 @@ import SubscriptionStateTable from "@/components/connections/connection/subscrip
 
 interface DestinationDetailProps {
   destinationName: string;
+  displayName?: boolean;
 }
 
-export function DestinationDetail({ destinationName }: DestinationDetailProps): React.JSX.Element {
+export function DestinationDetail({ destinationName, displayName=true }: DestinationDetailProps): React.JSX.Element {
 
   const params = {
     destinationName: destinationName,
@@ -43,7 +44,10 @@ export function DestinationDetail({ destinationName }: DestinationDetailProps): 
 
   return (
     <div>
-      <DestinationDetailHeader destinationData={data?.data.destination } />
+      <DestinationDetailHeader
+        destinationData={data?.data.destination }
+        displayName={displayName}
+      />
       <SubscriptionStateTable
         subscriptionStates={data?.data.subscriptionList || []}
         displayName={false}

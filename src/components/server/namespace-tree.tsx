@@ -29,6 +29,7 @@ import ForumIcon from "@mui/icons-material/Forum";
 import QueueIcon from "@mui/icons-material/Queue";
 import FolderIcon from "@mui/icons-material/Folder";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import DestinationDetail from "@/components/destination/destination-details";
 
 interface TreeNode {
   id: string;
@@ -123,17 +124,28 @@ const NamespaceTree = (): React.JSX.Element => {
   const [selectedFiles, setSelectedFiles] = useState<TreeFile[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const [selectedDestination, setSelectedDestination] = useState<TreeFile | null>(null);
 
   const handleNodeSelect = (event: React.SyntheticEvent | null, itemId: string): void => {
     setSelectedFolder(itemId);
     setSelectedFiles(filesMap.get(itemId) || []);
-    setSelectedItem(itemId);  // Synchronize selection in the tree view
+    setSelectedItem(itemId);
+    setSelectedDestination(null);
   };
 
   const handleFolderClick = (folderId: string) => {
     setSelectedFolder(folderId);
     setSelectedFiles(filesMap.get(folderId) || []);
-    setSelectedItem(folderId);  // Synchronize selection in the tree view
+    setSelectedItem(folderId);
+    setSelectedDestination(null);
+  };
+
+  const handleRowClick = (file: TreeFile) => {
+    if (file.isFolder) {
+      handleFolderClick(file.id);
+    } else {
+      setSelectedDestination(file); // Highlight this row
+    }
   };
 
   const handleUpOneLevel = () => {
@@ -141,12 +153,13 @@ const NamespaceTree = (): React.JSX.Element => {
       const parentPath = selectedFolder.split('/').slice(0, -1).join('/') || '/';
       setSelectedFolder(parentPath);
       setSelectedFiles(filesMap.get(parentPath) || []);
-      setSelectedItem(parentPath);  // Synchronize selection in the tree view
+      setSelectedItem(parentPath);
+      setSelectedDestination(null);
     }
   };
 
   const getIcon = (item: TreeFile): React.ReactElement | null => {
-    if (item.isFolder) return <FolderIcon />; // Folder icon for folders
+    if (item.isFolder) return <FolderIcon />;
     switch (item.destination?.type) {
       case DestinationDTOType.topic:
         return <ForumIcon />;
@@ -166,6 +179,7 @@ const NamespaceTree = (): React.JSX.Element => {
 
   return (
     <Box sx={{ display: 'flex', height: '80vh' }}>
+      {/* Tree view on the left */}
       <Box sx={{ width: 300, overflowY: 'auto', bgcolor: 'background.paper', borderRight: 1, borderColor: 'divider' }}>
         <RichTreeView
           selectedItems={selectedItem}
@@ -174,59 +188,73 @@ const NamespaceTree = (): React.JSX.Element => {
           onItemFocus={handleNodeSelect}
         />
       </Box>
-      <Box sx={{ flex: 1, paddingLeft: 2 }}>
-        <Typography variant="h6">Destination Details</Typography>
-        <TextField
-          label="Path"
-          value={selectedFolder || ''}
-          fullWidth
-          margin="normal"
-          variant="outlined"
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-        <TableContainer component={Paper} sx={{ marginTop: 1 }}>
-          <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell align="right">Type</TableCell>
-                <TableCell align="right">Delayed Messages</TableCell>
-                <TableCell align="right">Pending Messages</TableCell>
-                <TableCell align="right">Stored Messages</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {selectedFolder && selectedFolder !== "/" && (
-                <TableRow onClick={handleUpOneLevel} style={{ cursor: 'pointer' }}>
-                  <TableCell component="th" scope="row">
-                    <ArrowUpwardIcon /><span> ..</span>
-                  </TableCell>
-                  <TableCell align="right">Go up</TableCell>
-                  <TableCell align="right">-</TableCell>
-                  <TableCell align="right">-</TableCell>
-                  <TableCell align="right">-</TableCell>
+      {/* Content on the right */}
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+        {/* Table view */}
+        <Box sx={{ flex: 1, overflowY: 'auto' }}>
+          <Typography variant="h6">Destination Details</Typography>
+          <TextField
+            label="Path"
+            value={selectedFolder || ''}
+            fullWidth
+            margin="normal"
+            variant="outlined"
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TableContainer component={Paper} sx={{ marginTop: 1 }}>
+            <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell align="right">Type</TableCell>
+                  <TableCell align="right">Delayed Messages</TableCell>
+                  <TableCell align="right">Pending Messages</TableCell>
+                  <TableCell align="right">Stored Messages</TableCell>
                 </TableRow>
-              )}
-              {selectedFiles.map((file) => (
-                <TableRow
-                  key={file.id}
-                  onClick={() => { if (file.isFolder) handleFolderClick(file.id); }}
-                  style={{ cursor: file.isFolder ? 'pointer' : 'default' }}
-                >
-                  <TableCell component="th" scope="row">
-                    {getIcon(file)}<span> {getBaseName(file.id)}</span>
-                  </TableCell>
-                  <TableCell align="right">{file.isFolder ? "Folder" : file.destination?.type}</TableCell>
-                  <TableCell align="right">{file.delayedMessages ?? '-'}</TableCell>
-                  <TableCell align="right">{file.pendingMessages ?? '-'}</TableCell>
-                  <TableCell align="right">{file.storedMessages ?? '-'}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {selectedFolder && selectedFolder !== "/" && (
+                  <TableRow onClick={handleUpOneLevel} style={{ cursor: 'pointer' }}>
+                    <TableCell component="th" scope="row">
+                      <ArrowUpwardIcon /><span> ..</span>
+                    </TableCell>
+                    <TableCell align="right">Go up</TableCell>
+                    <TableCell align="right">-</TableCell>
+                    <TableCell align="right">-</TableCell>
+                    <TableCell align="right">-</TableCell>
+                  </TableRow>
+                )}
+                {selectedFiles.map((file) => (
+                  <TableRow
+                    key={file.id}
+                    onClick={() => handleRowClick(file)}
+                    style={{ cursor: file.isFolder ? 'pointer' : 'default' }}
+                    selected={selectedDestination?.id === file.id} // Highlight row if selected
+                  >
+                    <TableCell component="th" scope="row">
+                      {getIcon(file)}<span> {getBaseName(file.id)}</span>
+                    </TableCell>
+                    <TableCell align="right">{file.isFolder ? "Folder" : file.destination?.type}</TableCell>
+                    <TableCell align="right">{file.delayedMessages ?? '-'}</TableCell>
+                    <TableCell align="right">{file.pendingMessages ?? '-'}</TableCell>
+                    <TableCell align="right">{file.storedMessages ?? '-'}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+        {/* Destination detail view */}
+        {selectedDestination && (
+          <Box sx={{ flex: 1, overflowY: 'auto', borderTop: 1, borderColor: 'divider', marginTop: 2 }}>
+            <DestinationDetail
+              destinationName={selectedDestination.id || ''}
+              displayName={false}
+            />
+          </Box>
+        )}
       </Box>
     </Box>
   );

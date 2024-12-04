@@ -26,15 +26,25 @@ import DataGraph from "@/components/graphs/data-graph";
 import DualNumberGraph from "@/components/graphs/dual-number-graph";
 import {ServerTopLevelStatus} from "@/components/server/server-top-level-status";
 import SubSystemStatusTable from "@/components/server/sub-system-status-table";
+import ConnectionDetails from "@/components/connections/connection-details";
+import {NameSpaceTable} from "@/components/destination/namespace-table";
 
 
 const tabs = [
   {
-    label: 'Overview',
+    label: 'Sub System Status',
     value: 'overview'
   },
   {
-    label: 'Graphs',
+    label: 'Connections',
+    value: 'connections'
+  },
+  {
+    label: 'Destinations',
+    value: 'destinations'
+  },
+  {
+    label: 'Analytics',
     value: 'graphs'
   },
 ]
@@ -123,6 +133,8 @@ export function ServerDetails () :  React.JSX.Element {
         ))}
       </Tabs>
       {currentTab === 'overview' && <SubSystemStatusTable />}
+      {currentTab === 'connections' && <ConnectionDetails />}
+      {currentTab === 'destinations' && <NameSpaceTable />}
       {currentTab === 'graphs' &&
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>

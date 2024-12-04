@@ -24,9 +24,10 @@ import {DestinationDTO} from "@/generated/model";
 
 interface DestinationDetailHeaderProps {
   destinationData?: DestinationDTO;
+  displayName?: boolean;
 }
 
-export function DestinationDetailHeader({ destinationData }: DestinationDetailHeaderProps): React.JSX.Element {
+export function DestinationDetailHeader({ destinationData, displayName=true }: DestinationDetailHeaderProps): React.JSX.Element {
   return (
     <Card variant="outlined" sx={{ mb: 3 }}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -37,15 +38,18 @@ export function DestinationDetailHeader({ destinationData }: DestinationDetailHe
           </Typography>
           <Grid container spacing={2}>
             {/* Name */}
-            <Grid item xs={6}>
-              <Typography variant="body2" color="textSecondary">
-                <strong>Name:</strong>
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body2">{destinationData?.name || 'N/A'}</Typography>
-            </Grid>
-
+            {displayName &&
+              <div>
+              <Grid item xs={6}>
+                <Typography variant="body2" color="textSecondary">
+                  <strong>Name:</strong>
+                </Typography>
+              </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="body2">{destinationData?.name || 'N/A'}</Typography>
+                </Grid>
+              </div>
+            }
             {/* Type */}
             <Grid item xs={6}>
               <Typography variant="body2" color="textSecondary">
