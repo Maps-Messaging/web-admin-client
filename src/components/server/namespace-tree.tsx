@@ -229,7 +229,7 @@ const NamespaceTree = (): React.JSX.Element => {
                 {selectedFiles.map((file) => (
                   <TableRow
                     key={file.id}
-                    onClick={() => handleRowClick(file)}
+                    onClick={() => { handleRowClick(file); }}
                     style={{ cursor: file.isFolder ? 'pointer' : 'default' }}
                     selected={selectedDestination?.id === file.id} // Highlight row if selected
                   >
