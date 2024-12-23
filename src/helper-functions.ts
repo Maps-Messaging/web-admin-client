@@ -64,8 +64,30 @@ export function jsonToDateTime(data: string | DateJson): string {
 
   try {
     // Parse if input is a string
-    parsedData = typeof data === "string" ? JSON.parse(data) as DateJson : data;
-
+    if (typeof data === "string") {
+      // Handle "YYYY-MM-DD HH:mm:ss" format
+      const match = data.match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/);
+      if (match) {
+        parsedData = {
+          date: {
+            year: parseInt(match[1], 10),
+            month: parseInt(match[2], 10),
+            day: parseInt(match[3], 10),
+          },
+          time: {
+            hour: parseInt(match[4], 10),
+            minute: parseInt(match[5], 10),
+            second: parseInt(match[6], 10),
+            nano: 0, // No nanoseconds in the input format
+          },
+        };
+      } else {
+        // Attempt to parse as JSON string
+        parsedData = JSON.parse(data) as DateJson;
+      }
+    } else {
+      parsedData = data; // Already a DateJson object
+    }
     // Validate parsedData structure
     if (
       typeof parsedData.date?.year !== 'number' ||
