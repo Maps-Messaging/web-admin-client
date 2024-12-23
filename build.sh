@@ -5,6 +5,8 @@ export GITHUB_ORGANIZATION=Maps-Messaging
 export GITHUB_REPO=web-admin-client
 export VERSION_NAME=maps_web_client_$VERSION
 
+sed -i "s/API_BASE_URL: 'http:\/\/localhost:8080'/API_BASE_URL: ''/" next.config.js
+
 npm install --force || true
 npm install orval || true
 npm run generate || true
