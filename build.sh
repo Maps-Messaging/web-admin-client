@@ -14,8 +14,6 @@ npm run build || true
 
 tar -cvzf webAdminClient.tgz out/*
 
-
-
 # Delete the release from GitHub before creating a new one
 echo "Deleting release from GitHub before creating a new one"
 gh release delete ${VERSION_NAME} --repo ${GITHUB_ORGANIZATION}/${GITHUB_REPO} --yes || true
