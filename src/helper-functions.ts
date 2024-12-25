@@ -60,58 +60,48 @@ interface DateJson {
 }
 
 export function jsonToDateTime(data: string | DateJson): string {
-  let parsedData: DateJson;
-
   try {
-    // Parse if input is a string
+    let parsedData: DateJson;
+
     if (typeof data === "string") {
-      // Handle "YYYY-MM-DD HH:mm:ss" format
-      const match = data.match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/);
-      if (match) {
-        parsedData = {
-          date: {
-            year: parseInt(match[1], 10),
-            month: parseInt(match[2], 10),
-            day: parseInt(match[3], 10),
-          },
-          time: {
-            hour: parseInt(match[4], 10),
-            minute: parseInt(match[5], 10),
-            second: parseInt(match[6], 10),
-            nano: 0, // No nanoseconds in the input format
-          },
-        };
-      } else {
-        // Attempt to parse as JSON string
-        parsedData = JSON.parse(data) as DateJson;
+      // Directly split and parse the known format
+      const [datePart, timePart] = data.split(" ");
+      if (!datePart || !timePart) {
+        throw new Error("Invalid date/time format");
       }
+
+      const [year, month, day] = datePart.split("-").map(Number);
+      const [hour, minute, second] = timePart.split(":").map(Number);
+
+      parsedData = {
+        date: { year, month, day },
+        time: { hour, minute, second, nano: 0 },
+      };
     } else {
-      parsedData = data; // Already a DateJson object
+      parsedData = data;
     }
+
     // Validate parsedData structure
+    const { year, month, day } = parsedData.date;
+    const { hour, minute, second, nano } = parsedData.time;
+
     if (
-      typeof parsedData.date?.year !== 'number' ||
-      typeof parsedData.date?.month !== 'number' ||
-      typeof parsedData.date?.day !== 'number' ||
-      typeof parsedData.time?.hour !== 'number' ||
-      typeof parsedData.time?.minute !== 'number' ||
-      typeof parsedData.time?.second !== 'number' ||
-      typeof parsedData.time?.nano !== 'number'
+      ![year, month, day, hour, minute, second, nano].every(
+        (val) => typeof val === "number" && !isNaN(val)
+      )
     ) {
       throw new Error("Invalid DateJson format");
     }
+
+    // Construct date with zero-indexed month
+    const date = new Date(year, month - 1, day, hour, minute, second, nano / 1e6);
+
+    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
   } catch (error) {
-    throw new Error("Invalid JSON data provided");
+    return new Date(0).toISOString();
   }
-
-  const { year, month, day } = parsedData.date;
-  const { hour, minute, second, nano } = parsedData.time;
-
-  // Construct date with zero-indexed month
-  const date = new Date(year, month - 1, day, hour, minute, second, nano / 1e6);
-
-  return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
 }
+
 
 
 export function formatNumberWithPowerUnit(value: number): string {
