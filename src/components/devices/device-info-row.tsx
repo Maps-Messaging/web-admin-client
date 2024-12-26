@@ -42,7 +42,7 @@ export function DeviceInfoRow({ device }: DeviceInfoRowProps): React.JSX.Element
         <TableCell>{device.description}</TableCell>
         <TableCell>{device.type}</TableCell>
       </TableRow>
-      {device.type?.toLowerCase()  === "sensor" && (
+      {device.type?.toLowerCase().trim()  === "sensor" && (
         <TableRow>
           <TableCell colSpan={3} style={{ paddingBottom: 0, paddingTop: 0 }}>
             <Collapse in={open} timeout="auto" unmountOnExit>
