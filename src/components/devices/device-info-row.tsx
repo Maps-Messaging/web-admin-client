@@ -23,6 +23,7 @@ import Typography from "@mui/material/Typography";
 import Collapse from "@mui/material/Collapse";
 import {DeviceInfoDTO} from "@/generated/model";
 import Link from "next/link";
+import {DeviceInfoStateDialog} from "@/components/devices/device-info-state";
 
 interface DeviceInfoRowProps {
   device: DeviceInfoDTO;
@@ -42,13 +43,13 @@ export function DeviceInfoRow({ device }: DeviceInfoRowProps): React.JSX.Element
         <TableCell>{device.description}</TableCell>
         <TableCell>{device.type}</TableCell>
       </TableRow>
-      {device.type === "sensor" && (
+      {device.type?.toLowerCase()  === "sensor" && (
         <TableRow>
           <TableCell colSpan={3} style={{ paddingBottom: 0, paddingTop: 0 }}>
             <Collapse in={open} timeout="auto" unmountOnExit>
-              <Typography variant="body2" style={{ padding: "10px" }}>
-                State: {device.state || "N/A"}
-              </Typography>
+              <DeviceInfoStateDialog
+                stateString={device.state}
+              />
             </Collapse>
           </TableCell>
         </TableRow>
