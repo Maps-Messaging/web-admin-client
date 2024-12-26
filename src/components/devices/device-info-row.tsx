@@ -19,7 +19,6 @@
 import * as React from "react";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
 import Collapse from "@mui/material/Collapse";
 import {DeviceInfoDTO} from "@/generated/model";
 import Link from "next/link";

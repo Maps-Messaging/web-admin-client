@@ -5,14 +5,17 @@ interface DeviceInfoStateDialogProps {
   stateString?: string;
 }
 
-export function DeviceInfoStateDialog({ stateString }: DeviceInfoStateDialogProps) {
+type DeviceInfoState = Record<string, unknown>;
+
+export function DeviceInfoStateDialog({ stateString }: DeviceInfoStateDialogProps): React.JSX.Element {
   if (!stateString) {
-    return null;
+    // Self-closing for empty element
+    return <div />;
   }
 
-  let parsedState: Record<string, any> | null = null;
+  let parsedState: DeviceInfoState | null;
   try {
-    parsedState = JSON.parse(stateString);
+    parsedState = JSON.parse(stateString) as DeviceInfoState;
   } catch {
     parsedState = null;
   }
@@ -29,7 +32,5 @@ export function DeviceInfoStateDialog({ stateString }: DeviceInfoStateDialogProp
         <Typography>Invalid or empty state</Typography>
       )}
     </div>
-
   );
-
 }
