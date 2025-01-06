@@ -21,7 +21,7 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 
-import {useGetInterface,} from "@/generated/server-interface-management/server-interface-management";
+import {useGetEndPoint} from "@/generated/server-interface-management/server-interface-management";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -36,7 +36,7 @@ export default function EndPointDetails({
                                           name=''
                                         }: EndPointDetailsProps): React.JSX.Element {
 
-  const { data, error, isLoading } = useGetInterface(name ||'',{
+  const { data, error, isLoading } = useGetEndPoint(name ||'',{
     query:{
       refetchInterval: 60000
     }

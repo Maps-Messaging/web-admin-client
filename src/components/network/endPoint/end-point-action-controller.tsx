@@ -24,8 +24,8 @@ import {
   pauseInterface,
   resumeInterface,
   startInterface,
-  stopInterface,
-  useGetInterface,
+  stopInterface, useGetEndPoint
+
 } from "@/generated/server-interface-management/server-interface-management";
 import ActionController from "@/components/general/action-controller";
 import toast from "react-hot-toast";
@@ -38,7 +38,7 @@ export default function EndPointActionController({
                                           name=''
                                         }: EndPointActionControllerProps): React.JSX.Element {
 
-  const { data, error, isLoading } = useGetInterface(name ||'',{
+  const { data, error, isLoading } = useGetEndPoint(name ||'',{
     query:{
       refetchInterval: 60000
     }

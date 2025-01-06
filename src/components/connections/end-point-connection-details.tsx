@@ -24,7 +24,7 @@ import Stack from '@mui/material/Stack';
 import {type EndPointSummaryDTO} from "@/generated/model";
 import Typography from "@mui/material/Typography";
 import {ConnectionTable} from "@/components/connections/connection-table";
-import {useGetInterfaceConnections} from "@/generated/server-interface-management/server-interface-management";
+import {useGetEndPointConnections} from "@/generated/server-interface-management/server-interface-management";
 
 interface EndPointConnectionDetailsProps {
   name: string;
@@ -35,7 +35,7 @@ export default function EndPointConnectionDetails({
   const page = 0;
   const rowsPerPage = 20;
 
-  const { data, error, isLoading } = useGetInterfaceConnections(name ||'',{
+  const { data, error, isLoading } = useGetEndPointConnections(name ||'',{
     query:{
       refetchInterval: 6000
     }

@@ -26,8 +26,7 @@ import {
   pauseIntegration,
   resumeIntegration,
   startIntegration,
-  stopIntegration,
-  useGetIntegration
+  stopIntegration, useGetByNameIntegration
 } from "@/generated/server-integration-management/server-integration-management";
 
 interface ConnectionActionControllerProps {
@@ -38,7 +37,7 @@ export default function ConnectionActionController({
                                           name=''
                                         }: ConnectionActionControllerProps): React.JSX.Element {
 
-  const { data, error, isLoading } = useGetIntegration(name ||'',{
+  const { data, error, isLoading } = useGetByNameIntegration(name ||'',{
     query:{
       refetchInterval: 60000
     }

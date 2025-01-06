@@ -25,10 +25,10 @@ import Typography from '@mui/material/Typography';
 import {Accordion, AccordionDetails, AccordionSummary} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import {useGetInterface,} from "@/generated/server-interface-management/server-interface-management";
 import ProtocolConfigRenderer from "@/components/network/config/protocol/protocol-config-renderer";
 import {EndPointConfigDTO, ProtocolConfigDTO} from "@/generated/model";
 import NetworkConfigRenderer from "@/components/network/config/network/network-config-renderer";
+import {useGetEndPoint} from "@/generated/server-interface-management/server-interface-management";
 
 interface EndPointConfigurationProps {
   name: string;
@@ -38,7 +38,7 @@ export default function EndPointConfiguration({
                                                 name = ''
                                               }: EndPointConfigurationProps): React.JSX.Element {
 
-  const { data, error, isLoading } = useGetInterface(name || '', {
+  const { data, error, isLoading } = useGetEndPoint(name || '', {
     query: {
       refetchInterval: 60000
     }

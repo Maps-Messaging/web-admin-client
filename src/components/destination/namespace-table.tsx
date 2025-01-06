@@ -14,6 +14,7 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 
 import {useGetAllDestinations} from "@/generated/destination-management/destination-management";
 import {DestinationRow} from "@/components/destination/destination-row";
+import {GetAllDestinationsSortBy} from "@/generated/model";
 
 function noop(): void {
   // do nothing
@@ -30,7 +31,7 @@ export function NameSpaceTable({
                                  page = 0,
                                  rowsPerPage = 20, // Default to 20 rows per page
                                }: NameSpaceTableProps): React.JSX.Element {
-  const [sortBy, setSortBy] = React.useState<string>('Name');
+  const [sortBy, setSortBy] = React.useState<GetAllDestinationsSortBy>('Name');
 
   const params = {
     filter: '',
@@ -44,7 +45,7 @@ export function NameSpaceTable({
     },
   });
 
-  const handleSort = async (column: string): Promise<void> => {
+  const handleSort = async (column: GetAllDestinationsSortBy): Promise<void> => {
     setSortBy(column);
     await refetch(); // Await the promise returned by refetch
   };
