@@ -27,7 +27,7 @@ import {
   MqttSnProtocolInformation,
   MqttV5ProtocolInformation,
   NmeaProtocolInformation,
-  ProtocolInformationDTO,
+  ProtocolInformationDTO, RestProtocolInformation,
   SemtechProtocolInformation,
   StompProtocolInformation
 } from "@/generated/model";
@@ -76,6 +76,9 @@ function isStompProtocol(protocol: ProtocolInformationDTO): protocol is StompPro
   return protocol.type === 'stomp';
 }
 
+function isRestProtocol(protocol: ProtocolInformationDTO): protocol is RestProtocolInformation {
+  return protocol.type === 'rest';
+}
 
 const ProtocolInformationRenderer:React.FC<ProtocolInformationRendererProps> = ({ protocol, endPointDetails })  => {
   if (isAMQPProtocol(protocol)) {
@@ -116,6 +119,11 @@ const ProtocolInformationRenderer:React.FC<ProtocolInformationRendererProps> = (
       endPointDetails={endPointDetails}
     />;
   } else if (isStompProtocol(protocol)) {
+    return <SessionInfoDetails
+      sessionInfo={protocol.sessionInfo || {}}
+      endPointDetails={endPointDetails}
+    />;
+  } else if (isRestProtocol(protocol)) {
     return <SessionInfoDetails
       sessionInfo={protocol.sessionInfo || {}}
       endPointDetails={endPointDetails}
