@@ -27,20 +27,51 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import {Bell as BellIcon} from '@phosphor-icons/react/dist/ssr/Bell';
 import {List as ListIcon} from '@phosphor-icons/react/dist/ssr/List';
-import {MagnifyingGlass as MagnifyingGlassIcon} from '@phosphor-icons/react/dist/ssr/MagnifyingGlass';
-import {Users as UsersIcon} from '@phosphor-icons/react/dist/ssr/Users';
 
 import {usePopover} from '@/hooks/use-popover';
 
 import {MobileNav} from './mobile-nav';
 import {UserPopover} from './user-popover';
+import {useGetName} from "@/generated/server-health/server-health";
+import Typography from "@mui/material/Typography";
+import {Logo} from "@/components/core/logo";
+import {useGetServerHealthSummary} from "@/generated/server-management/server-management";
+
+function getInitials(name: string): string {
+  return name
+    .split(' ')
+    .map((word: string) => word.charAt(0).toUpperCase())
+    .join('');
+}
 
 export function MainNav(): React.JSX.Element {
   const [openNav, setOpenNav] = React.useState<boolean>(false);
 
   const userPopover = usePopover<HTMLDivElement>();
 
-  const basePath = process.env.BASE_PATH || '';
+  const username = getInitials(localStorage.getItem('username') || 'anonymous');
+  const {data: healthSummaryData} = useGetServerHealthSummary({
+    query:{
+      refetchInterval: 30000
+    }
+  });
+
+  const { data } = useGetName({
+    query:{}
+  });
+
+  function getStatusByNumber(value: number): 'success' | 'warning' {
+    return value > 0 ? 'warning' : 'success';
+  }
+
+  function getStatusToolTip(value: number): string {
+    if(value === 0){
+      return 'No issues found'
+    }
+    return value === 1
+      ? `${value.toString()} sub-system has an issue`
+      : `${value.toString()} sub-systems have issues`;
+  }
 
   return (
     <React.Fragment>
@@ -68,20 +99,22 @@ export function MainNav(): React.JSX.Element {
             >
               <ListIcon />
             </IconButton>
-            <Tooltip title="Search">
-              <IconButton>
-                <MagnifyingGlassIcon />
-              </IconButton>
-            </Tooltip>
+            <Logo
+              color="light"
+              emblem={true}
+              height={32}
+              width={32}
+            />
+            <Typography variant="h4" component="h1" gutterBottom>
+              Server : { data?.data.status || 'Loading...'}
+            </Typography>
           </Stack>
           <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
-            <Tooltip title="Contacts">
-              <IconButton>
-                <UsersIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Notifications">
-              <Badge badgeContent={4} color="success" variant="dot">
+            <Tooltip title={getStatusToolTip(healthSummaryData?.data.issueCount || 0)}>
+              <Badge
+                badgeContent={healthSummaryData?.data.issueCount || 0}
+                color={getStatusByNumber(healthSummaryData?.data.issueCount || 0)}
+              >
                 <IconButton>
                   <BellIcon />
                 </IconButton>
@@ -90,9 +123,10 @@ export function MainNav(): React.JSX.Element {
             <Avatar
               onClick={userPopover.handleOpen}
               ref={userPopover.anchorRef}
-              src={`${basePath}/assets/avatar.png`}
               sx={{ cursor: 'pointer' }}
-            />
+            >
+              {username}
+            </Avatar>
           </Stack>
         </Stack>
       </Box>

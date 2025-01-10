@@ -1,3 +1,4 @@
+'use client'
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
  * Copyright [ 2024 - 2024 ] [Maps Messaging B.V.]
@@ -24,14 +25,17 @@ import GlobalStyles from '@mui/material/GlobalStyles';
 import {AuthGuard} from '@/components/auth/auth-guard';
 import {MainNav} from '@/components/dashboard/layout/main-nav';
 import {SideNav} from '@/components/dashboard/layout/side-nav';
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
+const queryClient = new QueryClient();
 
 export default function Layout({ children }: LayoutProps): React.JSX.Element {
   return (
     <AuthGuard>
+      <QueryClientProvider client={queryClient}>
       <GlobalStyles
         styles={{
           body: {
@@ -63,6 +67,7 @@ export default function Layout({ children }: LayoutProps): React.JSX.Element {
           </main>
         </Box>
       </Box>
+      </QueryClientProvider>
     </AuthGuard>
   );
 }

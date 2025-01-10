@@ -40,7 +40,7 @@ export function Logo({ color = 'dark', emblem, height = HEIGHT, width = WIDTH }:
   let url: string;
 
   if (emblem) {
-    url = color === 'light' ? `${basePath}/assets/logo-emblem.svg` : `${basePath}/assets/logo-emblem--dark.svg`;
+    url = color === 'light' ? `${basePath}/assets/apple-touch-icon.png` : `${basePath}/assets/apple-touch-icon.png`;
   } else {
     url = color === 'light' ? `${basePath}/assets/logo.svg` : `${basePath}/assets/logo--dark.svg`;
   }

@@ -52,6 +52,7 @@ class AuthClient {
       if (response.status === 200 && response.data?.status) {
         const token = generateToken();
         localStorage.setItem('custom-auth-token', token);
+        localStorage.setItem('username', response.data.username || 'anonymous');
         localStorage.setItem('user', JSON.stringify(response.data));
         return {};
       } else {

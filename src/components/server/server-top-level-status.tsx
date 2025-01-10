@@ -22,7 +22,6 @@ import React from 'react';
 import {useGetBuildInfo} from "@/generated/server-management/server-management";
 import Container from "@mui/material/Container";
 import {Grid} from "@mui/material";
-import Typography from "@mui/material/Typography";
 import {ServerOverviewBox} from "@/components/server/stats/server-overview-box";
 import {ServerMemoryUsageBox} from "@/components/server/stats/server-memory-usage-box";
 import {ServerThreadUsageBox} from "@/components/server/stats/server-thread-usage-box";
@@ -42,9 +41,6 @@ export function ServerTopLevelStatus () :  React.JSX.Element {
 
   return (
     <Container maxWidth="lg">
-      <Typography variant="h3" component="h1" gutterBottom>
-        Server : {data?.data.serverName}
-      </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={3}>
           {/* Build Info */}
