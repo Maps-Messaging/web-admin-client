@@ -28,6 +28,7 @@ import {ServerTopLevelStatus} from "@/components/server/server-top-level-status"
 import SubSystemStatusTable from "@/components/server/sub-system-status-table";
 import ConnectionDetails from "@/components/connections/connection-details";
 import {NameSpaceTable} from "@/components/destination/namespace-table";
+import LogViewer from "@/components/logging/log-viewer";
 
 
 const tabs = [
@@ -46,6 +47,10 @@ const tabs = [
   {
     label: 'Analytics',
     value: 'graphs'
+  },
+  {
+    label: 'Logs',
+    value: 'logs'
   },
 ]
 
@@ -135,6 +140,7 @@ export function ServerDetails () :  React.JSX.Element {
       {currentTab === 'overview' && <SubSystemStatusTable />}
       {currentTab === 'connections' && <ConnectionDetails />}
       {currentTab === 'destinations' && <NameSpaceTable />}
+      {currentTab === 'logs' && <LogViewer />}
       {currentTab === 'graphs' &&
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>

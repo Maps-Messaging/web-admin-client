@@ -21,7 +21,6 @@ import {paths} from '@/paths';
 
 export const navItems = [
   { key: 'overview', title: 'Overview', href: paths.dashboard.overview, icon: 'cpu' },
-  { key: 'monitor', title: 'Monitor', href: paths.dashboard.monitor, icon: 'monitor' },
   {
     key: 'server',
     title: 'Server Management',
