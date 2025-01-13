@@ -46,7 +46,10 @@ const MessageStreamViewer: React.FC<MessageStreamViewerProps> = ({ destination }
 
     eventSource.addEventListener(destination, (event) => {
       const message: MessageDTO = JSON.parse(event.data); // Parse the log entry
-      setMessages((prevMessages) => [message, ...prevMessages]);
+      setMessages((prevMessages) => {
+        const updatedMessages = [message, ...prevMessages]; // Add new message at the start
+        return updatedMessages.slice(0, 20); // Keep only the last 20 messages
+      });
     });
 
     // Cleanup on unmount
@@ -67,23 +70,28 @@ const MessageStreamViewer: React.FC<MessageStreamViewerProps> = ({ destination }
       <Typography variant="h6" align="center" gutterBottom>
         Message Stream Viewer
       </Typography>
-      <div style={styles.messageWindow} ref={messageContainerRef}>
+      <div style={styles.messageWindow}>
         {messages.map((message, index) => (
           <div key={index} style={styles.message}>
-            <Typography variant="body2" style={{ color: "#0f0" }}>
+            <Typography variant="body2" style={{color: "#00FFFF"}}>
+              Identifier: {message?.identifier}  Creation: {message?.creation || ''}
+            </Typography>
+            <Typography variant="body2" style={{color: "#0f0"}}>
               Payload: {decodeBase64(message.payload)}
             </Typography>
             {message.dataMap && (
-              <Typography variant="body2" style={{ color: "#aaa" }}>
+              <Typography variant="body2" style={{color: "#aaa"}}>
                 Data Map: {JSON.stringify(message.dataMap)}
               </Typography>
             )}
+            <hr style={styles.horizontalLine}/>
+            {/* Horizontal line */}
           </div>
         ))}
       </div>
     </div>
   );
-};
+}
 
 const styles = {
   container: {
@@ -93,21 +101,22 @@ const styles = {
     border: "1px solid #ccc",
     borderRadius: "5px",
     overflow: "hidden",
-    backgroundColor: "#000", // Dark background for log viewer aesthetic
+    backgroundColor: "#000", // Black background for the container
+    padding: "10px",
   },
   messageWindow: {
     height: "600px",
-    overflowY: "scroll" as const,
     overflowX: "auto" as const,
-    backgroundColor: "#000",
+    backgroundColor: "#000", // Black background for the message window
     padding: "10px",
   },
   message: {
-    marginBottom: "10px",
-    padding: "5px",
-    backgroundColor: "#111", // Slightly lighter background for contrast
-    borderRadius: "4px",
+    padding: "10px 0",
+  },
+  horizontalLine: {
+    border: "none",
+    borderBottom: "1px solid #444", // Subtle gray line
+    margin: "10px 0",
   },
 };
-
 export default MessageStreamViewer;
