@@ -20,7 +20,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Typography from "@mui/material/Typography";
-import {LogEntry, MessageDTO} from "@/generated/model";
+import {MessageDTO} from "@/generated/model";
 
 interface MessageStreamViewerProps {
   destination: string;
@@ -35,21 +35,26 @@ const MessageStreamViewer: React.FC<MessageStreamViewerProps> = ({ destination }
     try {
       return atob(base64); // Decode Base64 string
     } catch (error) {
-      console.error("Failed to decode Base64 payload:", error);
       return "[Invalid Base64 Payload]";
     }
   };
 
   useEffect(() => {
-    const url = `${process.env.API_BASE_URL}/api/v1/messaging/sse?destination=${encodeURIComponent(destination)}`;
+    const baseUrl = process.env.API_BASE_URL || '';
+    const url = `${baseUrl}/api/v1/messaging/sse?destination=${encodeURIComponent(destination)}`;
     const eventSource = new EventSource(url);
 
-    eventSource.addEventListener(destination, (event) => {
-      const message: MessageDTO = JSON.parse(event.data); // Parse the log entry
-      setMessages((prevMessages) => {
-        const updatedMessages = [message, ...prevMessages]; // Add new message at the start
-        return updatedMessages.slice(0, 20); // Keep only the last 20 messages
-      });
+    eventSource.addEventListener(destination, (event: MessageEvent) => {
+      try {
+        const data = event.data as string;
+        const message: MessageDTO = JSON.parse(data) as MessageDTO;
+        setMessages((prevMessages) => {
+          const updatedMessages = [message, ...prevMessages];
+          return updatedMessages.slice(0, 20);
+        });
+      } catch (error) {
+        // Not much we can do here
+      }
     });
 
     // Cleanup on unmount
@@ -84,8 +89,12 @@ const MessageStreamViewer: React.FC<MessageStreamViewerProps> = ({ destination }
                 Data Map: {JSON.stringify(message.dataMap)}
               </Typography>
             )}
+            {message.dataMap && (
+              <Typography variant="body2" style={{color: "#aaa"}}>
+                Meta Data: {JSON.stringify(message.metaData)}
+              </Typography>
+            )}
             <hr style={styles.horizontalLine}/>
-            {/* Horizontal line */}
           </div>
         ))}
       </div>

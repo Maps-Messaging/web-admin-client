@@ -7,18 +7,18 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
-import { LogEntry } from "@/generated/model";
+import type { LogEntry } from "@/generated/model";
 
 const LogViewer: React.FC = () => {
-  const [logs, setLogs] = useState<LogEntry[]>([]); // Store log entries
-  const [level, setLevel] = useState<number>(0); // Selected log level filter
-  const [textFilter, setTextFilter] = useState<string>(""); // Message text filter
-  const logContainerRef = useRef<HTMLDivElement | null>(null); // Reference to the log container for auto-scrolling
-  const [filter, setFilter] = useState<string>(""); // Combined filter query
+  const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [level, setLevel] = useState<number>(0);
+  const [textFilter, setTextFilter] = useState<string>("");
+  const logContainerRef = useRef<HTMLDivElement | null>(null);
+  const [filter, setFilter] = useState<string>("");
 
   // Function to get the color based on the severity level
-  const getColorForLevel = (level: number): string => {
-    switch (level) {
+  const getColorForLevel = (logLevel: number): string => {
+    switch (logLevel) {
       case 40000: // ERROR
         return "#FF0000"; // Red
       case 30000: // WARN
@@ -34,28 +34,33 @@ const LogViewer: React.FC = () => {
     }
   };
 
-  // Function to construct the filter query
-  const buildFilter = () => {
+  const buildFilter = (): void => {
     let query = "";
     if (level > 0) {
-      query += `level >= ${level}`;
+      query += `level >= ${level.toString()}`; // Explicitly convert `level` to a string
     }
     if (textFilter.trim() !== "") {
       if (query) query += " AND ";
-      query += `message LIKE '%${textFilter.trim()}%'`; // Use LIKE for partial match
+      query += `message LIKE '%${textFilter.trim()}%'`;
     }
     setFilter(query);
   };
 
   useEffect(() => {
-    const url = `${process.env.API_BASE_URL}/api/v1/server/log/sse?filter=${encodeURIComponent(filter)}`;
+    const baseUrl = process.env.API_BASE_URL || '';
+    const url = `${baseUrl}/api/v1/server/log/sse?filter=${encodeURIComponent(filter)}`;
     const eventSource = new EventSource(url);
 
-    // Event handler for logEvent
-    eventSource.addEventListener("logEvent", (event) => {
-      const logEntry: LogEntry = JSON.parse(event.data); // Parse the log entry
-      setLogs((prevLogs) => [...prevLogs, logEntry]); // Append new log entry
+    eventSource.addEventListener("logEvent", (event: MessageEvent) => {
+      try {
+        const data = event.data as string; // Ensure event.data is treated as a string
+        const logEntry: LogEntry = JSON.parse(data) as LogEntry; // Explicitly type the parsed object
+        setLogs((prevLogs) => [...prevLogs, logEntry]);
+      } catch (error) {
+        // not much we can do here
+      }
     });
+
 
     // Cleanup SSE connection on unmount
     return () => {
@@ -76,7 +81,9 @@ const LogViewer: React.FC = () => {
         <Tooltip title="Select the log level. Includes all higher levels." arrow>
           <Select
             value={level}
-            onChange={(e) => setLevel(Number(e.target.value))}
+            onChange={(e) => {
+              setLevel(Number(e.target.value));
+            }}
             displayEmpty
             style={styles.dropdown}
           >
@@ -93,7 +100,9 @@ const LogViewer: React.FC = () => {
           variant="outlined"
           size="small"
           value={textFilter}
-          onChange={(e) => setTextFilter(e.target.value)}
+          onChange={(e) => {
+            setTextFilter(e.target.value)
+          }}
           style={styles.textField}
         />
         <Button variant="contained" color="primary" onClick={buildFilter}>
@@ -103,7 +112,7 @@ const LogViewer: React.FC = () => {
       <div style={styles.logWindow} ref={logContainerRef}>
         {logs.map((log, index) => (
           <Typography
-            key={index}
+            key={log.logNumber}
             variant="body2"
             component="div"
             sx={{
