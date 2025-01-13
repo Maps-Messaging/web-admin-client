@@ -18,17 +18,36 @@
  *  limitations under the License.
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {useGetDestinationDetails} from "@/generated/destination-management/destination-management";
 import DestinationDetailHeader from "@/components/destination/destination-details-header";
 import SubscriptionStateTable from "@/components/connections/connection/subscription-state-table";
+import {Tab, Tabs} from "@mui/material";
+import MessageStreamViewer from "@/components/messaging/message-stream-viewer";
 
 interface DestinationDetailProps {
   destinationName: string;
   displayName?: boolean;
 }
 
+const tabs = [
+  {
+    label: 'Details',
+    value: 'details'
+  },
+  {
+    label: 'Messages',
+    value: 'messages'
+  }
+
+]
+
 export function DestinationDetail({ destinationName, displayName=true }: DestinationDetailProps): React.JSX.Element {
+  const [currentTab, setCurrentTab] = useState<string>('details');
+
+  const handleTabsChange = (event: React.SyntheticEvent, value: string): void => {
+    setCurrentTab(value);
+  };
 
   const params = {
     destinationName: destinationName,
@@ -44,14 +63,38 @@ export function DestinationDetail({ destinationName, displayName=true }: Destina
 
   return (
     <div>
-      <DestinationDetailHeader
-        destinationData={data?.data.destination }
-        displayName={displayName}
-      />
-      <SubscriptionStateTable
-        subscriptionStates={data?.data.subscriptionList || []}
-        displayName={false}
-      />
+      <Tabs
+        indicatorColor="primary"
+        onChange={handleTabsChange}
+        scrollButtons="auto"
+        sx={{px: 3}}
+        textColor="primary"
+        value={currentTab}
+        variant="scrollable"
+      >
+        {tabs.map((tab) => (
+          <Tab
+            key={tab.value}
+            label={tab.label}
+            value={tab.value}
+          />
+        ))}
+      </Tabs>
+      {currentTab === 'details' &&
+        <div>
+            <DestinationDetailHeader
+            destinationData={data?.data.destination }
+            displayName={displayName}
+          />
+          <SubscriptionStateTable
+            subscriptionStates={data?.data.subscriptionList || []}
+            displayName={false}
+          />
+        </div>
+      }
+      {currentTab === 'messages' && <MessageStreamViewer
+        destination={destinationName || "" } />
+      }
     </div>
   );
 }
