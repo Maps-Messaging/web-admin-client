@@ -30,6 +30,7 @@ import QueueIcon from "@mui/icons-material/Queue";
 import FolderIcon from "@mui/icons-material/Folder";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import DestinationDetail from "@/components/destination/destination-details";
+import FolderDetails from "@/components/destination/folder-details";
 
 interface TreeNode {
   id: string;
@@ -116,6 +117,46 @@ const buildTree = (destinations: DestinationDTO[]): [TreeNode[], Map<string, Tre
   });
 
   return [root, filesMap];
+};
+
+const getRecursiveSummary = (
+  path: string,
+  filesMap: Map<string, TreeFile[]>
+): {
+  delayedMessages: number;
+  pendingMessages: number;
+  storedMessages: number;
+  destinationCount: number;
+  folderCount: number;
+} => {
+  let summary = {
+    delayedMessages: 0,
+    pendingMessages: 0,
+    storedMessages: 0,
+    destinationCount: 0,
+    folderCount: 0,
+  };
+
+  const processFiles = (currentPath: string) => {
+    const files = filesMap.get(currentPath) || [];
+    files.forEach((file) => {
+      // Aggregate message counts
+      summary.delayedMessages += file.delayedMessages || 0;
+      summary.pendingMessages += file.pendingMessages || 0;
+      summary.storedMessages += file.storedMessages || 0;
+
+      // Count destinations and folders
+      if (file.isFolder) {
+        summary.folderCount += 1;
+        processFiles(file.id); // Recursively process child folders
+      } else {
+        summary.destinationCount += 1;
+      }
+    });
+  };
+
+  processFiles(path); // Start the recursive processing
+  return summary;
 };
 
 const NamespaceTree = (): React.JSX.Element => {
@@ -252,6 +293,15 @@ const NamespaceTree = (): React.JSX.Element => {
             <DestinationDetail
               destinationName={selectedDestination.id || ''}
               displayName={false}
+            />
+          </Box>
+        )}
+        {!selectedDestination && (
+          <Box sx={{ flex: 1, overflowY: 'auto', borderTop: 1, borderColor: 'divider', marginTop: 2 }}>
+            <FolderDetails
+              folderName={selectedFolder || ''}
+              summary={selectedFolder ? getRecursiveSummary(selectedFolder, filesMap) : null}
+              resetTrigger={selectedFolder || ''}
             />
           </Box>
         )}

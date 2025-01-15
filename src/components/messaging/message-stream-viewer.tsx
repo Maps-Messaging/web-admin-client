@@ -20,14 +20,14 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Typography from "@mui/material/Typography";
-import {MessageDTO} from "@/generated/model";
+import {AsyncMessageDTO} from "@/generated/model";
 
 interface MessageStreamViewerProps {
   destination: string;
 }
 
 const MessageStreamViewer: React.FC<MessageStreamViewerProps> = ({ destination }) => {
-  const [messages, setMessages] = useState<MessageDTO[]>([]); // Store received messages
+  const [messages, setMessages] = useState<AsyncMessageDTO[]>([]); // Store received messages
   const messageContainerRef = useRef<HTMLDivElement | null>(null); // Auto-scroll reference
 
   // Decode Base64 payload
@@ -40,14 +40,14 @@ const MessageStreamViewer: React.FC<MessageStreamViewerProps> = ({ destination }
   };
 
   useEffect(() => {
-    const baseUrl = process.env.API_BASE_URL || '';
-    const url = `${baseUrl}/api/v1/messaging/sse?destination=${encodeURIComponent(destination)}`;
+    const baseUrl:string = process.env.API_BASE_URL || '';
+    const url = `${baseUrl}/api/v1/messaging/sse?destinationName=${encodeURIComponent(destination)}`;
     const eventSource = new EventSource(url);
 
-    eventSource.addEventListener(destination, (event: MessageEvent) => {
+    eventSource.addEventListener(destination, (event: MessageEvent) :void => {
       try {
         const data = event.data as string;
-        const message: MessageDTO = JSON.parse(data) as MessageDTO;
+        const message: AsyncMessageDTO = JSON.parse(data) as AsyncMessageDTO;
         setMessages((prevMessages) => {
           const updatedMessages = [message, ...prevMessages];
           return updatedMessages.slice(0, 20);
@@ -72,14 +72,11 @@ const MessageStreamViewer: React.FC<MessageStreamViewerProps> = ({ destination }
 
   return (
     <div style={styles.container}>
-      <Typography variant="h6" align="center" gutterBottom>
-        Message Stream Viewer
-      </Typography>
       <div style={styles.messageWindow}>
         {messages.map((message, index) => (
           <div key={index} style={styles.message}>
             <Typography variant="body2" style={{color: "#00FFFF"}}>
-              Identifier: {message?.identifier}  Creation: {message?.creation || ''}
+              Identifier: {message?.identifier} Creation: {message?.creation || ''} Name: {message?.destinationName || ''}
             </Typography>
             <Typography variant="body2" style={{color: "#0f0"}}>
               Payload: {decodeBase64(message.payload)}
