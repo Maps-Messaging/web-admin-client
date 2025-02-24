@@ -1,6 +1,6 @@
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2024 ] [Maps Messaging B.V.]
+ * Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import AmqpConfigComponent from "@/components/network/config/protocol/amqp-confi
 import CoapConfigComponent from "@/components/network/config/protocol/coap-config-component";
 import {
   AmqpConfigDTO,
-  CoapConfigDTO,
+  CoapConfigDTO, ExtensionConfigDTO,
   LoRaConfigDTO,
   MqttConfigDTO,
   MqttSnConfigDTO,
@@ -42,26 +42,22 @@ import {
   WebSocketConfigDTO
 } from "@/generated/model";
 import MqttSnConfigComponent from "@/components/network/config/protocol/mqtt-sn-config-component";
+import ExtensionConfigComponent from "@/components/network/config/protocol/extension-config-component";
 
 interface ProtocolConfigRendererProps {
   config: ProtocolConfigDTO;
   onChange: (updatedConfig: ProtocolConfigDTO) => void;
 }
 
-// Define type guards for each specific config type
 function isAmqpConfig(config: ProtocolConfigDTO): config is AmqpConfigDTO {
   return config.type === 'amqp';
 }
-
 function isCoapConfig(config: ProtocolConfigDTO): config is CoapConfigDTO {
   return config.type === 'coap';
 }
-
 function isMqttSnConfig(config: ProtocolConfigDTO): config is MqttSnConfigDTO {
   return config.type === 'mqtt-sn';
 }
-
-// Continue with similar type guards for each protocol type
 function isLoraConfig(config: ProtocolConfigDTO): config is LoRaConfigDTO {
   return config.type === 'lora';
 }
@@ -82,6 +78,9 @@ function isStompConfig(config: ProtocolConfigDTO): config is StompConfigDTO {
 }
 function isWebSocketConfig(config: ProtocolConfigDTO): config is WebSocketConfigDTO {
   return config.type === 'websocket';
+}
+function isExtensionConfig(config: ProtocolConfigDTO): config is ExtensionConfigDTO {
+  return config.type === 'extension';
 }
 
 const ProtocolConfigRenderer:React.FC<ProtocolConfigRendererProps> = ({ config, onChange })  => {
@@ -117,7 +116,10 @@ const ProtocolConfigRenderer:React.FC<ProtocolConfigRendererProps> = ({ config, 
     />;
   } else if (isWebSocketConfig(config)) {
     return <WebsocketConfigComponent config={config} />;
-  } else {
+  }
+ else if (isExtensionConfig(config)) {
+    return <ExtensionConfigComponent config={config} />;
+  }else {
     return <div>Unknown Protocol Type</div>;
   }
 };

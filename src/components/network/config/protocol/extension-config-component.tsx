@@ -15,30 +15,12 @@
  * limitations under the License.
  *
  */
-'use client'
 
 import React from 'react';
-import {useGetServerConfig,} from "@/generated/server-config-management/server-config-management";
-import MessagingServerConfig from "@/components/server/messaging-server-config";
-import ServerControl from "@/components/server/server-control";
+import {ExtensionConfigDTO} from "@/generated/model";
 
-const ServerConfig: React.FC = () => {
-
-  const { data, error, isLoading } = useGetServerConfig({
-    query:{
-      refetchInterval: 60000
-    }
-  });
-  if(isLoading) return (<div></div>);
-  if(error) return (<div>Unable to load server config</div>);
-  return (
-    <div>
-      <ServerControl/>
-      <MessagingServerConfig
-        config={data?.data || {}}
-        />
-    </div>
-  );
+const ExtensionConfigComponent: React.FC<{ config: ExtensionConfigDTO}> = ({ config }) => {
+  return <div>Coap Config: {config.type}</div>;
 };
 
-export default ServerConfig;
+export default ExtensionConfigComponent;
