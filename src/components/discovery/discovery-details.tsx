@@ -73,7 +73,7 @@ export default function DiscoveryDetails(): React.ReactElement {
       <TableContainer>
         <Table>
           <TableBody>
-            {data?.data.map((server, index) => {
+            {data?.data.list?.map((server, index) => {
               const key = `server-${index.toString()}`;
               const mapsService = server.services
                 ? Object.values(server.services).find((service) => service?.protocol === 'maps')

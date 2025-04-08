@@ -53,7 +53,7 @@ export function DeviceInfoTable(): React.JSX.Element {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((device) => (
+          {data?.data?.list?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((device) => (
             <DeviceInfoRow key={device.name} device={device} />
           ))}
         </TableBody>
@@ -61,7 +61,7 @@ export function DeviceInfoTable(): React.JSX.Element {
       <Divider />
       <TablePagination
         component="div"
-        count={data?.data?.length || 0}
+        count={data?.data?.list?.length || 0}
         page={page}
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}
