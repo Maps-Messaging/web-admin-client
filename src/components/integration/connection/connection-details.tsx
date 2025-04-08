@@ -22,9 +22,9 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
-import {useGetIntegrationStatus} from "@/generated/server-integration-management/server-integration-management";
 import {formatNumberWithPowerUnit} from "@/helper-functions";
 import {ConnectionStatus} from "@/components/integration/connection/connection-status";
+import {useGetIntegrationStatus} from "@/generated/server-integration-status/server-integration-status";
 
 interface ConnectionDetailsProps {
   name: string;

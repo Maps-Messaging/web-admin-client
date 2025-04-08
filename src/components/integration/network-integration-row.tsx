@@ -22,9 +22,9 @@ import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
 import {formatNumberWithPowerUnit} from "@/helper-functions";
 import TableRow from "@mui/material/TableRow";
-import {useGetIntegrationStatus} from "@/generated/server-integration-management/server-integration-management";
 import Link from "next/link";
 import ConnectionActionController from "@/components/integration/connection/connection-action-controller";
+import {useGetIntegrationStatus} from "@/generated/server-integration-status/server-integration-status";
 
 interface NetworkIntegrationRowProps {
   key: string;

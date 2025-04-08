@@ -16,7 +16,8 @@
     "generate": "orval --config orval.config.js && npm run update-client",
     "update": "npm update",
     "audit": "npm audit fix --force",
-    "update-client": "node scripts/updateGeneratedClient.js"
+    "update-client": "node scripts/updateGeneratedClient.js",
+    "redocly ": "redocly  lint resources/openapi.json"
   },
   "dependencies": {
     "@emotion/cache": "11.11.0",
@@ -69,6 +70,7 @@
     "jest-environment-jsdom": "29.7.0",
     "orval": "^6.19.1",
     "prettier": "3.2.5",
-    "typescript": "5.4.2"
+    "typescript": "5.4.2",
+    "@redocly/cli": "1.34.1"
   }
 }
