@@ -20,7 +20,10 @@
 
 import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import {Experimental_CssVarsProvider as CssVarsProvider} from '@mui/material/styles';
+import {
+  Experimental_CssVarsProvider as CssVarsProvider,
+  useColorScheme
+} from '@mui/material/styles';
 
 import {createTheme} from '@/styles/theme/create-theme';
 
@@ -30,14 +33,53 @@ export interface ThemeProviderProps {
   children: React.ReactNode;
 }
 
+export const ThemeContext = React.createContext<{
+  mode: 'light' | 'dark';
+  toggleColorMode: () => void;
+}>({
+  mode: 'light',
+  toggleColorMode: () => {},
+});
+
+function ThemeColorToggler({ children }: { children: React.ReactNode }) {
+  const { mode, setMode } = useColorScheme();
+  
+  const toggleColorMode = React.useCallback(() => {
+    const newMode = mode === 'light' ? 'dark' : 'light';
+    setMode(newMode);
+    // Store preference
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('colorMode', newMode);
+    }
+  }, [mode, setMode]);
+  
+  const themeContextValue = React.useMemo(() => ({
+    mode,
+    toggleColorMode,
+  }), [mode, toggleColorMode]);
+
+  return (
+    <ThemeContext.Provider value={themeContextValue}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
 export function ThemeProvider({ children }: ThemeProviderProps): React.JSX.Element {
   const theme = createTheme();
+  
+  // Get stored preference for initial theme
+  const storedMode = typeof window !== 'undefined' ? 
+    localStorage.getItem('colorMode') as 'light' | 'dark' | null : null;
+  const defaultMode = storedMode || 'light';
 
   return (
     <EmotionCache options={{ key: 'mui' }}>
-      <CssVarsProvider theme={theme}>
+      <CssVarsProvider theme={theme} defaultMode={defaultMode} storageKey="colorMode">
         <CssBaseline />
-        {children}
+        <ThemeColorToggler>
+          {children}
+        </ThemeColorToggler>
       </CssVarsProvider>
     </EmotionCache>
   );

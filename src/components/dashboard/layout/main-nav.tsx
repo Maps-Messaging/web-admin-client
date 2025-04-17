@@ -35,6 +35,7 @@ import {UserPopover} from './user-popover';
 import {useGetName} from "@/generated/server-health/server-health";
 import Typography from "@mui/material/Typography";
 import {Logo} from "@/components/core/logo";
+import {ThemeToggle} from '@/components/core/theme-toggle';
 import {useGetServerHealthSummary} from "@/generated/server-management/server-management";
 
 function getInitials(name: string): string {
@@ -120,6 +121,7 @@ export function MainNav(): React.JSX.Element {
                 </IconButton>
               </Badge>
             </Tooltip>
+            <ThemeToggle />
             <Avatar
               onClick={userPopover.handleOpen}
               ref={userPopover.anchorRef}

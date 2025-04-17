@@ -28,11 +28,14 @@ import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import {GearSix as GearSixIcon} from '@phosphor-icons/react/dist/ssr/GearSix';
 import {SignOut as SignOutIcon} from '@phosphor-icons/react/dist/ssr/SignOut';
+import {Moon as MoonIcon} from '@phosphor-icons/react/dist/ssr/Moon';
+import {Sun as SunIcon} from '@phosphor-icons/react/dist/ssr/Sun';
 
 import {paths} from '@/paths';
 import {authClient} from '@/lib/auth/client';
 import {logger} from '@/lib/default-logger';
 import {useUser} from '@/hooks/use-user';
+import {useTheme} from '@/hooks/use-theme';
 import type {LoginResponse} from '@/generated/model';
 
 
@@ -45,6 +48,7 @@ export interface UserPopoverProps {
 export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): React.JSX.Element {
   const { checkSession } = useUser();
   const router = useRouter();
+  const { mode, toggleColorMode } = useTheme();
 
   const [user, setUser] = React.useState<LoginResponse | null>(null);
 
@@ -81,6 +85,10 @@ export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): Reac
     }
   }, [checkSession, router]);
 
+  const handleToggleTheme = React.useCallback((): void => {
+    toggleColorMode();
+    onClose();
+  }, [toggleColorMode, onClose]);
 
 
   return (
@@ -101,6 +109,16 @@ export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): Reac
             <GearSixIcon fontSize="var(--icon-fontSize-md)" />
           </ListItemIcon>
           Settings
+        </MenuItem>
+        <MenuItem onClick={handleToggleTheme}>
+          <ListItemIcon>
+            {mode === 'light' ? (
+              <MoonIcon fontSize="var(--icon-fontSize-md)" />
+            ) : (
+              <SunIcon fontSize="var(--icon-fontSize-md)" />
+            )}
+          </ListItemIcon>
+          {mode === 'light' ? 'Dark Mode' : 'Light Mode'}
         </MenuItem>
         <MenuItem onClick={handleSignOut}>
           <ListItemIcon>
