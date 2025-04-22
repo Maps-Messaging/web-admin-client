@@ -9,9 +9,13 @@ sed -i "s/API_BASE_URL: 'http:\/\/localhost:8080'/API_BASE_URL: ''/" next.config
 
 npm install --force || true
 npm install orval || true
-npm run generate || true
-npm run build || true
+npm run generate
+npm run build
 
+if [ ! -d out ]; then
+  echo "Build failed: 'out' directory not found."
+  exit 1
+fi
 tar -cvzf webAdminClient.tgz out/*
 
 # Delete the release from GitHub before creating a new one
