@@ -20,10 +20,7 @@
 
 import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import {
-  Experimental_CssVarsProvider as CssVarsProvider,
-  useColorScheme
-} from '@mui/material/styles';
+import {useColorScheme, Experimental_CssVarsProvider as CssVarsProvider} from '@mui/material/styles';
 
 import {createTheme} from '@/styles/theme/create-theme';
 
@@ -38,12 +35,14 @@ export const ThemeContext = React.createContext<{
   toggleColorMode: () => void;
 }>({
   mode: 'light',
-  toggleColorMode: () => {},
+  toggleColorMode: () => {
+    // no-op default to prevent eslint error
+  },
 });
-
 function ThemeColorToggler({ children }: { children: React.ReactNode }) {
-  const { mode, setMode } = useColorScheme();
-  
+  const { mode = 'light', setMode } = useColorScheme();
+
+
   const toggleColorMode = React.useCallback(() => {
     const newMode = mode === 'light' ? 'dark' : 'light';
     setMode(newMode);
@@ -52,14 +51,16 @@ function ThemeColorToggler({ children }: { children: React.ReactNode }) {
       localStorage.setItem('colorMode', newMode);
     }
   }, [mode, setMode]);
-  
+
   const themeContextValue = React.useMemo(() => ({
-    mode,
+    mode: (mode ?? 'light') as 'light' | 'dark',
     toggleColorMode,
   }), [mode, toggleColorMode]);
 
   return (
-    <ThemeContext.Provider value={themeContextValue}>
+    <ThemeContext.Provider
+      value={themeContextValue}
+    >
       {children}
     </ThemeContext.Provider>
   );
@@ -67,15 +68,18 @@ function ThemeColorToggler({ children }: { children: React.ReactNode }) {
 
 export function ThemeProvider({ children }: ThemeProviderProps): React.JSX.Element {
   const theme = createTheme();
-  
+
   // Get stored preference for initial theme
-  const storedMode = typeof window !== 'undefined' ? 
+  const storedMode = typeof window !== 'undefined' ?
     localStorage.getItem('colorMode') as 'light' | 'dark' | null : null;
   const defaultMode = storedMode || 'light';
 
   return (
     <EmotionCache options={{ key: 'mui' }}>
-      <CssVarsProvider theme={theme} defaultMode={defaultMode} storageKey="colorMode">
+      <CssVarsProvider
+        theme={theme}
+        defaultMode={defaultMode}
+      >
         <CssBaseline />
         <ThemeColorToggler>
           {children}
