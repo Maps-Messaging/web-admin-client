@@ -26,6 +26,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import type { LogEntry } from "@/generated/model";
+import {requestSseToken} from "@/generated/logging-monitor/logging-monitor";
 
 const LogViewer: React.FC = () => {
   const [logs, setLogs] = useState<LogEntry[]>([]);
@@ -65,24 +66,35 @@ const LogViewer: React.FC = () => {
   };
 
   useEffect(() => {
-    const baseUrl = process.env.API_BASE_URL || '';
-    const url = `${baseUrl}/api/v1/server/log/sse?filter=${encodeURIComponent(filter)}`;
-    const eventSource = new EventSource(url);
+    let eventSource: EventSource | null = null;
 
-    eventSource.addEventListener("logEvent", (event: MessageEvent) => {
+    const connectWithToken = async () => {
       try {
-        const data = event.data as string; // Ensure event.data is treated as a string
-        const logEntry: LogEntry = JSON.parse(data) as LogEntry; // Explicitly type the parsed object
-        setLogs((prevLogs) => [...prevLogs, logEntry]);
+        const response = await requestSseToken({ withCredentials: true });
+        const token = response.data as string; // or use `response.data.token` if wrapped
+
+        const baseUrl = process.env.API_BASE_URL || '';
+        const url = `${baseUrl}/api/v1/server/log/sse/stream/${token}?filter=${encodeURIComponent(filter)}`;
+
+        eventSource = new EventSource(url, { withCredentials: true });
+
+        eventSource.addEventListener("logEvent", (event: MessageEvent) => {
+          try {
+            const logEntry: LogEntry = JSON.parse(event.data);
+            setLogs((prevLogs) => [...prevLogs, logEntry]);
+          } catch {
+            // Ignore parse errors
+          }
+        });
       } catch (error) {
-        // not much we can do here
+        // Optionally log error or show notification
       }
-    });
+    };
 
+    connectWithToken();
 
-    // Cleanup SSE connection on unmount
     return () => {
-      eventSource.close();
+      if (eventSource) eventSource.close();
     };
   }, [filter]);
 
