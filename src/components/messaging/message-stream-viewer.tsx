@@ -21,6 +21,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Typography from "@mui/material/Typography";
 import {AsyncMessageDTO} from "@/generated/model";
+import {useRequestSseMessageToken} from "@/generated/messaging-interface/messaging-interface";
 
 interface MessageStreamViewerProps {
   destination: string;
@@ -39,29 +40,27 @@ const MessageStreamViewer: React.FC<MessageStreamViewerProps> = ({ destination }
     }
   };
 
-  useEffect(() => {
-    const baseUrl:string = process.env.API_BASE_URL || '';
-    const url = `${baseUrl}/api/v1/messaging/sse?destinationName=${encodeURIComponent(destination)}`;
-    const eventSource = new EventSource(url);
+  const { data: tokenResponse, isSuccess } = useRequestSseMessageToken({destination});
 
-    eventSource.addEventListener(destination, (event: MessageEvent) :void => {
+  useEffect(() => {
+    if (!isSuccess || !tokenResponse?.data) return;
+
+    const baseUrl = process.env.API_BASE_URL || '';
+    const token = tokenResponse.data as string; // Adjust if your API wraps the token in an object
+    const sseUrl = `${baseUrl}/api/v1/messaging/sse/stream/${encodeURIComponent(token)}?destinationName=${encodeURIComponent(destination)}`;
+    const eventSource = new EventSource(sseUrl);
+
+    eventSource.addEventListener(destination, (event: MessageEvent) => {
       try {
-        const data = event.data as string;
-        const message: AsyncMessageDTO = JSON.parse(data) as AsyncMessageDTO;
-        setMessages((prevMessages) => {
-          const updatedMessages = [message, ...prevMessages];
-          return updatedMessages.slice(0, 20);
-        });
-      } catch (error) {
-        // Not much we can do here
+        const message: AsyncMessageDTO = JSON.parse(event.data);
+        setMessages(prev => [message, ...prev].slice(0, 20));
+      } catch {
+        // silently ignore
       }
     });
 
-    // Cleanup on unmount
-    return () => {
-      eventSource.close();
-    };
-  }, [destination]);
+    return () => eventSource.close();
+  }, [isSuccess, tokenResponse?.data, destination]);
 
   useEffect(() => {
     // Auto-scroll to the bottom of the message view
