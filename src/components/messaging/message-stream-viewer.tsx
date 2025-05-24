@@ -19,51 +19,55 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from "react";
+import { JSX } from "react";
 import Typography from "@mui/material/Typography";
-import {AsyncMessageDTO} from "@/generated/model";
-import {useRequestSseMessageToken} from "@/generated/messaging-interface/messaging-interface";
+import type { AsyncMessageDTO } from "@/generated/model";
+import { useRequestSseMessageToken } from "@/generated/messaging-interface/messaging-interface";
 
 interface MessageStreamViewerProps {
   destination: string;
 }
 
-const MessageStreamViewer: React.FC<MessageStreamViewerProps> = ({ destination }) => {
-  const [messages, setMessages] = useState<AsyncMessageDTO[]>([]); // Store received messages
-  const messageContainerRef = useRef<HTMLDivElement | null>(null); // Auto-scroll reference
+function MessageStreamViewer({ destination }: MessageStreamViewerProps): JSX.Element {
+  const [messages, setMessages] = useState<AsyncMessageDTO[]>([]);
+  const messageContainerRef = useRef<HTMLDivElement | null>(null);
 
-  // Decode Base64 payload
   const decodeBase64 = (base64: string): string => {
     try {
-      return atob(base64); // Decode Base64 string
-    } catch (error) {
+      return atob(base64);
+    } catch {
       return "[Invalid Base64 Payload]";
     }
   };
 
-  const { data: tokenResponse, isSuccess } = useRequestSseMessageToken({destination});
+  const { data: tokenResponse, isSuccess } = useRequestSseMessageToken({ destination });
 
   useEffect(() => {
-    if (!isSuccess || !tokenResponse?.data) return;
+    if (!isSuccess || typeof tokenResponse?.data !== 'string') return;
 
     const baseUrl = process.env.API_BASE_URL || '';
-    const token = tokenResponse.data as string; // Adjust if your API wraps the token in an object
+    if (!isSuccess || typeof tokenResponse?.data !== 'string') return;
+    const token: string = tokenResponse.data;
     const sseUrl = `${baseUrl}/api/v1/messaging/sse/stream/${encodeURIComponent(token)}?destinationName=${encodeURIComponent(destination)}`;
     const eventSource = new EventSource(sseUrl);
 
-    eventSource.addEventListener(destination, (event: MessageEvent) => {
+
+    eventSource.addEventListener(destination, (event: MessageEvent<string>) => {
       try {
-        const message: AsyncMessageDTO = JSON.parse(event.data);
+        const message :AsyncMessageDTO = JSON.parse(event.data) as AsyncMessageDTO;
+
         setMessages(prev => [message, ...prev].slice(0, 20));
       } catch {
         // silently ignore
       }
     });
 
-    return () => eventSource.close();
+    return () => {
+      eventSource.close();
+    };
   }, [isSuccess, tokenResponse?.data, destination]);
 
   useEffect(() => {
-    // Auto-scroll to the bottom of the message view
     if (messageContainerRef.current) {
       messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
     }
@@ -71,26 +75,26 @@ const MessageStreamViewer: React.FC<MessageStreamViewerProps> = ({ destination }
 
   return (
     <div style={styles.container}>
-      <div style={styles.messageWindow}>
+      <div style={styles.messageWindow} ref={messageContainerRef}>
         {messages.map((message, index) => (
           <div key={index} style={styles.message}>
-            <Typography variant="body2" style={{color: "#00FFFF"}}>
+            <Typography variant="body2" style={{ color: "#00FFFF" }}>
               Identifier: {message?.identifier} Creation: {message?.creation || ''} Name: {message?.destinationName || ''}
             </Typography>
-            <Typography variant="body2" style={{color: "#0f0"}}>
+            <Typography variant="body2" style={{ color: "#0f0" }}>
               Payload: {decodeBase64(message.payload)}
             </Typography>
             {message.dataMap && (
-              <Typography variant="body2" style={{color: "#aaa"}}>
+              <Typography variant="body2" style={{ color: "#aaa" }}>
                 Data Map: {JSON.stringify(message.dataMap)}
               </Typography>
             )}
-            {message.dataMap && (
-              <Typography variant="body2" style={{color: "#aaa"}}>
+            {message.metaData && (
+              <Typography variant="body2" style={{ color: "#aaa" }}>
                 Meta Data: {JSON.stringify(message.metaData)}
               </Typography>
             )}
-            <hr style={styles.horizontalLine}/>
+            <hr style={styles.horizontalLine} />
           </div>
         ))}
       </div>
@@ -106,13 +110,13 @@ const styles = {
     border: "1px solid #ccc",
     borderRadius: "5px",
     overflow: "hidden",
-    backgroundColor: "#000", // Black background for the container
+    backgroundColor: "#000",
     padding: "10px",
   },
   messageWindow: {
     height: "600px",
     overflowX: "auto" as const,
-    backgroundColor: "#000", // Black background for the message window
+    backgroundColor: "#000",
     padding: "10px",
   },
   message: {
@@ -120,8 +124,9 @@ const styles = {
   },
   horizontalLine: {
     border: "none",
-    borderBottom: "1px solid #444", // Subtle gray line
+    borderBottom: "1px solid #444",
     margin: "10px 0",
   },
 };
+
 export default MessageStreamViewer;

@@ -13,12 +13,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 'use client';
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, type JSX } from "react";
 import Typography from "@mui/material/Typography";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -26,39 +25,32 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import type { LogEntry } from "@/generated/model";
-import {requestSseToken} from "@/generated/logging-monitor/logging-monitor";
+import { requestSseToken } from "@/generated/logging-monitor/logging-monitor";
 
-const LogViewer: React.FC = () => {
+function LogViewer(): JSX.Element {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [level, setLevel] = useState<number>(0);
   const [textFilter, setTextFilter] = useState<string>("");
   const logContainerRef = useRef<HTMLDivElement | null>(null);
   const [filter, setFilter] = useState<string>("");
 
-  // Function to get the color based on the severity level
   const getColorForLevel = (logLevel: number): string => {
     switch (logLevel) {
-      case 40000: // ERROR
-        return "#FF0000"; // Red
-      case 30000: // WARN
-        return "#FFFF00"; // Yellow
-      case 20000: // INFO
-        return "#00FF00"; // Green
-      case 10000: // DEBUG
-        return "#00FFFF"; // Cyan
-      case 5000: // TRACE
-        return "#AAAAAA"; // Gray
-      default:
-        return "#FFFFFF"; // Default white for unknown levels
+      case 40000: return "#FF0000";
+      case 30000: return "#FFFF00";
+      case 20000: return "#00FF00";
+      case 10000: return "#00FFFF";
+      case 5000: return "#AAAAAA";
+      default: return "#FFFFFF";
     }
   };
 
   const buildFilter = (): void => {
     let query = "";
     if (level > 0) {
-      query += `level >= ${level.toString()}`; // Explicitly convert `level` to a string
+      query += `level >= ${String(level)}`;
     }
-    if (textFilter.trim() !== "") {
+    if (textFilter.trim()) {
       if (query) query += " AND ";
       query += `message LIKE '%${textFilter.trim()}%'`;
     }
@@ -68,38 +60,41 @@ const LogViewer: React.FC = () => {
   useEffect(() => {
     let eventSource: EventSource | null = null;
 
-    const connectWithToken = async () => {
+    const connectWithToken = async (): Promise<void> => {
       try {
         const response = await requestSseToken({ withCredentials: true });
-        const token = response.data as string; // or use `response.data.token` if wrapped
+        if (typeof response.data !== "string") return;
+        const token: string = response.data;
 
-        const baseUrl = process.env.API_BASE_URL || '';
+        const baseUrl = process.env.API_BASE_URL || "";
         const url = `${baseUrl}/api/v1/server/log/sse/stream/${token}?filter=${encodeURIComponent(filter)}`;
 
         eventSource = new EventSource(url, { withCredentials: true });
 
-        eventSource.addEventListener("logEvent", (event: MessageEvent) => {
+        eventSource.addEventListener("logEvent", (event: MessageEvent<string>) => {
           try {
-            const logEntry: LogEntry = JSON.parse(event.data);
-            setLogs((prevLogs) => [...prevLogs, logEntry]);
+            const logEntry:LogEntry = JSON.parse(event.data) as LogEntry;
+            setLogs((prev) => {
+              return [...prev, logEntry];
+            });
           } catch {
             // Ignore parse errors
           }
         });
       } catch (error) {
-        // Optionally log error or show notification
+        // Log fetch error – replace with proper logging if needed
+        // console.error("SSE token fetch failed:", error);
       }
     };
 
-    connectWithToken();
+    void connectWithToken();
 
     return () => {
-      if (eventSource) eventSource.close();
+      eventSource?.close();
     };
   }, [filter]);
 
   useEffect(() => {
-    // Auto-scroll to the bottom of the log view
     if (logContainerRef.current) {
       logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
     }
@@ -131,7 +126,7 @@ const LogViewer: React.FC = () => {
           size="small"
           value={textFilter}
           onChange={(e) => {
-            setTextFilter(e.target.value)
+            setTextFilter(e.target.value);
           }}
           style={styles.textField}
         />
@@ -146,13 +141,13 @@ const LogViewer: React.FC = () => {
             variant="body2"
             component="div"
             sx={{
-              color: getColorForLevel(log.level || 0), // Apply color based on severity
+              color: getColorForLevel(log.level || 0),
               fontFamily: "monospace",
-              padding: 0, // No padding
-              margin: 0, // No margin
-              lineHeight: 1, // Tighter line height
-              whiteSpace: "nowrap", // Prevent text wrapping
-              backgroundColor: index % 6 < 3 ? "#000" : "#004400", // Alternate background
+              padding: 0,
+              margin: 0,
+              lineHeight: 1,
+              whiteSpace: "nowrap",
+              backgroundColor: index % 6 < 3 ? "#000" : "#004400",
             }}
           >
             {log.message}
@@ -161,12 +156,12 @@ const LogViewer: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 const styles = {
   container: {
     width: "100%",
-    maxWidth: "900px", // Increased size for the container
+    maxWidth: "900px",
     margin: "0 auto",
     border: "1px solid #ccc",
     borderRadius: "5px",
@@ -187,9 +182,9 @@ const styles = {
     flex: 1,
   },
   logWindow: {
-    height: "600px", // Increased height for the log window
+    height: "600px",
     overflowY: "scroll" as const,
-    overflowX: "auto" as const, // Enable horizontal scrolling
+    overflowX: "auto" as const,
     backgroundColor: "#000",
     padding: "10px",
   },
