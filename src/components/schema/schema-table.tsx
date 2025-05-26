@@ -57,6 +57,7 @@ export function SchemaTable({
             <TableRow>
               <TableCell>Format</TableCell>
               <TableCell>Type</TableCell>
+              <TableCell>Resource Type</TableCell>
               <TableCell>Unique Id</TableCell>
               <TableCell>Created</TableCell>
               <TableCell>Version</TableCell>

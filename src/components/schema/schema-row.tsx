@@ -43,6 +43,9 @@ export function SchemaRow({
         <Typography variant="subtitle2">{schema.type}</Typography>
       </TableCell>
       <TableCell>
+        <Typography variant="subtitle2">{schema.resourceType}</Typography>
+      </TableCell>
+      <TableCell>
         <Typography variant="subtitle2">{schema.uniqueId}</Typography>
       </TableCell>
       <TableCell>

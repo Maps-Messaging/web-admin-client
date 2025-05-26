@@ -41,12 +41,15 @@ class AuthClient {
   async signInWithPassword(params: SignInWithPasswordParams): Promise<{ error?: string }> {
     const { username, password } = params;
 
-    // Set the browser's basic auth headers
-    axiosInstance.defaults.headers.common['Authorization'] = `Basic ${btoa(`${username}:${password}`)}`;
-
     try {
       // Call the login function
-      const response = await login();
+      const response = await login({
+        username: username,
+        password: password,
+        persistent: false,
+        sessionId: "",
+        longLived: false
+      });
 
       // Check if the response is a JSON object with the expected properties
       if (response.status === 200 && response.data?.status) {
