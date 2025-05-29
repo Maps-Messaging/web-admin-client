@@ -19,9 +19,10 @@
 'use client';
 
 import axios from 'axios';
-import {login, logout} from "@/generated/server-health/server-health";
+
 import {LoginResponse} from "@/generated/model";
 import axiosInstance from "@/axiosInstance";
+import {login, logout} from "@/generated/user-authentication/user-authentication";
 
 axios.defaults.baseURL = process.env.API_BASE_URL;
 
