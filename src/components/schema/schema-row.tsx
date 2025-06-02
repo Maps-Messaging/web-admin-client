@@ -40,13 +40,10 @@ export function SchemaRow({
         <Typography variant="subtitle2">{schema.format}</Typography>
       </TableCell>
       <TableCell>
-        <Typography variant="subtitle2">{schema.type}</Typography>
+        <Typography variant="subtitle2">{schema.title}</Typography>
       </TableCell>
       <TableCell>
         <Typography variant="subtitle2">{schema.resourceType}</Typography>
-      </TableCell>
-      <TableCell>
-        <Typography variant="subtitle2">{schema.uniqueId}</Typography>
       </TableCell>
       <TableCell>
         <Typography variant="subtitle2">{schema.creation ? jsonToDateTime(schema.creation) : ""}</Typography>
