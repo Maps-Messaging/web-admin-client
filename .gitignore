@@ -10,7 +10,7 @@
 
 # production
 /build
-out
+admin
 .next
 
 # misc
