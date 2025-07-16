@@ -20,7 +20,7 @@
 
 import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import {useColorScheme, Experimental_CssVarsProvider as CssVarsProvider} from '@mui/material/styles';
+import {Experimental_CssVarsProvider as CssVarsProvider, useColorScheme} from '@mui/material/styles';
 
 import {createTheme} from '@/styles/theme/create-theme';
 

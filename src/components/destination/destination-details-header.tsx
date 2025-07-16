@@ -37,7 +37,7 @@
  */
 
 import React from 'react';
-import { Card, CardContent, Grid, Typography, Box } from '@mui/material';
+import {Box, Card, CardContent, Grid, Typography} from '@mui/material';
 import {DestinationDTO} from "@/generated/model";
 
 interface DestinationDetailHeaderProps {

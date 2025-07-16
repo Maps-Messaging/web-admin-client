@@ -37,15 +37,7 @@
  */
 
 import React from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper, Chip,
-} from '@mui/material';
+import {Chip, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,} from '@mui/material';
 import {useGetServerStatus} from "@/generated/server-management/server-management";
 
 const statusOrder = ["ERROR", "WARN", "STOPPED", "PAUSED", "OK", "DISABLED"];

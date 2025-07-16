@@ -24,8 +24,8 @@ import {
   pauseInterface,
   resumeInterface,
   startInterface,
-  stopInterface, useGetEndPoint
-
+  stopInterface,
+  useGetEndPoint
 } from "@/generated/server-interface-management/server-interface-management";
 import ActionController from "@/components/general/action-controller";
 import toast from "react-hot-toast";

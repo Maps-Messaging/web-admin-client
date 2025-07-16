@@ -22,7 +22,8 @@ import React from 'react';
 import {
   DtlsConfigDTO,
   EndPointConfigDTO,
-  LoRaConfigDTO,
+  LoRaChipConfigDTO,
+  LoRaSerialConfigDTO,
   SerialConfigDTO,
   TcpConfigDTO,
   TlsConfigDTO,
@@ -33,7 +34,8 @@ import TcpConfigComponent from "@/components/network/config/network/tcp-config-c
 import TlsConfigComponent from "@/components/network/config/network/tls-config-component";
 import DtlsConfigComponent from "@/components/network/config/network/DtlsConfigComponent";
 import SerialConfigComponent from "@/components/network/config/network/serial-config-component";
-import LoRaConfigComponent from "@/components/network/config/network/lora-config-renderer"; // Adjust import path as necessary
+import LoRaConfigComponent from "@/components/network/config/network/lora-config-renderer";
+import LoRaDeviceConfigComponent from "@/components/network/config/lora/lora-device-config-component"; // Adjust import path as necessary
 
 interface InterfaceConfigRendererProps {
   config: EndPointConfigDTO;
@@ -61,8 +63,12 @@ function isSerialConfig(config: EndPointConfigDTO): config is SerialConfigDTO {
   return config.type === 'serial';
 }
 
-function isLoraConfig(config: EndPointConfigDTO): config is LoRaConfigDTO {
-  return config.type === 'lora';
+function isLoraSerialConfig(config: EndPointConfigDTO): config is LoRaSerialConfigDTO {
+  return config.type === 'loraSerial';
+}
+
+function isLoraChipConfig(config: EndPointConfigDTO): config is LoRaChipConfigDTO {
+  return config.type === 'loraDevice';
 }
 
 const InterfaceConfigRenderer: React.FC<InterfaceConfigRendererProps> = ({ config, onChange }) => {
@@ -91,12 +97,16 @@ const InterfaceConfigRenderer: React.FC<InterfaceConfigRendererProps> = ({ confi
       config={config}
       onChange={onChange}
     />;
-  } else if (isLoraConfig(config)) {
+  } else if (isLoraSerialConfig(config)) {
     return <LoRaConfigComponent
       config={config}
       onChange={onChange}
     />;
-  } else {
+  } else if (isLoraChipConfig(config)) {
+    return <LoRaDeviceConfigComponent
+      config={config}
+      onChange={onChange}
+    />;  } else {
     return <div>Unknown Interface Type</div>;
   }
 };

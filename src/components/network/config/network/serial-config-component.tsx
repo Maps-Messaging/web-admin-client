@@ -20,7 +20,7 @@ import React from 'react';
 import * as Yup from 'yup';
 import {useFormik} from 'formik';
 import {Box, Button, MenuItem, TextField, Typography} from '@mui/material';
-import {SerialConfigDTO, SerialConfigDTOAllOfFlowControl} from '@/generated/model';
+import {SerialConfigDTO, SerialConfigDTOFlowControl} from '@/generated/model';
 
 interface SerialConfigComponentProps {
   config: SerialConfigDTO;
@@ -36,7 +36,7 @@ const SerialConfigComponent: React.FC<SerialConfigComponentProps> = ({ config, o
       dataBits: config.dataBits || 8,
       stopBits: config.stopBits || '1',
       parity: config.parity || 'n',
-      flowControl: config.flowControl ?? SerialConfigDTOAllOfFlowControl.NUMBER_0,
+      flowControl: config.flowControl ?? SerialConfigDTOFlowControl.NUMBER_0,
       readTimeOut: config.readTimeOut || 1000,
       writeTimeOut: config.writeTimeOut || 1000,
       bufferSize: config.bufferSize || 1024,
@@ -47,7 +47,7 @@ const SerialConfigComponent: React.FC<SerialConfigComponentProps> = ({ config, o
       dataBits: Yup.number().min(5).max(8).required('Required'),
       stopBits: Yup.mixed().oneOf(['1', '1.5', '2'], 'Invalid stop bit value').required('Required'),
       parity: Yup.mixed().oneOf(['o', 'e', 'm', 's', 'n'], 'Invalid parity option').required('Required'),
-      flowControl: Yup.number().oneOf(Object.values(SerialConfigDTOAllOfFlowControl), 'Invalid flow control').required('Required'),
+      flowControl: Yup.number().oneOf(Object.values(SerialConfigDTOFlowControl), 'Invalid flow control').required('Required'),
       readTimeOut: Yup.number().min(0).required('Required'),
       writeTimeOut: Yup.number().min(0).required('Required'),
       bufferSize: Yup.number().min(0).required('Required'),
@@ -148,10 +148,10 @@ const SerialConfigComponent: React.FC<SerialConfigComponentProps> = ({ config, o
           error={Boolean(formik.touched.flowControl && formik.errors.flowControl)}
           helperText={formik.touched.flowControl && formik.errors.flowControl}
         >
-          <MenuItem value={SerialConfigDTOAllOfFlowControl.NUMBER_0}>None</MenuItem>
-          <MenuItem value={SerialConfigDTOAllOfFlowControl.NUMBER_1}>Hardware In</MenuItem>
-          <MenuItem value={SerialConfigDTOAllOfFlowControl.NUMBER_2}>Hardware Out</MenuItem>
-          <MenuItem value={SerialConfigDTOAllOfFlowControl.NUMBER_3}>Xon Xoff</MenuItem>
+          <MenuItem value={SerialConfigDTOFlowControl.NUMBER_0}>None</MenuItem>
+          <MenuItem value={SerialConfigDTOFlowControl.NUMBER_1}>Hardware In</MenuItem>
+          <MenuItem value={SerialConfigDTOFlowControl.NUMBER_2}>Hardware Out</MenuItem>
+          <MenuItem value={SerialConfigDTOFlowControl.NUMBER_3}>Xon Xoff</MenuItem>
         </TextField>
         <TextField
           fullWidth

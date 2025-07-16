@@ -20,17 +20,17 @@ import React from 'react';
 import * as Yup from 'yup';
 import {useFormik} from 'formik';
 import {Box, Button, Checkbox, FormControlLabel, TextField, Typography} from '@mui/material';
-import {LoRaConfigDTO} from '@/generated/model'; // Adjust the import path as necessary
+import {LoRaSerialConfigDTO} from '@/generated/model'; // Adjust the import path as necessary
 
 interface LoRaConfigComponentProps {
-  config: LoRaConfigDTO;
-  onChange: (updatedConfig: LoRaConfigDTO) => void;
+  config: LoRaSerialConfigDTO;
+  onChange: (updatedConfig: LoRaSerialConfigDTO) => void;
 }
 
 const LoRaConfigComponent: React.FC<LoRaConfigComponentProps> = ({ config, onChange }) => {
   const formik = useFormik({
     initialValues: {
-      type: config.type || "lora",
+      type: config.type || "loraSerial",
       discoverable: config.discoverable || false,
       selectorThreadCount: config.selectorThreadCount || 1,
       serverReadBufferSize: config.serverReadBufferSize || 10240,

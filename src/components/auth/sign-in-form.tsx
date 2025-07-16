@@ -19,8 +19,8 @@
 'use client';
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
-import { zodResolver } from '@hookform/resolvers/zod';
+import {useRouter} from 'next/navigation';
+import {zodResolver} from '@hookform/resolvers/zod';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
@@ -28,13 +28,13 @@ import FormHelperText from '@mui/material/FormHelperText';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Stack from '@mui/material/Stack';
-import { Eye as EyeIcon } from '@phosphor-icons/react/dist/ssr/Eye';
-import { EyeSlash as EyeSlashIcon } from '@phosphor-icons/react/dist/ssr/EyeSlash';
-import { Controller, useForm } from 'react-hook-form';
-import { z as zod } from 'zod';
+import {Eye as EyeIcon} from '@phosphor-icons/react/dist/ssr/Eye';
+import {EyeSlash as EyeSlashIcon} from '@phosphor-icons/react/dist/ssr/EyeSlash';
+import {Controller, useForm} from 'react-hook-form';
+import {z as zod} from 'zod';
 
-import { authClient } from '@/lib/auth/client';
-import { useUser } from '@/hooks/use-user';
+import {authClient} from '@/lib/auth/client';
+import {useUser} from '@/hooks/use-user';
 
 const schema = zod.object({
   username: zod.string().min(1, { message: 'Username is required' }),

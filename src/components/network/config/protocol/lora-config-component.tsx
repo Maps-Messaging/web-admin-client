@@ -18,9 +18,9 @@
 
 // LoraConfigComponent.tsx
 import React from 'react';
-import {LoRaConfigDTO} from "@/generated/model";
+import {LoRaProtocolConfigDTO} from "@/generated/model";
 
-const LoraConfigComponent: React.FC<{ config: LoRaConfigDTO }> = ({ config }) => {
+const LoraConfigComponent: React.FC<{ config: LoRaProtocolConfigDTO }> = ({ config }) => {
   return <div>LoRa Config: {config.type}</div>;
 };
 

@@ -16,19 +16,12 @@
  *
  */
 
-import * as React from 'react';
-import type {Metadata} from 'next';
+// LoraConfigComponent.tsx
+import React from 'react';
+import {LoRaChipConfigDTO} from "@/generated/model";
 
-import {config} from '@/config';
-import {GuestGuard} from '@/components/auth/guest-guard';
-import {SignInForm} from '@/components/auth/sign-in-form';
+const LoraDeviceConfigComponent: React.FC<{ config: LoRaChipConfigDTO }> = ({ config }) => {
+  return <div>LoRa Device Config: {config.type}</div>;
+};
 
-export const metadata = { title: `Sign in | ${config.site.name}` } satisfies Metadata;
-
-export default function Page(): React.JSX.Element {
-  return (
-    <GuestGuard>
-      <SignInForm />
-    </GuestGuard>
-  );
-}
+export default LoraDeviceConfigComponent;

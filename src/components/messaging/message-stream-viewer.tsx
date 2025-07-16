@@ -18,11 +18,10 @@
 
 'use client';
 
-import React, { useEffect, useRef, useState } from "react";
-import { JSX } from "react";
+import React, {JSX, useEffect, useRef, useState} from "react";
 import Typography from "@mui/material/Typography";
-import type { AsyncMessageDTO } from "@/generated/model";
-import { useRequestSseMessageToken } from "@/generated/messaging-interface/messaging-interface";
+import type {AsyncMessageDTO} from "@/generated/model";
+import {useRequestSseMessageToken} from "@/generated/messaging-interface/messaging-interface";
 
 interface MessageStreamViewerProps {
   destination: string;

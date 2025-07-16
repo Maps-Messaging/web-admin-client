@@ -20,16 +20,17 @@ import React from 'react';
 import * as Yup from 'yup';
 import {useFormik} from 'formik';
 import {Box, Button, TextField} from '@mui/material';
-import {LoRaDeviceConfigInfoDTO} from '@/generated/model'; // Adjust import path as necessary
+import {LoRaChipConfigDTO} from '@/generated/model'; // Adjust import path as necessary
 
 interface LoRaDeviceConfigComponentProps {
-  config: LoRaDeviceConfigInfoDTO;
-  onChange: (updatedConfig: LoRaDeviceConfigInfoDTO) => void;
+  config: LoRaChipConfigDTO;
+  onChange: (updatedConfig: LoRaChipConfigDTO) => void;
 }
 
 const LoRaDeviceConfigComponent: React.FC<LoRaDeviceConfigComponentProps> = ({ config, onChange }) => {
   const formik = useFormik({
     initialValues: {
+      type: config.type || "loraDevice",
       cadTimeout: config.cadTimeout || 0,
       cs: config.cs || 0,
       frequency: config.frequency || 868000000,  // Example default frequency

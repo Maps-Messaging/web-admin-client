@@ -26,10 +26,10 @@ import ProtocolInformationRenderer from "@/components/connections/connection/pro
 const queryClient = new QueryClient();
 
 interface ConnectionDetailProps {
-  connectionId: string;
+  connectionId: number;
 }
 
-export function ConnectionDetail({ connectionId = '' }: ConnectionDetailProps): React.JSX.Element {
+export function ConnectionDetail({ connectionId = 0 }: ConnectionDetailProps): React.JSX.Element {
   const request = { connectionId };
   const { data, error, isLoading } = useGetConnectionDetails(request, {
     query: { refetchInterval: 10000 },

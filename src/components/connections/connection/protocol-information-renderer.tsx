@@ -27,7 +27,8 @@ import {
   MqttSnProtocolInformation,
   MqttV5ProtocolInformation,
   NmeaProtocolInformation,
-  ProtocolInformationDTO, RestProtocolInformation,
+  ProtocolInformationDTO,
+  RestProtocolInformation,
   SemtechProtocolInformation,
   StompProtocolInformation
 } from "@/generated/model";
@@ -65,7 +66,7 @@ function isMqttV5Protocol(config: ProtocolInformationDTO): config is MqttV5Proto
 }
 
 function isNmeaProtocol(config: ProtocolInformationDTO): config is NmeaProtocolInformation {
-  return config.type === 'nmea';
+  return config.type === 'NMEA-0183';
 }
 
 function isSemtechProtocol(config: ProtocolInformationDTO): config is SemtechProtocolInformation {

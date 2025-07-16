@@ -21,8 +21,8 @@
 import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import { useColorScheme } from '@mui/material/styles';
-import { Moon, Sun } from '@phosphor-icons/react';
+import {useColorScheme} from '@mui/material/styles';
+import {Moon, Sun} from '@phosphor-icons/react';
 
 export function ThemeToggle(): React.JSX.Element {
   const { mode, setMode } = useColorScheme();

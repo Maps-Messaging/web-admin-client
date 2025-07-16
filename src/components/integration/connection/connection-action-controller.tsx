@@ -26,7 +26,8 @@ import {
   pauseIntegration,
   resumeIntegration,
   startIntegration,
-  stopIntegration, useGetByNameIntegration
+  stopIntegration,
+  useGetByNameIntegration
 } from "@/generated/server-integration-management/server-integration-management";
 
 interface ConnectionActionControllerProps {

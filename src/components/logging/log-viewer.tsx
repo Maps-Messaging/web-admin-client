@@ -17,15 +17,15 @@
 
 'use client';
 
-import React, { useEffect, useRef, useState, type JSX } from "react";
+import React, {type JSX, useEffect, useRef, useState} from "react";
 import Typography from "@mui/material/Typography";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
-import type { LogEntry } from "@/generated/model";
-import { requestSseToken } from "@/generated/logging-monitor/logging-monitor";
+import type {LogEntry} from "@/generated/model";
+import {requestSseToken} from "@/generated/logging-monitor/logging-monitor";
 
 function LogViewer(): JSX.Element {
   const [logs, setLogs] = useState<LogEntry[]>([]);

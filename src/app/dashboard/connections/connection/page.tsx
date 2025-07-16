@@ -39,7 +39,7 @@ const ConnectionDetailPage = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ConnectionDetail
-        connectionId={connectionId}
+        connectionId={Number(connectionId)}
       />
     </QueryClientProvider>
   );

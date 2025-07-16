@@ -19,7 +19,6 @@
 // ProtocolConfigRenderer.tsx
 import React from 'react';
 
-import LoraConfigComponent from "@/components/network/config/protocol/lora-config-component";
 import MqttConfigComponent from "@/components/network/config/protocol/mqtt-config-component";
 import MqttV5ConfigComponent from "@/components/network/config/protocol/mqtt-v5-config-component";
 import NmeaConfigComponent from "@/components/network/config/protocol/nmea-config-component";
@@ -30,8 +29,9 @@ import AmqpConfigComponent from "@/components/network/config/protocol/amqp-confi
 import CoapConfigComponent from "@/components/network/config/protocol/coap-config-component";
 import {
   AmqpConfigDTO,
-  CoapConfigDTO, ExtensionConfigDTO,
-  LoRaConfigDTO,
+  CoapConfigDTO,
+  ExtensionConfigDTO,
+  LoRaProtocolConfigDTO,
   MqttConfigDTO,
   MqttSnConfigDTO,
   MqttV5ConfigDTO,
@@ -43,6 +43,7 @@ import {
 } from "@/generated/model";
 import MqttSnConfigComponent from "@/components/network/config/protocol/mqtt-sn-config-component";
 import ExtensionConfigComponent from "@/components/network/config/protocol/extension-config-component";
+import LoraConfigComponent from "@/components/network/config/protocol/lora-config-component";
 
 interface ProtocolConfigRendererProps {
   config: ProtocolConfigDTO;
@@ -58,7 +59,7 @@ function isCoapConfig(config: ProtocolConfigDTO): config is CoapConfigDTO {
 function isMqttSnConfig(config: ProtocolConfigDTO): config is MqttSnConfigDTO {
   return config.type === 'mqtt-sn';
 }
-function isLoraConfig(config: ProtocolConfigDTO): config is LoRaConfigDTO {
+function isLoraConfig(config: ProtocolConfigDTO): config is LoRaProtocolConfigDTO {
   return config.type === 'lora';
 }
 function isMqttConfig(config: ProtocolConfigDTO): config is MqttConfigDTO {
@@ -68,7 +69,7 @@ function isMqttV5Config(config: ProtocolConfigDTO): config is MqttV5ConfigDTO {
   return config.type === 'mqttV5';
 }
 function isNmeaConfig(config: ProtocolConfigDTO): config is NmeaConfigDTO {
-  return config.type === 'nmea';
+  return config.type === 'NMEA-0183';
 }
 function isSemtechConfig(config: ProtocolConfigDTO): config is SemtechConfigDTO {
   return config.type === 'semtech';
