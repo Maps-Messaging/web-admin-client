@@ -39,7 +39,7 @@ export function ConnectionRow({
       id={key}
     >
       <TableCell>
-        <Link href={`/dashboard/connections/connection?connectionId=${encodeURIComponent(connection.name||'')}`} passHref>
+        <Link href={`/dashboard/connections/connection?connectionId=${encodeURIComponent(connection.id||'')}`} passHref>
           <Typography variant="subtitle2">{connection.name}</Typography>
         </Link>
 
