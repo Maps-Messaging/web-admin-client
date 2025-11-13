@@ -15,6 +15,8 @@
  * limitations under the License.
  *
  */
+'use client';
+import '@/lib/api';
 
 import * as React from 'react';
 import type {Viewport} from 'next';

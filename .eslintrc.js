@@ -22,6 +22,14 @@ module.exports = {
         // any other rules you want to disable for these files
       },
     },
+    {
+      files: ['orval.config.ts'],
+      rules: {
+        'no-undef': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+      },
+    }
   ],
   extends: [
     require.resolve('@vercel/style-guide/eslint/node'),

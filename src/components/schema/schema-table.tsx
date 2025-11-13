@@ -57,7 +57,7 @@ export function SchemaTable({
             <TableRow>
               <TableCell>Format</TableCell>
               <TableCell>Title</TableCell>
-              <TableCell>Resource Type</TableCell>
+              <TableCell>Comments</TableCell>
               <TableCell>Created</TableCell>
               <TableCell>Version</TableCell>
             </TableRow>
