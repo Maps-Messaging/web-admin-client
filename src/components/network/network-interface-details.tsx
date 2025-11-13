@@ -45,11 +45,8 @@ export default function NetworkInterfaceDetails(): React.JSX.Element {
       ? data.data.data
       : [];
 
-// optional sanity check
-  console.log('interfaces', list);
-
   const total = list.length;
-  const paged = list.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const paged =  paginate(list, page, rowsPerPage);
 
 
   return (

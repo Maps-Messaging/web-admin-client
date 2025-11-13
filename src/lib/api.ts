@@ -15,26 +15,32 @@
  * limitations under the License.
  *
  */
-
 // src/lib/api.ts
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const api = axios.create({ baseURL: '/api' });
 
 api.interceptors.response.use(
-  res => res,
-  err => {
-    if (err.response?.status === 401) {
-      localStorage.removeItem('custom-auth-token');
-      localStorage.removeItem('username');
-      localStorage.removeItem('user');
-      localStorage.removeItem('authToken');
+  (res) => res,
+  (error: unknown) => {
+    const axErr = error as AxiosError;
+
+    const status = axErr.response?.status;
+    if (status === 401) {
+      try {
+        localStorage.removeItem('custom-auth-token');
+        localStorage.removeItem('username');
+        localStorage.removeItem('user');
+        localStorage.removeItem('authToken');
+      } catch {
+        // ignore storage errors
+      }
       window.location.href = '/auth';
     }
-    return Promise.reject(err);
+
+    // eslint prefers rejecting an Error instance
+    return Promise.reject(axErr instanceof Error ? axErr : new Error('Request failed'));
   }
 );
 
 export default api;
-
-

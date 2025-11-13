@@ -21,7 +21,7 @@ import * as React from "react";
 import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
 import TableRow from "@mui/material/TableRow";
-import {jsonToDateTime, jsonToDateTimeZoned} from "@/helper-functions";
+import {jsonToDateTimeZoned} from "@/helper-functions";
 
 interface SchemaRowProps {
   schema: SchemaConfig;

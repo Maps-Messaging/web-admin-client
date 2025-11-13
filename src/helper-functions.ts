@@ -101,22 +101,24 @@ export function jsonToDateTime(data: string | DateJson): string {
     return new Date(0).toISOString();
   }
 }
+
 export function jsonToDateTimeZoned(data: string | DateJson): string {
   try {
     let date: Date | null = null;
 
     if (typeof data === 'string') {
       // ISO or zoned format: 2025-11-10T00:13:32.8307385Z or with offset
-      const isoMatch = data.match(
-        /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(\.(\d+))?([Zz]|[+-]\d{2}:\d{2})?$/
-      );
-      if (isoMatch) {
-        const [, y, mo, d, h, mi, s, , frac = '', tz = 'Z'] = isoMatch;
-        const ms = frac.slice(0, 3).padEnd(3, '0'); // millisecond precision
-        const iso = `${y}-${mo}-${d}T${h}:${mi}:${s}.${ms}${tz}`;
+      const isoRegex =
+        /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})T(?<hour>\d{2}):(?<minute>\d{2}):(?<second>\d{2})(?:\.(?<frac>\d+))?(?<tz>[Zz]|[+-]\d{2}:\d{2})?$/;
+
+      const match = isoRegex.exec(data);
+      if (match?.groups) { // optional chain to satisfy lint
+        const g = match.groups as Record<string, string>;
+        const ms = (g.frac ?? '').slice(0, 3).padEnd(3, '0');
+        const iso = `${g.year}-${g.month}-${g.day}T${g.hour}:${g.minute}:${g.second}.${ms}${g.tz ?? 'Z'}`;
         date = new Date(iso);
       } else {
-        // Fallback: plain date time "YYYY-MM-DD HH:mm:ss"
+        // Fallback: "YYYY-MM-DD HH:mm:ss"
         const [datePart, timePart] = data.split(' ');
         if (!datePart || !timePart) throw new Error('Invalid date/time format');
         const [year, month, day] = datePart.split('-').map(Number);
@@ -129,7 +131,7 @@ export function jsonToDateTimeZoned(data: string | DateJson): string {
       date = new Date(year, month - 1, day, hour, minute, second, Math.floor(nano / 1e6));
     }
 
-    if (!date || isNaN(date.getTime())) throw new Error('Invalid date');
+    if (!date || Number.isNaN(date.getTime())) throw new Error('Invalid date');
 
     return date.toLocaleString('en-AU', {
       day: '2-digit',
@@ -143,7 +145,6 @@ export function jsonToDateTimeZoned(data: string | DateJson): string {
     return new Date(0).toLocaleString('en-AU');
   }
 }
-
 
 
 export function formatNumberWithPowerUnit(value: number): string {
