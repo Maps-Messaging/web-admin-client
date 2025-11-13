@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 'use client';
 
 import * as React from 'react';
@@ -28,31 +27,55 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import {type InterfaceInfoDTO} from "@/generated/model";
-import {NetworkInterfaceRow} from "@/components/network/network-interface-row";
-
-function noop(): void {
-  // do nothing
-}
+import type { InterfaceInfoDTO } from '@/generated/model';
+import { NetworkInterfaceRow } from '@/components/network/network-interface-row';
 
 interface NetworkInterfaceTableProps {
-  count?: number;
-  page?: number;
-  rows?: InterfaceInfoDTO[];
-  rowsPerPage?: number;
+  rows: InterfaceInfoDTO[];
+  count: number;
+  page: number;
+  rowsPerPage: number;
 }
 
 export function NetworkInterfaceTable({
-                                 count = 0,
-                                 rows = [],
-                                 page = 0,
-                                 rowsPerPage = 0,
-                               }: NetworkInterfaceTableProps): React.JSX.Element {
+                                        rows,
+                                        count,
+                                        page,
+                                        rowsPerPage,
+                                      }: NetworkInterfaceTableProps): React.JSX.Element {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const updateQuery = React.useCallback(
+    (next: Record<string, string | number | undefined>) => {
+      const params = new URLSearchParams(searchParams?.toString() ?? '');
+      Object.entries(next).forEach(([k, v]) => {
+        if (v === undefined || v === null || v === '') params.delete(k);
+        else params.set(k, String(v));
+      });
+      router.replace(`${pathname}?${params.toString()}`);
+    },
+    [router, pathname, searchParams]
+  );
+
+  const handlePageChange = (_: unknown, newPage: number) => {
+    updateQuery({ page: newPage, rowsPerPage });
+  };
+
+  const handleRowsPerPageChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const newRpp = Number(event.target.value) || 10;
+    updateQuery({ page: 0, rowsPerPage: newRpp });
+  };
+
   return (
     <Card>
       <Box sx={{ overflowX: 'auto' }}>
-        <Table sx={{ minWidth: '800px' }}>
+        <Table sx={{ minWidth: 800 }}>
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
@@ -66,14 +89,12 @@ export function NetworkInterfaceTable({
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => {
-              return (
-                <NetworkInterfaceRow
-                  key={row?.name || ''}
-                  networkInfo={row}
-                />
-              );
-            })}
+            {rows.map((row) => (
+              <NetworkInterfaceRow
+                key={row?.name ?? ''}
+                networkInfo={row}
+              />
+            ))}
           </TableBody>
         </Table>
       </Box>
@@ -81,10 +102,10 @@ export function NetworkInterfaceTable({
       <TablePagination
         component="div"
         count={count}
-        onPageChange={noop}
-        onRowsPerPageChange={noop}
         page={page}
+        onPageChange={handlePageChange}
         rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleRowsPerPageChange}
         rowsPerPageOptions={[5, 10, 25]}
       />
     </Card>

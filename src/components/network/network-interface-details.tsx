@@ -15,32 +15,42 @@
  * limitations under the License.
  *
  */
-
-'use client'
+'use client';
 
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { useSearchParams } from 'next/navigation';
 
-import {type GetAllInterfacesParams, type InterfaceInfoDTO} from "@/generated/model";
-import {useGetAllInterfaces} from "@/generated/server-interface-management/server-interface-management";
-import Typography from "@mui/material/Typography";
-import {NetworkInterfaceTable} from "@/components/network/network-interface-table";
+import type { InterfaceInfoDTO } from '@/generated/model';
+import { useGetAllInterfaces } from '@/generated/server-interface-management/server-interface-management';
+import { NetworkInterfaceTable } from '@/components/network/network-interface-table';
 
 export default function NetworkInterfaceDetails(): React.JSX.Element {
-  const page = 0;
-  const rowsPerPage = 10;
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get('page') ?? 0);
+  const rowsPerPage = Number(searchParams.get('rowsPerPage') ?? 10);
 
-  const params: GetAllInterfacesParams = { filter: '' };
-  const { data, error, isLoading } = useGetAllInterfaces(params,{
-    query:{
-      refetchInterval: 60000
-    }
+  // Keep the original hook call signature you had working
+  const { data, error, isLoading } = useGetAllInterfaces(undefined, {
+    query: { refetchInterval: 60000 },
   });
 
-  if (isLoading) return <div>Loading name...</div>;
-  if (error) return <div>Error loading name: {error.message}</div>;
+  if (isLoading) return <Typography>Loading…</Typography>;
+  if (error) return <Typography color="error">Error: {error.message}</Typography>;
 
-  const paginatedInterfaces = applyPagination((data?.data.data || []), page, rowsPerPage);
+  const list = Array.isArray(data?.data)
+    ? data.data
+    : Array.isArray(data?.data?.data)
+      ? data.data.data
+      : [];
+
+// optional sanity check
+  console.log('interfaces', list);
+
+  const total = list.length;
+  const paged = list.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
 
   return (
     <Stack spacing={3}>
@@ -49,16 +59,18 @@ export default function NetworkInterfaceDetails(): React.JSX.Element {
           <Typography variant="h4">Network Interfaces</Typography>
         </Stack>
       </Stack>
+
       <NetworkInterfaceTable
-        count={paginatedInterfaces.length}
+        count={total}
         page={page}
-        rows={paginatedInterfaces}
+        rows={paged}
         rowsPerPage={rowsPerPage}
       />
     </Stack>
   );
 }
 
-function applyPagination(rows: InterfaceInfoDTO[], page: number, rowsPerPage: number): InterfaceInfoDTO[] {
-  return rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+function paginate(rows: InterfaceInfoDTO[], page: number, rowsPerPage: number): InterfaceInfoDTO[] {
+  const start = page * rowsPerPage;
+  return rows.slice(start, start + rowsPerPage);
 }

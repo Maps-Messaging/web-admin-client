@@ -24,17 +24,15 @@ import TableRow from "@mui/material/TableRow";
 import {jsonToDateTime, jsonToDateTimeZoned} from "@/helper-functions";
 
 interface SchemaRowProps {
-  key: string;
   schema: SchemaConfig;
 }
 
 export function SchemaRow({
                             schema,
-                                      key=''
-                                      }: SchemaRowProps): React.JSX.Element {
+                          }: SchemaRowProps): React.JSX.Element {
   return (
     <TableRow
-      id={key}
+      id={schema.uniqueId}
     >
       <TableCell>
         <Typography variant="subtitle2">{schema.format}</Typography>

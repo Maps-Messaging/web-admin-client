@@ -15,68 +15,98 @@
  * limitations under the License.
  *
  */
+'use client';
 
-import type {InterfaceInfoDTO} from "@/generated/model";
-import * as React from "react";
-import TableCell from "@mui/material/TableCell";
-import Typography from "@mui/material/Typography";
-import {useGetInterfaceStatus} from "@/generated/server-interface-management/server-interface-management";
-import {formatNumberWithPowerUnit} from "@/helper-functions";
-import TableRow from "@mui/material/TableRow";
-import Link from "next/link";
-import EndPointActionController from "@/components/network/endPoint/end-point-action-controller";
+import * as React from 'react';
+import TableCell from '@mui/material/TableCell';
+import Typography from '@mui/material/Typography';
+import TableRow from '@mui/material/TableRow';
+import Link from 'next/link';
+
+import type { InterfaceInfoDTO } from '@/generated/model';
+import { useGetInterfaceStatus } from '@/generated/server-interface-management/server-interface-management';
+import { formatNumberWithPowerUnit } from '@/helper-functions';
+import EndPointActionController from '@/components/network/endPoint/end-point-action-controller';
 
 interface NetworkInterfaceRowProps {
-  key: string;
   networkInfo: InterfaceInfoDTO;
 }
 
 export function NetworkInterfaceRow({
-                                      networkInfo = {},
-                                      key=''
-                                      }: NetworkInterfaceRowProps): React.JSX.Element {
+                                      networkInfo,
+                                    }: NetworkInterfaceRowProps): React.JSX.Element {
+  const name = networkInfo?.name ?? '';
 
-  const { data, error, isLoading } = useGetInterfaceStatus(networkInfo.name ||'',{
-    query:{
-      refetchInterval: 10000
-    }
+  const { data, error, isLoading } = useGetInterfaceStatus(name, {
+    query: { refetchInterval: 10000 },
   });
-  if (isLoading) return <div>Loading name...</div>;
-  if (error) return <div>Error loading name: {error.message}</div>;
+
+  if (isLoading)
+    return (
+      <TableRow>
+        <TableCell colSpan={8}>
+          <Typography variant="body2">Loading {name}…</Typography>
+        </TableCell>
+      </TableRow>
+    );
+
+  if (error)
+    return (
+      <TableRow>
+        <TableCell colSpan={8}>
+          <Typography color="error">
+            Error loading {name}: {error.message}
+          </Typography>
+        </TableCell>
+      </TableRow>
+    );
+
+  const stats = data?.data;
 
   return (
-    <TableRow
-      id={key}
-    >
+    <TableRow id={name}>
       <TableCell>
-        <Link href={`/dashboard/network/endPoint?networkName=${encodeURIComponent(networkInfo.name||'')}`} passHref>
-          <Typography variant="subtitle2">{networkInfo.name}</Typography>
+        <Link
+          href={`/dashboard/network/endPoint?networkName=${encodeURIComponent(name)}`}
+        >
+          <Typography variant="subtitle2">{name}</Typography>
         </Link>
       </TableCell>
+
       <TableCell>
-        <Typography variant="subtitle2">{networkInfo.host}:{networkInfo.port}</Typography>
+        <Typography variant="subtitle2">
+          {networkInfo.host}:{networkInfo.port}
+        </Typography>
       </TableCell>
+
+      <TableCell>{stats?.connections ?? 0}</TableCell>
+
       <TableCell>
-        { data?.data.connections || 0}
+        {formatNumberWithPowerUnit(stats?.totalMessagesReceived ?? 0)}
+        <br />
+        {formatNumberWithPowerUnit(stats?.messagesReceived ?? 0)} /sec
       </TableCell>
+
       <TableCell>
-        {formatNumberWithPowerUnit(data?.data.totalMessagesReceived || 0)}<br/>
-        {formatNumberWithPowerUnit(data?.data.messagesReceived || 0)} /sec
+        {formatNumberWithPowerUnit(stats?.totalMessagesSent ?? 0)}
+        <br />
+        {formatNumberWithPowerUnit(stats?.messagesSent ?? 0)} /sec
       </TableCell>
+
       <TableCell>
-        {formatNumberWithPowerUnit(data?.data.totalMessagesSent || 0)}<br/>
-        {formatNumberWithPowerUnit(data?.data.messagesSent || 0)} /sec
+        {formatNumberWithPowerUnit(stats?.totalBytesReceived ?? 0)}
+        <br />
+        {formatNumberWithPowerUnit(stats?.bytesReceived ?? 0)} /sec
       </TableCell>
+
       <TableCell>
-        {formatNumberWithPowerUnit(data?.data.totalBytesReceived || 0)}<br/>
-        {formatNumberWithPowerUnit(data?.data.bytesReceived || 0)} /sec
+        {formatNumberWithPowerUnit(stats?.totalBytesSent ?? 0)}
+        <br />
+        {formatNumberWithPowerUnit(stats?.bytesSent ?? 0)} /sec
       </TableCell>
+
       <TableCell>
-        {formatNumberWithPowerUnit(data?.data.totalBytesSent || 0)}<br/>
-        {formatNumberWithPowerUnit(data?.data.bytesSent || 0)} /sec
-      </TableCell>
-      <TableCell>
-        <EndPointActionController name={networkInfo.name||''} />
+        <EndPointActionController name={name} />
       </TableCell>
     </TableRow>
   );
