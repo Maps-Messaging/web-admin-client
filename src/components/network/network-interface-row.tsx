@@ -106,7 +106,7 @@ export function NetworkInterfaceRow({
       </TableCell>
 
       <TableCell>
-        <EndPointActionController name={name} />
+        <EndPointActionController name={networkInfo?.uniqueId || ''} />
       </TableCell>
     </TableRow>
   );

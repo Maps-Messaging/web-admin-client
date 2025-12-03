@@ -22,13 +22,8 @@ import * as React from 'react';
 
 import ActionController from "@/components/general/action-controller";
 import toast from "react-hot-toast";
-import {
-  pauseIntegration,
-  resumeIntegration,
-  startIntegration,
-  stopIntegration,
-  useGetByNameIntegration
-} from "@/generated/server-integration-management/server-integration-management";
+import {handleIntegrationActionRequest, useGetByNameIntegration } from '@/generated/server-integration-management/server-integration-management';
+
 
 interface ConnectionActionControllerProps {
   name: string;
@@ -47,54 +42,24 @@ export default function ConnectionActionController({
   if (isLoading) return <div>Loading name...</div>;
   if (error) return <div>Error loading name: {error.message}</div>;
 
-  const onStart = async (): Promise<void> => {
-    if (name) {
-      try {
-        await startIntegration(name);
-      } catch (error1) {
-        toast.success('Failed to start interface');
-      }
-    }
-  };
+  const performAction = async (state:string): Promise<void> => {
+    if (!name) return;
 
-  const onStop = async (): Promise<void> => {
-    if (name) {
-      try {
-        await stopIntegration(name);
-      } catch (error1) {
-        toast.success('Failed to stop interface');
-
-      }
+    try {
+      await handleIntegrationActionRequest(name, { state: state });
+      toast.success("Interface "+state);
+    } catch (error1) {
+      toast.error("Interface state unchanged");
     }
-  };
-
-  const onPause = async (): Promise<void> => {
-    if (name) {
-      try {
-        await pauseIntegration(name);
-      } catch (error1) {
-        toast.success('Failed to pause interface');
-      }
-    }
-  };
-
-  const onResume = async (): Promise<void> => {
-    if (name) {
-      try {
-        await resumeIntegration(name);
-      } catch (error1) {
-        toast.success('Failed to resume interface');
-      }
-    }
-  };
+  }
 
   return (
     <ActionController
       currentState={data?.data.state ||''}
-      onPause={onPause}
-      onStart={onStart}
-      onStop={onStop}
-      onResume={onResume}
+      onPause={() => performAction("paused")}
+      onStart={() => performAction("started")}
+      onStop={() => performAction("stopped")}
+      onResume={() => performAction("resumed")}
     />
   );
 }

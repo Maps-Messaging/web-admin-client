@@ -28,7 +28,8 @@ import {
   DialogTitle,
   Snackbar,
 } from "@mui/material";
-import {restartServer, shutdownServer,} from "@/generated/server-management/server-management";
+import { serverAction } from "@/generated/server-management/server-management";
+
 
 const ServerControl: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -57,9 +58,9 @@ const ServerControl: React.FC = () => {
     try {
       setLoading(true);
       if (dialogAction === "stop") {
-        await shutdownServer();
+        await serverAction( { state: "shutdown" });
       } else {
-        await restartServer();
+        await serverAction( { state: "restart" });
       }
       setSnackbarMessage(`Server ${dialogAction}ed successfully!`);
     } catch (error) {

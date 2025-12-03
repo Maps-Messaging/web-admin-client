@@ -24,7 +24,7 @@ import {formatNumberWithPowerUnit} from "@/helper-functions";
 import TableRow from "@mui/material/TableRow";
 import Link from "next/link";
 import ConnectionActionController from "@/components/integration/connection/connection-action-controller";
-import {useGetIntegrationStatus} from "@/generated/server-integration-status/server-integration-status";
+import {useGetIntegrationStatus} from "@/generated/server-integration-management/server-integration-management";
 
 interface NetworkIntegrationRowProps {
   key: string;

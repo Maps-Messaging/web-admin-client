@@ -15,16 +15,12 @@
  * limitations under the License.
  *
  */
-
 'use client'
 
 import * as React from 'react';
 
 import {
-  pauseInterface,
-  resumeInterface,
-  startInterface,
-  stopInterface,
+  manageSpecificInterface,
   useGetEndPoint
 } from "@/generated/server-interface-management/server-interface-management";
 import ActionController from "@/components/general/action-controller";
@@ -35,67 +31,45 @@ interface EndPointActionControllerProps {
 }
 
 export default function EndPointActionController({
-                                          name=''
-                                        }: EndPointActionControllerProps): React.JSX.Element {
+                                                   name = ''
+                                                 }: EndPointActionControllerProps): React.JSX.Element {
 
-  const { data, error, isLoading } = useGetEndPoint(name ||'',{
-    query:{
+  const endpointName = name || '';
+
+  const { data, error, isLoading } = useGetEndPoint(endpointName, {
+    query: {
       refetchInterval: 60000
     }
   });
 
-  if (isLoading) return <div>Loading name...</div>;
-  if (error) return <div>Error loading name: {error.message}</div>;
+  if (isLoading) {
+    return <div>Loading name...</div>;
+  }
 
-  const onStart = async (): Promise<void> => {
-    if (name) {
-      try {
-        await startInterface(name);
-      } catch (error1) {
-        toast.success('Failed to start interface');
-      }
+  if (error) {
+    return <div>Error loading name: {error.message}</div>;
+  }
+
+  const performAction = async (state: string): Promise<void> => {
+    if (!endpointName) {
+      return;
     }
-  };
 
-  const onStop = async (): Promise<void> => {
-    if (name) {
-      try {
-        await stopInterface(name);
-      } catch (error1) {
-        toast.success('Failed to stop interface');
-
-      }
-    }
-  };
-
-  const onPause = async (): Promise<void> => {
-    if (name) {
-      try {
-        await pauseInterface(name);
-      } catch (error1) {
-        toast.success('Failed to pause interface');
-      }
-    }
-  };
-
-  const onResume = async (): Promise<void> => {
-    if (name) {
-      try {
-        await resumeInterface(name);
-      } catch (error1) {
-        toast.success('Failed to resume interface');
-      }
+    try {
+      await manageSpecificInterface(endpointName, { state });
+      toast.success(`Interface ${state}`);
+    } catch (error1) {
+      toast.error("Interface state unchanged");
     }
   };
 
   return (
     <ActionController
-      currentState={data?.data.state||''}
-      onPause={onPause}
-      onStart={onStart}
-      onStop={onStop}
-      onResume={onResume}
+      currentState={data?.data.state || ''}
+      onPause={() => performAction("paused")}
+      onStart={() => performAction("started")}
+      onStop={() => performAction("stopped")}
+      onResume={() => performAction("resumed")}
     />
   );
 }
-

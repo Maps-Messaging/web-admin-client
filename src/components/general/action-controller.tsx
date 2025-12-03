@@ -27,7 +27,6 @@ interface ActionControllerProps {
   onStop?: () => void;
   onPause?: () => void;
   onResume?: () => void;
-  onRecord?: (isRecording: boolean) => void;
 }
 
 const ActionController: React.FC<ActionControllerProps> = ({
@@ -35,12 +34,12 @@ const ActionController: React.FC<ActionControllerProps> = ({
                                                              onStart,
                                                              onStop,
                                                              onPause,
-                                                             onResume,
-                                                             onRecord
+                                                             onResume
                                                            }) => {
   const [state, setState] = useState<string>(currentState);
   const [recording, setRecording] = useState(false);
 
+  console.log(currentState);
   const handleStart = () => {
     setState('Started');
     onStart?.();
@@ -48,7 +47,6 @@ const ActionController: React.FC<ActionControllerProps> = ({
 
   const handleStop = () => {
     setState('Stopped');
-    setRecording(false);
     onStop?.();
   };
 
@@ -60,12 +58,6 @@ const ActionController: React.FC<ActionControllerProps> = ({
   const handleResume = () => {
     setState('Started');
     onResume?.();
-  };
-
-  const handleRecord = () => {
-    const newRecordingState = !recording;
-    setRecording(newRecordingState);
-    onRecord?.(newRecordingState);
   };
 
   return (
@@ -102,11 +94,6 @@ const ActionController: React.FC<ActionControllerProps> = ({
       {state === 'Stopped' && (
         <div style={{width: 40}}></div>
       )}
-      <IconButton onClick={handleRecord} disabled={state === 'Stopped'} color={recording ? 'error' : 'default'}>
-        <Tooltip title={recording ? "Stop Recording" : "Start Recording"}>
-          <Record/>
-        </Tooltip>
-      </IconButton>
     </div>
   )
 };

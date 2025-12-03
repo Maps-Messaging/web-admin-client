@@ -30,7 +30,7 @@ interface ConnectionDetailProps {
 }
 
 export function ConnectionDetail({ connectionId = 0 }: ConnectionDetailProps): React.JSX.Element {
-  const request = { connectionId };
+  const request = String(connectionId);
   const { data, error, isLoading } = useGetConnectionDetails(request, {
     query: { refetchInterval: 10000 },
   });
