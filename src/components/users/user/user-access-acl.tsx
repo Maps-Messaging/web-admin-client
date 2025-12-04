@@ -35,15 +35,8 @@ interface UserAccessAclProps {
 }
 
 function isServerPermission(permission: PermissionDetailsDTO): boolean {
-  // Depending on how the OpenAPI generator mapped `boolean isServer`
-  // this may be `isServer` or `server`. Support both.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const anyPerm = permission as any;
-  if (typeof anyPerm.isServer === 'boolean') {
-    return anyPerm.isServer;
-  }
-  if (typeof anyPerm.server === 'boolean') {
-    return anyPerm.server;
+  if (typeof permission.server === 'boolean') {
+    return permission.server;
   }
   return false;
 }
@@ -92,7 +85,7 @@ export default function UserAccessAcl({
   const serverPermissions = React.useMemo(() => {
     const perms = (permissions || []).filter((perm) => isServerPermission(perm)).map((perm) => perm.name);
     if (perms.length > 0) {
-      return perms.sort();
+      return  perms.sort((a, b) => (a ?? "").localeCompare(b ?? ""));
     }
     // Fallback: infer from existing server entries
     const set = new Set<string>();
@@ -105,7 +98,7 @@ export default function UserAccessAcl({
   const nonServerPermissions = React.useMemo(() => {
     const perms = (permissions || []).filter((perm) => !isServerPermission(perm)).map((perm) => perm.name);
     if (perms.length > 0) {
-      return perms.sort();
+      return perms.sort((a, b) => (a ?? "").localeCompare(b ?? ""));
     }
     // Fallback: infer from non-server entries
     const set = new Set<string>();
@@ -137,8 +130,8 @@ export default function UserAccessAcl({
           </TableHead>
           <TableBody>
             {serverEntries.map((entry) => (
-              <TableRow key={`${entry.resourceType}:${entry.resourceKey}`}>
-                <TableCell>{entry.resourceKey}</TableCell>
+              <TableRow key={`${entry.resourceType || ""}:${entry.resourceKey || ""}`}>
+                <TableCell>{entry.resourceKey || "?"}</TableCell>
                 {serverPermissions.map((permission) => (
                   <TableCell key={permission} align="center">
                     {renderPermissionCell(entry, permission || "?")}
@@ -173,7 +166,7 @@ export default function UserAccessAcl({
           </TableHead>
           <TableBody>
             {nonServerEntries.map((entry) => (
-              <TableRow key={`${entry.resourceType}:${entry.resourceKey}:${entry.effect}`}>
+              <TableRow key={`${entry.resourceType || ""}:${entry.resourceKey ||""}:${entry.effect||""}`}>
                 <TableCell>{entry.resourceType}</TableCell>
                 <TableCell>{entry.resourceKey}</TableCell>
                 {nonServerPermissions.map((permission) => (

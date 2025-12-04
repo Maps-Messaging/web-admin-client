@@ -43,7 +43,7 @@ export default function UserDetails({ user = '' }) {
     data: aclData,
     isLoading: aclLoading,
   } = useGetIdentityAcl(identityId, {
-    query: { enabled: !!identityId }
+    query: { enabled: Boolean(identityId) }
   });
   const {
     data: permissionsData,

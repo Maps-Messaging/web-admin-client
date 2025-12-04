@@ -17,7 +17,7 @@
  */
 
 import React, {useState} from 'react';
-import {Pause, Play, Record, Stop} from "@phosphor-icons/react";
+import {Pause, Play, Stop} from "@phosphor-icons/react";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
@@ -37,9 +37,7 @@ const ActionController: React.FC<ActionControllerProps> = ({
                                                              onResume
                                                            }) => {
   const [state, setState] = useState<string>(currentState);
-  const [recording, setRecording] = useState(false);
 
-  console.log(currentState);
   const handleStart = () => {
     setState('Started');
     onStart?.();
