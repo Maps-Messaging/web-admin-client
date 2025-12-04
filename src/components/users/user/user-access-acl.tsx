@@ -35,10 +35,10 @@ interface UserAccessAclProps {
 }
 
 function isServerPermission(permission: PermissionDetailsDTO): boolean {
-  if (typeof permission.server === 'boolean') {
-    return permission.server;
-  }
-  return false;
+  console.log(permission);
+  var result = permission.server || false;
+  console.log(result);
+   return result;
 }
 
 function splitPermissionLabel(name: string): React.ReactNode {
