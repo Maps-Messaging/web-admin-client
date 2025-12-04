@@ -21,52 +21,69 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+
 import {
   useGetUser,
 } from "@/generated/authentication-and-authorisation-management/authentication-and-authorisation-management";
+
 import UserGroupGrid from "@/components/dashboard/account/user-group-grid";
-import Divider from "@mui/material/Divider";
 import UserAttributesTable from "@/components/users/user/user-attributes-table";
+import UserAccessAcl from "@/components/users/user/user-access-acl";
+import {useGetAuthorisationStaticInfo, useGetIdentityAcl} from "@/generated/default/default";
 import toast from "react-hot-toast";
 
-interface UserDetailsProps {
-  user: string;
-}
+export default function UserDetails({ user = '' }) {
 
-export default function UserDetails({
-                                      user = ''
-                                    }: UserDetailsProps): React.JSX.Element {
+  const { data, error, isLoading } = useGetUser(user);
 
-  const { data, error, isLoading } = useGetUser(user,{
-    query:{
-      refetchInterval: 120000
-    }
+  const identityId = data?.data.uniqueId ?? '';
+
+  const {
+    data: aclData,
+    isLoading: aclLoading,
+  } = useGetIdentityAcl(identityId, {
+    query: { enabled: !!identityId }
   });
-
+  const {
+    data: permissionsData,
+    isLoading: permsLoading,
+    error: permsError,
+  } = useGetAuthorisationStaticInfo({
+    query: {staleTime: 600000},
+  });
 
   const onDelete = async (group:string): Promise<void> => {
     toast(`group removed from user ${group}`);
   }
 
-  if (isLoading) return <div>Loading name...</div>;
-  if (error) return <div>Error loading name: {error.message}</div>;
+  if (isLoading || aclLoading || permsLoading) return <div>Loading…</div>;
+  if (error || permsError) return <div>Error loading user: {error?.message || " "} {permsError?.message || " "}</div>;
 
   return (
     <div>
-    <Stack spacing={3}>
-      <Stack direction="row" spacing={3}>
-        <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
-          <Typography variant="body2">Username: {data?.data.username}</Typography>
-        </Stack>
-        <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
-          <Typography variant="body2">Unique ID: {data?.data.uniqueId}</Typography>
-        </Stack>
+      <Stack spacing={3}>
+        <Typography variant="body2">Username: {data?.data.username}</Typography>
+        <Typography variant="body2">Unique ID: {data?.data.uniqueId}</Typography>
       </Stack>
-    </Stack>
-      <Divider></Divider>
-      <UserAttributesTable attributes={ data?.data.attributes || {}} />
-      <Divider></Divider>
-      <UserGroupGrid groups={(data?.data.groupList || []).filter((group): group is string => group !== null)} onDelete={onDelete} />
+
+      <Divider />
+
+      <UserAttributesTable attributes={data?.data.attributes || {}} />
+
+      <Divider />
+
+      <UserGroupGrid
+        groups={(data?.data.groupList || []).filter((group): group is string => group !== null)}
+        onDelete={onDelete}
+      />
+
+      <Divider />
+
+      <UserAccessAcl
+        entries={aclData?.data.entries ?? []}
+        permissions={permissionsData?.data.permissions ?? []}
+      />
     </div>
   );
 }
