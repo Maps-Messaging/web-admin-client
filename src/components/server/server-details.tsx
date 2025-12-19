@@ -89,10 +89,10 @@ export function ServerDetails () :  React.JSX.Element {
         const newArray = [...prev, newValue];
         return newArray.length > 120 ? newArray.slice(newArray.length - 120) : newArray;
       };
-      setNoInterest(prev => updateArray(prev, statsData.data.data?.noInterestPerSecond || 0));
-      setPublished(prev => updateArray(prev, statsData.data.data?.publishedPerSecond || 0));
-      setDelivered(prev => updateArray(prev,statsData.data.data?.deliveredPerSecond || 0))
-      setRetrieved(prev => updateArray(prev,statsData.data.data?.retrievedPerSecond || 0))
+      setNoInterest(prev => updateArray(prev, statsData.data?.noInterestPerSecond || 0));
+      setPublished(prev => updateArray(prev, statsData.data?.publishedPerSecond || 0));
+      setDelivered(prev => updateArray(prev,statsData.data?.deliveredPerSecond || 0))
+      setRetrieved(prev => updateArray(prev,statsData.data?.retrievedPerSecond || 0))
     }
   }, [statsData]);
 

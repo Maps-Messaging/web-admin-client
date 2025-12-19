@@ -48,9 +48,9 @@ export function ServerStatsBox ({
       <Typography variant="h6">State Info</Typography>
       <Typography variant="body2">Total Topics/Queues: {((info?.destinations || 0) ).toFixed(0)}</Typography>
       <Typography variant="body2">Storage Size: {((info?.storageSize|| 0) / 1024 / 1024).toFixed(0)} MB</Typography>
-      <Typography variant="body2">Total Connections: {((data?.data.data?.totalConnections|| 0)).toFixed(0)} </Typography>
-      <Typography variant="body2">Total Received: {((data?.data.data?.totalPublishedMessages|| 0)).toFixed(0)} </Typography>
-      <Typography variant="body2">Total Delivered: {((data?.data.data?.totalDeliveredMessages|| 0)).toFixed(0)} </Typography>
+      <Typography variant="body2">Total Connections: {((data?.data?.totalConnections|| 0)).toFixed(0)} </Typography>
+      <Typography variant="body2">Total Received: {((data?.data?.totalPublishedMessages|| 0)).toFixed(0)} </Typography>
+      <Typography variant="body2">Total Delivered: {((data?.data?.totalDeliveredMessages|| 0)).toFixed(0)} </Typography>
     </CardContent>
   </Card>
 

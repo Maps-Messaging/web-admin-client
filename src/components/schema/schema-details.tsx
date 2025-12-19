@@ -40,7 +40,7 @@ export default function SchemaDetails(): React.JSX.Element {
   if (isLoading) return <Typography>Loading…</Typography>;
   if (error) return <Typography color="error">Error: {error.message}</Typography>;
 
-  const rows: SchemaConfig[] = data?.data?.data ?? [];
+  const rows: SchemaConfig[] = data?.data ?? [];
   const total = rows.length;
   const paged = applyPagination(rows, page, rowsPerPage);
 

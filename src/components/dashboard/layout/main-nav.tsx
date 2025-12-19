@@ -107,7 +107,7 @@ export function MainNav(): React.JSX.Element {
               width={32}
             />
             <Typography variant="h4" component="h1" gutterBottom>
-              Server : { data?.data.status || 'Loading...'}
+              Server : { data?.data || 'Loading...'}
             </Typography>
           </Stack>
           <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>

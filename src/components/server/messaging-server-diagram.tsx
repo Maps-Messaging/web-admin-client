@@ -99,8 +99,8 @@ export default function MessagingServerDiagram(): React.JSX.Element {
   useEffect(() => {
     if (data) {
 
-      if (JSON.stringify(data?.data?.data) !== JSON.stringify(previousUpdate)) {
-        const stat = data?.data?.data || {};
+      if (JSON.stringify(data?.data) !== JSON.stringify(previousUpdate)) {
+        const stat = data?.data || {};
         setDiff(calculateStatDiff(stat, previousUpdate));
         setPreviousUpdate(stat);
         const prev = key + 1;
