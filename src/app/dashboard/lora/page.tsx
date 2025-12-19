@@ -98,7 +98,7 @@ function LoRaDeviceDetailsInner(): React.JSX.Element {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data?.data.data?.map((device: LoRaDeviceInfoDTO) => (
+              {data?.data?.map((device: LoRaDeviceInfoDTO) => (
                 <React.Fragment key={device.name}>
                   <TableRow>
                     <TableCell>{device.name}</TableCell>

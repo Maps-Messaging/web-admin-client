@@ -161,7 +161,7 @@ const getRecursiveSummary = (
 
 const NamespaceTree = (): React.JSX.Element => {
   const { data, error, isLoading } = useGetAllDestinations();
-  const [treeData, filesMap] = buildTree(data?.data.data || []);
+  const [treeData, filesMap] = buildTree(data?.data || []);
   const [selectedFiles, setSelectedFiles] = useState<TreeFile[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);

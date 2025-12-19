@@ -39,7 +39,7 @@ export default function ConnectionDetails(): React.JSX.Element {
   if (isLoading) return <div>Loading details...</div>;
   if (error) return <div>Error loading details: {error.message}</div>;
 
-  const paginatedInterfaces = applyPagination((data?.data.data || []), page, rowsPerPage);
+  const paginatedInterfaces = applyPagination((data?.data || []), page, rowsPerPage);
 
   return (
     <Stack spacing={3}>

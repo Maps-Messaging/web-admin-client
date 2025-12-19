@@ -41,8 +41,8 @@ export default function NetworkInterfaceDetails(): React.JSX.Element {
 
   const list = Array.isArray(data?.data)
     ? data.data
-    : Array.isArray(data?.data?.data)
-      ? data.data.data
+    : Array.isArray(data?.data)
+      ? data.data
       : [];
 
   const total = list.length;

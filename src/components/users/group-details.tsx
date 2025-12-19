@@ -46,7 +46,7 @@ export default function GroupDetails(): React.JSX.Element {
   if (isLoading) return <div>Loading groups...</div>;
   if (error) return <div>Error loading groups: {error.message}</div>;
 
-  const paginatedGroups = applyPagination((data?.data.data || []), page, rowsPerPage);
+  const paginatedGroups = applyPagination((data?.data || []), page, rowsPerPage);
 
   return (
     <Stack spacing={3}>

@@ -73,7 +73,7 @@ export function LoRaEndPointConnectionTable({
             </TableRow>
           </TableHead>
           <TableBody>
-            {data?.data.list?.map((row, index) => (
+            {data?.data?.map((row, index) => (
               <TableRow key={index}>
                 <TableCell>{row.remoteNodeId}</TableCell>
                 <TableCell>{row.rssi}</TableCell>

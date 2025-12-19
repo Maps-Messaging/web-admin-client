@@ -161,7 +161,7 @@ export function NameSpaceTable({
             </TableRow>
           </TableHead>
           <TableBody>
-            {data?.data.data?.map((destination): React.JSX.Element => (
+            {data?.data?.map((destination): React.JSX.Element => (
               <DestinationRow key={destination.name} destination={destination} />
             ))}
           </TableBody>

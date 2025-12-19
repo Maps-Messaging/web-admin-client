@@ -47,7 +47,7 @@ export default function UsersDetails(): React.JSX.Element {
   if (isLoading) return <div>Loading name...</div>;
   if (error) return <div>Error loading name: {error.message}</div>;
 
-  const paginatedUsers = applyPagination((data?.data.data || []), page, rowsPerPage);
+  const paginatedUsers = applyPagination((data?.data || []), page, rowsPerPage);
 
   return (
     <Stack spacing={3}>
