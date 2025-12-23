@@ -33,6 +33,7 @@ import Typography from '@mui/material/Typography';
 
 import {useSelection} from '@/hooks/use-selection';
 import {type GroupDTO} from "@/generated/model";
+import Link from "next/link";
 
 function noop(): void {
   // do nothing
@@ -103,7 +104,10 @@ export function GroupTable({
                     />
                   </TableCell>
                   <TableCell>
+
+                    <Link href={`/dashboard/authentication/group?groupname=${encodeURIComponent(row.uniqueId||'')}`} passHref>
                       <Typography variant="subtitle2">{row.name}</Typography>
+                    </Link>
                   </TableCell>
                   <TableCell>
                     <Typography variant="subtitle2">{row.uniqueId}</Typography>

@@ -20,15 +20,19 @@
 
 import * as React from 'react';
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import UsersDetails from "@/components/users/users-details";
 import '../../../../hostname-lookup'
+import {useSearchParams} from "next/navigation";
+import GroupDetails from "@/components/users/group/group-detail";
 
 const queryClient = new QueryClient();
 
 export default function Page(): React.JSX.Element {
+  const searchParams = useSearchParams()
+  const name = searchParams.get('groupname')
+
   return (
     <QueryClientProvider client={queryClient}>
-      <UsersDetails />
+      <GroupDetails group={name||''} />
     </QueryClientProvider>
   );
 }

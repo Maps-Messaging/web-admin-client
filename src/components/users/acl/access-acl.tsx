@@ -29,7 +29,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { IdentityAclEntryDTO, PermissionDetailsDTO } from "@/generated/model";
 
-interface UserAccessAclProps {
+interface AccessAclProps {
   entries: IdentityAclEntryDTO[];
   permissions: PermissionDetailsDTO[];
 }
@@ -64,10 +64,10 @@ function renderPermissionCell(entry: IdentityAclEntryDTO, permission: string): R
   return null;
 }
 
-export default function UserAccessAcl({
+export default function AccessAcl({
                                         entries,
                                         permissions,
-                                      }: UserAccessAclProps): React.JSX.Element {
+                                      }: AccessAclProps): React.JSX.Element {
 
   const serverEntries = React.useMemo(
     () => (entries || []).filter((entry) => entry.resourceType === 'Server'),

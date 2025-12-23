@@ -24,18 +24,17 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 
 import {
-  useGetUser,
+  useGetGroupById,
 } from "@/generated/authentication-and-authorisation-management/authentication-and-authorisation-management";
 
-import UserGroupGrid from "@/components/dashboard/account/user-group-grid";
-import UserAttributesTable from "@/components/users/user/user-attributes-table";
 import AccessAcl from "@/components/users/acl/access-acl";
 import {useGetAuthorisationStaticInfo, useGetIdentityAcl} from "@/generated/default/default";
 import toast from "react-hot-toast";
+import GroupUsersGrid from "@/components/dashboard/account/group-users-grid";
 
-export default function UserDetails({ user = '' }) {
+export default function GroupDetails({ group = '' }) {
 
-  const { data, error, isLoading } = useGetUser(user);
+  const { data, error, isLoading } = useGetGroupById(group);
 
   const identityId = data?.data.uniqueId ?? '';
 
@@ -45,6 +44,7 @@ export default function UserDetails({ user = '' }) {
   } = useGetIdentityAcl(identityId, {
     query: { enabled: Boolean(identityId) }
   });
+
   const {
     data: permissionsData,
     isLoading: permsLoading,
@@ -53,8 +53,8 @@ export default function UserDetails({ user = '' }) {
     query: {staleTime: 600000},
   });
 
-  const onDelete = async (group:string): Promise<void> => {
-    toast(`group removed from user ${group}`);
+  const onDelete = async (user:string): Promise<void> => {
+    toast(`user removed from user ${user}`);
   }
 
   if (isLoading || aclLoading || permsLoading) return <div>Loading…</div>;
@@ -63,23 +63,15 @@ export default function UserDetails({ user = '' }) {
   return (
     <div>
       <Stack spacing={3}>
-        <Typography variant="body2">Username: {data?.data.username}</Typography>
+        <Typography variant="body2">Group Name: {data?.data.name}</Typography>
         <Typography variant="body2">Unique ID: {data?.data.uniqueId}</Typography>
       </Stack>
-
       <Divider />
-
-      <UserAttributesTable attributes={data?.data.attributes || {}} />
-
-      <Divider />
-
-      <UserGroupGrid
-        groups={(data?.data.groupList || []).filter((group): group is string => group !== null)}
+      <GroupUsersGrid
+        users={(data?.data.usersList || [])}
         onDelete={onDelete}
       />
-
       <Divider />
-
       <AccessAcl
         entries={aclData?.data.entries ?? []}
         permissions={permissionsData?.data.permissions ?? []}
