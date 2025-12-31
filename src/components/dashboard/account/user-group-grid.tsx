@@ -22,9 +22,10 @@ import IconButton from "@mui/material/IconButton";
 import {Trash} from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
+import {GroupInfoDTO} from "@/generated/model";
 
 interface UserGroupGridProps {
-  groups: string[];
+  groups: GroupInfoDTO[];
   onDelete: (groupId: string) => void;
 }
 
@@ -35,7 +36,7 @@ const UserGroupGrid: React.FC<UserGroupGridProps> = ({ groups, onDelete }) => {
 
       <Grid container spacing={2}>
         {groups.map((group) => (
-          <Grid item xs={12} sm={6} md={3} key={group}>
+          <Grid item xs={12} sm={6} md={3} key={group?.uniqueId ||''}>
             <Box
               sx={{
                 display: 'flex',
@@ -46,9 +47,9 @@ const UserGroupGrid: React.FC<UserGroupGridProps> = ({ groups, onDelete }) => {
                 borderRadius: 1,
               }}
             >
-              <Typography variant="body1">{group}</Typography>
+              <Typography variant="body1">{group?.name}</Typography>
               <Tooltip title="Remove from user">
-                <IconButton color="secondary" onClick={() => { onDelete(group); }}>
+                <IconButton color="secondary" onClick={() => { onDelete(group?.uniqueId ||''); }}>
                   <Trash/>
                 </IconButton>
               </Tooltip>

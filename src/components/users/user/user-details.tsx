@@ -32,6 +32,7 @@ import UserAttributesTable from "@/components/users/user/user-attributes-table";
 import AccessAcl from "@/components/users/acl/access-acl";
 import {useGetAuthorisationStaticInfo, useGetIdentityAcl} from "@/generated/default/default";
 import toast from "react-hot-toast";
+import {GroupInfoDTO} from "@/generated/model";
 
 export default function UserDetails({ user = '' }) {
 
@@ -74,7 +75,7 @@ export default function UserDetails({ user = '' }) {
       <Divider />
 
       <UserGroupGrid
-        groups={(data?.data.groupList || []).filter((group): group is string => group !== null)}
+        groups={(data?.data.groupList || []).filter((group): group is GroupInfoDTO => group !== null)}
         onDelete={onDelete}
       />
 

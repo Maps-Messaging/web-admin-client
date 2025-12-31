@@ -32,7 +32,7 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 
 import {useSelection} from '@/hooks/use-selection';
-import {UserDTO} from "@/generated/model";
+import {GroupInfoDTO, UserDTO} from "@/generated/model";
 import Link from "next/link";
 
 function noop(): void {
@@ -61,8 +61,11 @@ export function UserTable({
   const selectedSome = (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
   const selectedAll = rows.length > 0 && selected?.size === rows.length;
 
-  function getGroups(arr: (string | null)[]): string {
-    return arr.filter((group): group is string => group !== null).join(',');
+  function getGroups(arr: (GroupInfoDTO | null)[]) {
+    return arr
+      .filter((group): group is NonNullable<GroupInfoDTO> => group !== null)
+      .map(group => group.name)
+      .join(",");
   }
 
 
