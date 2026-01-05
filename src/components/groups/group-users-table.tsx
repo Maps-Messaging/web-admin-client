@@ -15,16 +15,10 @@
  *  limitations under the License.
  */
 
+import { AddUserDialog } from "@/components/groups/add-user-dialog/add-user-dialog";
+import { useRemoveUserFromGroup } from "@/components/groups/hooks";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -34,11 +28,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AddGroupDialog } from "@/components/users/add-group-dialog/add-group-dialog";
-import { CreateUserDialog } from "@/components/users/create-user-dialog";
-import { useDeleteUser } from "@/components/users/hooks";
-import type { UserWithLock } from "@/components/users/models";
-import { UserTableRowActions } from "@/components/users/user-table-row-actions";
 import { Link } from "@tanstack/react-router";
 import {
   type ColumnDef,
@@ -48,14 +37,15 @@ import {
   getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Lock, UserX } from "lucide-react";
 import { type FunctionComponent, useState } from "react";
+import type { Group, GroupId } from "./models";
 
-interface UserTableProps {
-  users: UserWithLock[];
+interface GroupUserTableProps {
+  users: NonNullable<Group["usersList"]>;
+  groupId: GroupId;
 }
 
-const columns: ColumnDef<UserWithLock>[] = [
+const columns: ColumnDef<GroupUserTableProps["users"][number]>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -83,35 +73,21 @@ const columns: ColumnDef<UserWithLock>[] = [
       <Button variant="link" asChild className="px-0">
         <Link
           to="/admin/users/$userId"
-          params={{ userId: row.original.uniqueId }}
+          params={{ userId: row.original?.uniqueId }}
         >
-          {row.original.username}
+          {row.original?.username}
         </Link>
       </Button>
     ),
   },
-  {
-    header: "Groups",
-    cell: ({ row }) =>
-      (row.original.groupList ?? []).map((group) => group?.name).join(", "),
-  },
-  {
-    accessorKey: "locked",
-    header: "Locked",
-    cell: ({ row }) =>
-      row.original.locked ? <Lock className="size-4" /> : null,
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => <UserTableRowActions userId={row.original.uniqueId} />,
-  },
 ];
 
-export const UserTable: FunctionComponent<UserTableProps> = ({ users }) => {
+export const GroupUsersTable: FunctionComponent<GroupUserTableProps> = ({
+  groupId,
+  users,
+}) => {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
-
-  const { mutate: deleteUser } = useDeleteUser();
 
   const table = useReactTable({
     data: users,
@@ -126,36 +102,24 @@ export const UserTable: FunctionComponent<UserTableProps> = ({ users }) => {
     },
   });
 
-  const deleteUsers = () => {
-    table
-      .getFilteredSelectedRowModel()
-      .rows.forEach((row) =>
-        deleteUser({ params: { path: { userUuid: row.original.uniqueId } } }),
-      );
+  const { mutate: removeUserFromGroup } = useRemoveUserFromGroup();
+
+  const removeUsers = () => {
+    table.getFilteredSelectedRowModel().rows.forEach((row) =>
+      removeUserFromGroup({
+        params: {
+          path: {
+            userUuid: row.original.uniqueId,
+            groupUuid: groupId,
+          },
+        },
+      }),
+    );
     table.setRowSelection({});
   };
 
-  if ((users ?? []).length === 0) {
-    return (
-      <Empty>
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <UserX />
-          </EmptyMedia>
-          <EmptyTitle>No Users Yet</EmptyTitle>
-          <EmptyDescription>
-            You haven&apos;t created any users yet. Get started by creating your
-            first user.
-          </EmptyDescription>
-        </EmptyHeader>
-        <EmptyContent>
-          <CreateUserDialog />
-        </EmptyContent>
-      </Empty>
-    );
-  }
   return (
-    <div className="w-full max-w-4xl">
+    <div>
       <div className="flex items-center justify-between pb-4">
         <Input
           placeholder="Search by username..."
@@ -167,6 +131,7 @@ export const UserTable: FunctionComponent<UserTableProps> = ({ users }) => {
           }
           className="max-w-sm"
         />
+
         {table.getFilteredSelectedRowModel().rows.length > 0 ? (
           <div className="flex items-center gap-4">
             <div className="text-muted-foreground text-sm">
@@ -174,18 +139,12 @@ export const UserTable: FunctionComponent<UserTableProps> = ({ users }) => {
                 ? `${table.getFilteredSelectedRowModel().rows.length} users selected.`
                 : "1 user selected."}
             </div>
-            <AddGroupDialog
-              users={table.getSelectedRowModel().rows.map((row) => ({
-                uniqueId: row.original.uniqueId,
-                username: row.original.username,
-              }))}
-            />
-            <Button variant="destructive" size="sm" onClick={deleteUsers}>
-              Delete Users
+            <Button variant="destructive" size="sm" onClick={removeUsers}>
+              Remove Users
             </Button>
           </div>
         ) : (
-          <CreateUserDialog />
+          <AddUserDialog groupId={groupId} />
         )}
       </div>
       <div className="overflow-hidden rounded-md border">
@@ -231,7 +190,9 @@ export const UserTable: FunctionComponent<UserTableProps> = ({ users }) => {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {columnFilters.length > 0
+                    ? "No results."
+                    : "No users in group"}
                 </TableCell>
               </TableRow>
             )}

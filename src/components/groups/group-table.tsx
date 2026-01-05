@@ -15,8 +15,10 @@
  *  limitations under the License.
  */
 
+import { CreateGroupDialog } from "@/components/groups/create-group-dialog";
+import { GroupTableRowActions } from "@/components/groups/group-table-row-actions";
+import type { Group } from "@/components/groups/models";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Empty,
   EmptyContent,
@@ -34,11 +36,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AddGroupDialog } from "@/components/users/add-group-dialog/add-group-dialog";
-import { CreateUserDialog } from "@/components/users/create-user-dialog";
-import { useDeleteUser } from "@/components/users/hooks";
-import type { UserWithLock } from "@/components/users/models";
-import { UserTableRowActions } from "@/components/users/user-table-row-actions";
 import { Link } from "@tanstack/react-router";
 import {
   type ColumnDef,
@@ -48,108 +45,91 @@ import {
   getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Lock, UserX } from "lucide-react";
+import { UserX } from "lucide-react";
 import { type FunctionComponent, useState } from "react";
 
-interface UserTableProps {
-  users: UserWithLock[];
+interface GroupTableProps {
+  groups?: Group[];
 }
 
-const columns: ColumnDef<UserWithLock>[] = [
+const columns: ColumnDef<Group>[] = [
+  // {
+  //   id: "select",
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={
+  //         table.getIsAllPageRowsSelected() ||
+  //         (table.getIsSomePageRowsSelected() && "indeterminate")
+  //       }
+  //       onCheckedChange={ (value) => table.toggleAllPageRowsSelected(!!value) }
+  //       aria-label="Select all"
+  //     />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <Checkbox
+  //       checked={ row.getIsSelected() }
+  //       onCheckedChange={ (value) => row.toggleSelected(!!value) }
+  //       aria-label="Select row"
+  //     />
+  //   ),
+  // },
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-  },
-  {
-    id: "username",
-    header: "Username",
+    id: "name",
+    header: "Name",
     cell: ({ row }) => (
       <Button variant="link" asChild className="px-0">
         <Link
-          to="/admin/users/$userId"
-          params={{ userId: row.original.uniqueId }}
+          to="/admin/groups/$groupId"
+          params={{ groupId: row.original.uniqueId }}
         >
-          {row.original.username}
+          {row.original.name}
         </Link>
       </Button>
     ),
   },
   {
-    header: "Groups",
-    cell: ({ row }) =>
-      (row.original.groupList ?? []).map((group) => group?.name).join(", "),
-  },
-  {
-    accessorKey: "locked",
-    header: "Locked",
-    cell: ({ row }) =>
-      row.original.locked ? <Lock className="size-4" /> : null,
+    header: "Users",
+    cell: ({ row }) => (row.original.usersList ?? []).length,
   },
   {
     id: "actions",
-    cell: ({ row }) => <UserTableRowActions userId={row.original.uniqueId} />,
+    cell: ({ row }) => <GroupTableRowActions groupId={row.original.uniqueId} />,
+    size: 30,
   },
 ];
 
-export const UserTable: FunctionComponent<UserTableProps> = ({ users }) => {
+export const GroupTable: FunctionComponent<GroupTableProps> = ({ groups }) => {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [rowSelection, setRowSelection] = useState({});
-
-  const { mutate: deleteUser } = useDeleteUser();
+  // const [ rowSelection, setRowSelection ] = useState({});
 
   const table = useReactTable({
-    data: users,
+    data: groups ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
-    onRowSelectionChange: setRowSelection,
+    // onRowSelectionChange: setRowSelection,
     state: {
       columnFilters,
-      rowSelection,
+      // rowSelection
     },
   });
 
-  const deleteUsers = () => {
-    table
-      .getFilteredSelectedRowModel()
-      .rows.forEach((row) =>
-        deleteUser({ params: { path: { userUuid: row.original.uniqueId } } }),
-      );
-    table.setRowSelection({});
-  };
-
-  if ((users ?? []).length === 0) {
+  if ((groups ?? []).length === 0) {
     return (
       <Empty>
         <EmptyHeader>
           <EmptyMedia variant="icon">
             <UserX />
           </EmptyMedia>
-          <EmptyTitle>No Users Yet</EmptyTitle>
+          <EmptyTitle>No Groups Yet</EmptyTitle>
           <EmptyDescription>
-            You haven&apos;t created any users yet. Get started by creating your
-            first user.
+            You haven&apos;t created any groups yet. Get started by creating
+            your first group.
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <CreateUserDialog />
+          <CreateGroupDialog />
         </EmptyContent>
       </Empty>
     );
@@ -158,35 +138,14 @@ export const UserTable: FunctionComponent<UserTableProps> = ({ users }) => {
     <div className="w-full max-w-4xl">
       <div className="flex items-center justify-between pb-4">
         <Input
-          placeholder="Search by username..."
-          value={
-            (table.getColumn("username")?.getFilterValue() as string) ?? ""
-          }
+          placeholder="Search by group name..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("username")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
-        {table.getFilteredSelectedRowModel().rows.length > 0 ? (
-          <div className="flex items-center gap-4">
-            <div className="text-muted-foreground text-sm">
-              {table.getFilteredSelectedRowModel().rows.length > 1
-                ? `${table.getFilteredSelectedRowModel().rows.length} users selected.`
-                : "1 user selected."}
-            </div>
-            <AddGroupDialog
-              users={table.getSelectedRowModel().rows.map((row) => ({
-                uniqueId: row.original.uniqueId,
-                username: row.original.username,
-              }))}
-            />
-            <Button variant="destructive" size="sm" onClick={deleteUsers}>
-              Delete Users
-            </Button>
-          </div>
-        ) : (
-          <CreateUserDialog />
-        )}
+        <CreateGroupDialog />
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
@@ -195,7 +154,13 @@ export const UserTable: FunctionComponent<UserTableProps> = ({ users }) => {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      style={{
+                        minWidth: header.column.columnDef.size,
+                        maxWidth: header.column.columnDef.size,
+                      }}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -216,7 +181,13 @@ export const UserTable: FunctionComponent<UserTableProps> = ({ users }) => {
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      style={{
+                        minWidth: cell.column.columnDef.size,
+                        maxWidth: cell.column.columnDef.size,
+                      }}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
