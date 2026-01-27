@@ -93,13 +93,13 @@ export const AddUserDialog: FunctionComponent<AddUserDialogProps> = ({
         }}
       >
         <DialogTrigger asChild>
-          <Button>Add users</Button>
+          <Button>Add member</Button>
         </DialogTrigger>
         <DialogContent showCloseButton={false} className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Add Users to {group?.name}</DialogTitle>
+            <DialogTitle>Add member to {group?.name}</DialogTitle>
             <DialogDescription>
-              Search and add users to the group. Click save when you&apos;re
+              Search and add users to the group. Click submit when you&apos;re
               done.
             </DialogDescription>
           </DialogHeader>

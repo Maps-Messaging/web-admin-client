@@ -15,46 +15,86 @@
  *  limitations under the License.
  */
 
-import { GroupUsersTable } from "@/components/groups/group-users-table";
-import { useDeleteGroup, useGroup } from "@/components/groups/hooks";
-import type { Group } from "@/components/groups/models";
+import { AddUserDialog } from "@/components/groups/add-user-dialog/add-user-dialog";
+import { useAddUserToGroup, useGroup, useRemoveUserFromGroup } from "@/components/groups/hooks";
+import type { GroupId } from "@/components/groups/models";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LinkButton } from "@/components/ui/link-button";
+import type { UserId } from "@/components/users/models";
+import { Unlink } from "lucide-react";
 import { type FunctionComponent } from "react";
+import { toast } from "sonner";
 
 interface GroupDetailsCardProps {
-  groupId: Group["uniqueId"];
+  groupId: GroupId;
+  className?: string;
 }
 
 export const GroupDetailsCard: FunctionComponent<GroupDetailsCardProps> = ({
   groupId,
+  className,
 }) => {
   const { data: group } = useGroup(groupId);
-  const { mutate: deleteGroup } = useDeleteGroup();
+
+  const { mutate: addUserToGroup } = useAddUserToGroup();
+  const { mutate: removeUserFromGroup } = useRemoveUserFromGroup();
+
+  const unlinkGroup = (userId: UserId, username: string) => {
+    removeUserFromGroup(
+      {
+        params: {
+          path: {
+            userUuid: userId,
+            groupUuid: groupId,
+          },
+        },
+      },
+      {
+        onSuccess: () => {
+          toast(`User removed`, {
+            description: `User "${username}" has been removed from ${group?.name}`,
+            action: {
+              label: "Undo",
+              onClick: () => {
+                addUserToGroup({
+                  params: { path: { groupUuid: groupId, userUuid: userId } },
+                });
+              },
+            },
+          });
+        },
+      },
+    );
+  };
 
   return (
-    <Card className="w-full max-w-4xl">
+    <Card className={className}>
       <CardHeader>
-        <CardTitle>{group?.name}</CardTitle>
+        <CardTitle className="text-xl">Members</CardTitle>
         <CardAction>
-          <Button
-            variant="destructive"
-            onClick={() =>
-              deleteGroup({ params: { path: { groupUuid: groupId } } })
-            }
-          >
-            Delete Group
-          </Button>
+          <AddUserDialog groupId={groupId} />
         </CardAction>
       </CardHeader>
-      <CardContent>
-        <GroupUsersTable groupId={groupId} users={group?.usersList ?? []} />
+      <CardContent className="flex flex-col gap-2">
+        {(group?.usersList ?? []).map(({ username, uniqueId }) => (
+          <div className="flex justify-between" key={uniqueId}>
+            <LinkButton
+              to="/people/users/$userId"
+              params={{ userId: uniqueId }}
+            >
+              {username}
+            </LinkButton>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => unlinkGroup(uniqueId, username)}
+            >
+              <span className="sr-only">Group member</span>
+              <Unlink />
+            </Button>
+          </div>
+        ))}
       </CardContent>
     </Card>
   );
