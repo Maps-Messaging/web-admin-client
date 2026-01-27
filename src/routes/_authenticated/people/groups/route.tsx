@@ -17,7 +17,7 @@
 
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_authenticated/admin/users")({
+export const Route = createFileRoute("/_authenticated/people/groups")({
   component: Outlet,
-  staticData: { breadcrumb: "Users" },
+  staticData: { breadcrumb: "Groups" },
 });

@@ -15,12 +15,9 @@
  *  limitations under the License.
  */
 
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_authenticated/admin/")({
-  component: RouteComponent,
+export const Route = createFileRoute("/_authenticated/people")({
+  component: Outlet,
+  staticData: { breadcrumb: "People" },
 });
-
-function RouteComponent() {
-  return <div>Hello "/admin/"!</div>;
-}

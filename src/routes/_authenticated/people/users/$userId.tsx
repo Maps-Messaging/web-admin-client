@@ -18,13 +18,16 @@
 import { apiClient } from "@/api/api-client";
 import { queryClient } from "@/api/query-client";
 import { Button } from "@/components/ui/button";
+import { DeleteUserDialog } from "@/components/users/delete-user-dialog";
+import { useDeleteUser, useGetUser } from "@/components/users/hooks";
 import { ResetUserPasswordDialog } from "@/components/users/reset-user-password-dialog";
+import { UserAclCard } from "@/components/users/user-acl-card";
 import { UserAttributesCard } from "@/components/users/user-attributes-card";
 import { UserGroupsCard } from "@/components/users/user-groups-card";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
-export const Route = createFileRoute("/_authenticated/admin/users/$userId")({
+export const Route = createFileRoute("/_authenticated/people/users/$userId")({
   component: RouteComponent,
   loader: async ({ params }) => {
     const data = await queryClient.fetchQuery(
@@ -38,27 +41,61 @@ export const Route = createFileRoute("/_authenticated/admin/users/$userId")({
 
 function RouteComponent() {
   const { userId } = Route.useParams();
+  const { data: user } = useGetUser(userId);
+  const navigate = useNavigate();
+
+  const { mutate: deleteUser } = useDeleteUser();
 
   const [showResetPasswordDialog, setShowResetPasswordDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+  const handleDelete = () => {
+    deleteUser(
+      { params: { path: { userUuid: userId } } },
+      {
+        onSuccess: () => {
+          navigate({ to: ".." });
+        },
+      },
+    );
+  };
 
   return (
-    <div className="px-4">
-      <div className="flex items-center justify-end-safe pb-4">
-        <Button
-          variant="outline"
-          onClick={() => setShowResetPasswordDialog(true)}
-        >
-          Reset Password
-        </Button>
+    <div className="flex flex-col gap-4 w-6xl mx-auto">
+      <div className="px-6 flex items-center justify-between w-full">
+        <h1 className="text-4xl font-extrabold">{user?.username}</h1>
+        <div className="flex gap-4">
+          <Button
+            variant="outline"
+            onClick={() => setShowResetPasswordDialog(true)}
+          >
+            Reset Password
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={() => setShowDeleteDialog(true)}
+          >
+            Delete User
+          </Button>
+        </div>
       </div>
-      <div className="flex gap-4">
+      <div className="flex gap-4 w-full">
         <UserAttributesCard userId={userId} className="flex-6" />
         <UserGroupsCard userId={userId} className="flex-6" />
+      </div>
+      <div className="w-full">
+        <UserAclCard userId={userId} />
       </div>
       <ResetUserPasswordDialog
         userId={userId}
         open={showResetPasswordDialog}
         setOpen={setShowResetPasswordDialog}
+      />
+      <DeleteUserDialog
+        userId={userId}
+        open={showDeleteDialog}
+        setOpen={setShowDeleteDialog}
+        onConfirm={handleDelete}
       />
     </div>
   );

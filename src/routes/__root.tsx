@@ -19,10 +19,8 @@ import { TanStackDevtools } from "@tanstack/react-devtools";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { House } from "lucide-react";
 
 export const Route = createRootRoute({
-  staticData: { breadcrumb: <House className="size-4" /> },
   component: () => (
     <>
       <Outlet />

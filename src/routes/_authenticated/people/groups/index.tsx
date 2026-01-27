@@ -15,9 +15,21 @@
  *  limitations under the License.
  */
 
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { GroupTable } from "@/components/groups/group-table";
+import { useGroups } from "@/components/groups/hooks";
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_authenticated/admin")({
-  component: Outlet,
-  staticData: { breadcrumb: "Admin" },
+export const Route = createFileRoute("/_authenticated/people/groups/")({
+  component: RouteComponent,
 });
+
+function RouteComponent() {
+  const { data } = useGroups();
+
+  return (
+    <div className="px-6 flex flex-col gap-4 w-6xl mx-auto">
+      <h1 className="text-4xl font-extrabold">Groups</h1>
+      <GroupTable groups={data} />
+    </div>
+  );
+}

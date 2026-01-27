@@ -15,20 +15,10 @@
  *  limitations under the License.
  */
 
-import { GroupTable } from "@/components/groups/group-table";
-import { useGroups } from "@/components/groups/hooks";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_authenticated/admin/groups/")({
-  component: RouteComponent,
+export const Route = createFileRoute("/_authenticated/people/")({
+  beforeLoad: () => {
+    throw redirect({ to: "/people/users" });
+  },
 });
-
-function RouteComponent() {
-  const { data } = useGroups();
-
-  return (
-    <div className="px-4 flex justify-center">
-      <GroupTable groups={data} />
-    </div>
-  );
-}

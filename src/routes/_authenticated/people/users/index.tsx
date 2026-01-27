@@ -15,29 +15,21 @@
  *  limitations under the License.
  */
 
-import { apiClient } from "@/api/api-client";
-import { queryClient } from "@/api/query-client";
-import { GroupDetailsCard } from "@/components/groups/group-details-card";
 import { createFileRoute } from "@tanstack/react-router";
+import { UserTable } from "@/components/users/user-table";
+import { useUsersWithLock } from "@/components/users/hooks";
 
-export const Route = createFileRoute("/_authenticated/admin/groups/$groupId")({
+export const Route = createFileRoute("/_authenticated/people/users/")({
   component: RouteComponent,
-  loader: async ({ params }) => {
-    const data = await queryClient.fetchQuery(
-      apiClient.queryOptions("get", "/api/v1/auth/groups/{groupUuid}", {
-        params: { path: { groupUuid: params.groupId } },
-      }),
-    );
-    return { breadcrumb: data.name };
-  },
 });
 
 function RouteComponent() {
-  const { groupId } = Route.useParams();
+  const { data } = useUsersWithLock();
 
   return (
-    <div className="px-4 flex justify-center">
-      <GroupDetailsCard groupId={groupId} />
+    <div className="px-6 flex flex-col gap-4 w-6xl mx-auto">
+      <h1 className="text-4xl font-extrabold">Users</h1>
+      <UserTable users={data} />
     </div>
   );
 }

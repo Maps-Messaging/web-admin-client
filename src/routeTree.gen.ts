@@ -12,21 +12,21 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedPeopleRouteRouteImport } from './routes/_authenticated/people/route'
 import { Route as AuthenticatedNamespacesRouteRouteImport } from './routes/_authenticated/namespaces/route'
 import { Route as AuthenticatedConnectionsRouteRouteImport } from './routes/_authenticated/connections/route'
-import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
+import { Route as AuthenticatedPeopleIndexRouteImport } from './routes/_authenticated/people/index'
 import { Route as AuthenticatedNamespacesIndexRouteImport } from './routes/_authenticated/namespaces/index'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 import { Route as AuthenticatedConnectionsIndexRouteImport } from './routes/_authenticated/connections/index'
-import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedNamespacesSplatRouteImport } from './routes/_authenticated/namespaces/$'
 import { Route as AuthenticatedConnectionsConnectionIdRouteImport } from './routes/_authenticated/connections/$connectionId'
-import { Route as AuthenticatedAdminUsersRouteRouteImport } from './routes/_authenticated/admin/users/route'
-import { Route as AuthenticatedAdminGroupsRouteRouteImport } from './routes/_authenticated/admin/groups/route'
-import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin/users/index'
-import { Route as AuthenticatedAdminGroupsIndexRouteImport } from './routes/_authenticated/admin/groups/index'
-import { Route as AuthenticatedAdminUsersUserIdRouteImport } from './routes/_authenticated/admin/users/$userId'
-import { Route as AuthenticatedAdminGroupsGroupIdRouteImport } from './routes/_authenticated/admin/groups/$groupId'
+import { Route as AuthenticatedPeopleUsersRouteRouteImport } from './routes/_authenticated/people/users/route'
+import { Route as AuthenticatedPeopleGroupsRouteRouteImport } from './routes/_authenticated/people/groups/route'
+import { Route as AuthenticatedPeopleUsersIndexRouteImport } from './routes/_authenticated/people/users/index'
+import { Route as AuthenticatedPeopleGroupsIndexRouteImport } from './routes/_authenticated/people/groups/index'
+import { Route as AuthenticatedPeopleUsersUserIdRouteImport } from './routes/_authenticated/people/users/$userId'
+import { Route as AuthenticatedPeopleGroupsGroupIdRouteImport } from './routes/_authenticated/people/groups/$groupId'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -42,6 +42,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedPeopleRouteRoute =
+  AuthenticatedPeopleRouteRouteImport.update({
+    id: '/people',
+    path: '/people',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedNamespacesRouteRoute =
   AuthenticatedNamespacesRouteRouteImport.update({
     id: '/namespaces',
@@ -54,11 +60,12 @@ const AuthenticatedConnectionsRouteRoute =
     path: '/connections',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
+const AuthenticatedPeopleIndexRoute =
+  AuthenticatedPeopleIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedPeopleRouteRoute,
+  } as any)
 const AuthenticatedNamespacesIndexRoute =
   AuthenticatedNamespacesIndexRouteImport.update({
     id: '/',
@@ -77,11 +84,6 @@ const AuthenticatedConnectionsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedConnectionsRouteRoute,
   } as any)
-const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthenticatedAdminRouteRoute,
-} as any)
 const AuthenticatedNamespacesSplatRoute =
   AuthenticatedNamespacesSplatRouteImport.update({
     id: '/$',
@@ -94,151 +96,151 @@ const AuthenticatedConnectionsConnectionIdRoute =
     path: '/$connectionId',
     getParentRoute: () => AuthenticatedConnectionsRouteRoute,
   } as any)
-const AuthenticatedAdminUsersRouteRoute =
-  AuthenticatedAdminUsersRouteRouteImport.update({
+const AuthenticatedPeopleUsersRouteRoute =
+  AuthenticatedPeopleUsersRouteRouteImport.update({
     id: '/users',
     path: '/users',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
+    getParentRoute: () => AuthenticatedPeopleRouteRoute,
   } as any)
-const AuthenticatedAdminGroupsRouteRoute =
-  AuthenticatedAdminGroupsRouteRouteImport.update({
+const AuthenticatedPeopleGroupsRouteRoute =
+  AuthenticatedPeopleGroupsRouteRouteImport.update({
     id: '/groups',
     path: '/groups',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
+    getParentRoute: () => AuthenticatedPeopleRouteRoute,
   } as any)
-const AuthenticatedAdminUsersIndexRoute =
-  AuthenticatedAdminUsersIndexRouteImport.update({
+const AuthenticatedPeopleUsersIndexRoute =
+  AuthenticatedPeopleUsersIndexRouteImport.update({
     id: '/',
     path: '/',
-    getParentRoute: () => AuthenticatedAdminUsersRouteRoute,
+    getParentRoute: () => AuthenticatedPeopleUsersRouteRoute,
   } as any)
-const AuthenticatedAdminGroupsIndexRoute =
-  AuthenticatedAdminGroupsIndexRouteImport.update({
+const AuthenticatedPeopleGroupsIndexRoute =
+  AuthenticatedPeopleGroupsIndexRouteImport.update({
     id: '/',
     path: '/',
-    getParentRoute: () => AuthenticatedAdminGroupsRouteRoute,
+    getParentRoute: () => AuthenticatedPeopleGroupsRouteRoute,
   } as any)
-const AuthenticatedAdminUsersUserIdRoute =
-  AuthenticatedAdminUsersUserIdRouteImport.update({
+const AuthenticatedPeopleUsersUserIdRoute =
+  AuthenticatedPeopleUsersUserIdRouteImport.update({
     id: '/$userId',
     path: '/$userId',
-    getParentRoute: () => AuthenticatedAdminUsersRouteRoute,
+    getParentRoute: () => AuthenticatedPeopleUsersRouteRoute,
   } as any)
-const AuthenticatedAdminGroupsGroupIdRoute =
-  AuthenticatedAdminGroupsGroupIdRouteImport.update({
+const AuthenticatedPeopleGroupsGroupIdRoute =
+  AuthenticatedPeopleGroupsGroupIdRouteImport.update({
     id: '/$groupId',
     path: '/$groupId',
-    getParentRoute: () => AuthenticatedAdminGroupsRouteRoute,
+    getParentRoute: () => AuthenticatedPeopleGroupsRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/connections': typeof AuthenticatedConnectionsRouteRouteWithChildren
   '/namespaces': typeof AuthenticatedNamespacesRouteRouteWithChildren
-  '/admin/groups': typeof AuthenticatedAdminGroupsRouteRouteWithChildren
-  '/admin/users': typeof AuthenticatedAdminUsersRouteRouteWithChildren
+  '/people': typeof AuthenticatedPeopleRouteRouteWithChildren
+  '/people/groups': typeof AuthenticatedPeopleGroupsRouteRouteWithChildren
+  '/people/users': typeof AuthenticatedPeopleUsersRouteRouteWithChildren
   '/connections/$connectionId': typeof AuthenticatedConnectionsConnectionIdRoute
   '/namespaces/$': typeof AuthenticatedNamespacesSplatRoute
-  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/connections/': typeof AuthenticatedConnectionsIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/namespaces/': typeof AuthenticatedNamespacesIndexRoute
-  '/admin/groups/$groupId': typeof AuthenticatedAdminGroupsGroupIdRoute
-  '/admin/users/$userId': typeof AuthenticatedAdminUsersUserIdRoute
-  '/admin/groups/': typeof AuthenticatedAdminGroupsIndexRoute
-  '/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
+  '/people/': typeof AuthenticatedPeopleIndexRoute
+  '/people/groups/$groupId': typeof AuthenticatedPeopleGroupsGroupIdRoute
+  '/people/users/$userId': typeof AuthenticatedPeopleUsersUserIdRoute
+  '/people/groups/': typeof AuthenticatedPeopleGroupsIndexRoute
+  '/people/users/': typeof AuthenticatedPeopleUsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/connections/$connectionId': typeof AuthenticatedConnectionsConnectionIdRoute
   '/namespaces/$': typeof AuthenticatedNamespacesSplatRoute
-  '/admin': typeof AuthenticatedAdminIndexRoute
   '/connections': typeof AuthenticatedConnectionsIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/namespaces': typeof AuthenticatedNamespacesIndexRoute
-  '/admin/groups/$groupId': typeof AuthenticatedAdminGroupsGroupIdRoute
-  '/admin/users/$userId': typeof AuthenticatedAdminUsersUserIdRoute
-  '/admin/groups': typeof AuthenticatedAdminGroupsIndexRoute
-  '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/people': typeof AuthenticatedPeopleIndexRoute
+  '/people/groups/$groupId': typeof AuthenticatedPeopleGroupsGroupIdRoute
+  '/people/users/$userId': typeof AuthenticatedPeopleUsersUserIdRoute
+  '/people/groups': typeof AuthenticatedPeopleGroupsIndexRoute
+  '/people/users': typeof AuthenticatedPeopleUsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/connections': typeof AuthenticatedConnectionsRouteRouteWithChildren
   '/_authenticated/namespaces': typeof AuthenticatedNamespacesRouteRouteWithChildren
-  '/_authenticated/admin/groups': typeof AuthenticatedAdminGroupsRouteRouteWithChildren
-  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRouteRouteWithChildren
+  '/_authenticated/people': typeof AuthenticatedPeopleRouteRouteWithChildren
+  '/_authenticated/people/groups': typeof AuthenticatedPeopleGroupsRouteRouteWithChildren
+  '/_authenticated/people/users': typeof AuthenticatedPeopleUsersRouteRouteWithChildren
   '/_authenticated/connections/$connectionId': typeof AuthenticatedConnectionsConnectionIdRoute
   '/_authenticated/namespaces/$': typeof AuthenticatedNamespacesSplatRoute
-  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/connections/': typeof AuthenticatedConnectionsIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/namespaces/': typeof AuthenticatedNamespacesIndexRoute
-  '/_authenticated/admin/groups/$groupId': typeof AuthenticatedAdminGroupsGroupIdRoute
-  '/_authenticated/admin/users/$userId': typeof AuthenticatedAdminUsersUserIdRoute
-  '/_authenticated/admin/groups/': typeof AuthenticatedAdminGroupsIndexRoute
-  '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
+  '/_authenticated/people/': typeof AuthenticatedPeopleIndexRoute
+  '/_authenticated/people/groups/$groupId': typeof AuthenticatedPeopleGroupsGroupIdRoute
+  '/_authenticated/people/users/$userId': typeof AuthenticatedPeopleUsersUserIdRoute
+  '/_authenticated/people/groups/': typeof AuthenticatedPeopleGroupsIndexRoute
+  '/_authenticated/people/users/': typeof AuthenticatedPeopleUsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/login'
-    | '/admin'
     | '/connections'
     | '/namespaces'
-    | '/admin/groups'
-    | '/admin/users'
+    | '/people'
+    | '/people/groups'
+    | '/people/users'
     | '/connections/$connectionId'
     | '/namespaces/$'
-    | '/admin/'
     | '/connections/'
     | '/dashboard'
     | '/namespaces/'
-    | '/admin/groups/$groupId'
-    | '/admin/users/$userId'
-    | '/admin/groups/'
-    | '/admin/users/'
+    | '/people/'
+    | '/people/groups/$groupId'
+    | '/people/users/$userId'
+    | '/people/groups/'
+    | '/people/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/connections/$connectionId'
     | '/namespaces/$'
-    | '/admin'
     | '/connections'
     | '/dashboard'
     | '/namespaces'
-    | '/admin/groups/$groupId'
-    | '/admin/users/$userId'
-    | '/admin/groups'
-    | '/admin/users'
+    | '/people'
+    | '/people/groups/$groupId'
+    | '/people/users/$userId'
+    | '/people/groups'
+    | '/people/users'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/login'
-    | '/_authenticated/admin'
     | '/_authenticated/connections'
     | '/_authenticated/namespaces'
-    | '/_authenticated/admin/groups'
-    | '/_authenticated/admin/users'
+    | '/_authenticated/people'
+    | '/_authenticated/people/groups'
+    | '/_authenticated/people/users'
     | '/_authenticated/connections/$connectionId'
     | '/_authenticated/namespaces/$'
-    | '/_authenticated/admin/'
     | '/_authenticated/connections/'
     | '/_authenticated/dashboard/'
     | '/_authenticated/namespaces/'
-    | '/_authenticated/admin/groups/$groupId'
-    | '/_authenticated/admin/users/$userId'
-    | '/_authenticated/admin/groups/'
-    | '/_authenticated/admin/users/'
+    | '/_authenticated/people/'
+    | '/_authenticated/people/groups/$groupId'
+    | '/_authenticated/people/users/$userId'
+    | '/_authenticated/people/groups/'
+    | '/_authenticated/people/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -270,6 +272,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/people': {
+      id: '/_authenticated/people'
+      path: '/people'
+      fullPath: '/people'
+      preLoaderRoute: typeof AuthenticatedPeopleRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/namespaces': {
       id: '/_authenticated/namespaces'
       path: '/namespaces'
@@ -284,12 +293,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedConnectionsRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/admin': {
-      id: '/_authenticated/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/_authenticated/people/': {
+      id: '/_authenticated/people/'
+      path: '/'
+      fullPath: '/people/'
+      preLoaderRoute: typeof AuthenticatedPeopleIndexRouteImport
+      parentRoute: typeof AuthenticatedPeopleRouteRoute
     }
     '/_authenticated/namespaces/': {
       id: '/_authenticated/namespaces/'
@@ -312,13 +321,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedConnectionsIndexRouteImport
       parentRoute: typeof AuthenticatedConnectionsRouteRoute
     }
-    '/_authenticated/admin/': {
-      id: '/_authenticated/admin/'
-      path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
     '/_authenticated/namespaces/$': {
       id: '/_authenticated/namespaces/$'
       path: '/$'
@@ -333,102 +335,50 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedConnectionsConnectionIdRouteImport
       parentRoute: typeof AuthenticatedConnectionsRouteRoute
     }
-    '/_authenticated/admin/users': {
-      id: '/_authenticated/admin/users'
+    '/_authenticated/people/users': {
+      id: '/_authenticated/people/users'
       path: '/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AuthenticatedAdminUsersRouteRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
+      fullPath: '/people/users'
+      preLoaderRoute: typeof AuthenticatedPeopleUsersRouteRouteImport
+      parentRoute: typeof AuthenticatedPeopleRouteRoute
     }
-    '/_authenticated/admin/groups': {
-      id: '/_authenticated/admin/groups'
+    '/_authenticated/people/groups': {
+      id: '/_authenticated/people/groups'
       path: '/groups'
-      fullPath: '/admin/groups'
-      preLoaderRoute: typeof AuthenticatedAdminGroupsRouteRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
+      fullPath: '/people/groups'
+      preLoaderRoute: typeof AuthenticatedPeopleGroupsRouteRouteImport
+      parentRoute: typeof AuthenticatedPeopleRouteRoute
     }
-    '/_authenticated/admin/users/': {
-      id: '/_authenticated/admin/users/'
+    '/_authenticated/people/users/': {
+      id: '/_authenticated/people/users/'
       path: '/'
-      fullPath: '/admin/users/'
-      preLoaderRoute: typeof AuthenticatedAdminUsersIndexRouteImport
-      parentRoute: typeof AuthenticatedAdminUsersRouteRoute
+      fullPath: '/people/users/'
+      preLoaderRoute: typeof AuthenticatedPeopleUsersIndexRouteImport
+      parentRoute: typeof AuthenticatedPeopleUsersRouteRoute
     }
-    '/_authenticated/admin/groups/': {
-      id: '/_authenticated/admin/groups/'
+    '/_authenticated/people/groups/': {
+      id: '/_authenticated/people/groups/'
       path: '/'
-      fullPath: '/admin/groups/'
-      preLoaderRoute: typeof AuthenticatedAdminGroupsIndexRouteImport
-      parentRoute: typeof AuthenticatedAdminGroupsRouteRoute
+      fullPath: '/people/groups/'
+      preLoaderRoute: typeof AuthenticatedPeopleGroupsIndexRouteImport
+      parentRoute: typeof AuthenticatedPeopleGroupsRouteRoute
     }
-    '/_authenticated/admin/users/$userId': {
-      id: '/_authenticated/admin/users/$userId'
+    '/_authenticated/people/users/$userId': {
+      id: '/_authenticated/people/users/$userId'
       path: '/$userId'
-      fullPath: '/admin/users/$userId'
-      preLoaderRoute: typeof AuthenticatedAdminUsersUserIdRouteImport
-      parentRoute: typeof AuthenticatedAdminUsersRouteRoute
+      fullPath: '/people/users/$userId'
+      preLoaderRoute: typeof AuthenticatedPeopleUsersUserIdRouteImport
+      parentRoute: typeof AuthenticatedPeopleUsersRouteRoute
     }
-    '/_authenticated/admin/groups/$groupId': {
-      id: '/_authenticated/admin/groups/$groupId'
+    '/_authenticated/people/groups/$groupId': {
+      id: '/_authenticated/people/groups/$groupId'
       path: '/$groupId'
-      fullPath: '/admin/groups/$groupId'
-      preLoaderRoute: typeof AuthenticatedAdminGroupsGroupIdRouteImport
-      parentRoute: typeof AuthenticatedAdminGroupsRouteRoute
+      fullPath: '/people/groups/$groupId'
+      preLoaderRoute: typeof AuthenticatedPeopleGroupsGroupIdRouteImport
+      parentRoute: typeof AuthenticatedPeopleGroupsRouteRoute
     }
   }
 }
-
-interface AuthenticatedAdminGroupsRouteRouteChildren {
-  AuthenticatedAdminGroupsGroupIdRoute: typeof AuthenticatedAdminGroupsGroupIdRoute
-  AuthenticatedAdminGroupsIndexRoute: typeof AuthenticatedAdminGroupsIndexRoute
-}
-
-const AuthenticatedAdminGroupsRouteRouteChildren: AuthenticatedAdminGroupsRouteRouteChildren =
-  {
-    AuthenticatedAdminGroupsGroupIdRoute: AuthenticatedAdminGroupsGroupIdRoute,
-    AuthenticatedAdminGroupsIndexRoute: AuthenticatedAdminGroupsIndexRoute,
-  }
-
-const AuthenticatedAdminGroupsRouteRouteWithChildren =
-  AuthenticatedAdminGroupsRouteRoute._addFileChildren(
-    AuthenticatedAdminGroupsRouteRouteChildren,
-  )
-
-interface AuthenticatedAdminUsersRouteRouteChildren {
-  AuthenticatedAdminUsersUserIdRoute: typeof AuthenticatedAdminUsersUserIdRoute
-  AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
-}
-
-const AuthenticatedAdminUsersRouteRouteChildren: AuthenticatedAdminUsersRouteRouteChildren =
-  {
-    AuthenticatedAdminUsersUserIdRoute: AuthenticatedAdminUsersUserIdRoute,
-    AuthenticatedAdminUsersIndexRoute: AuthenticatedAdminUsersIndexRoute,
-  }
-
-const AuthenticatedAdminUsersRouteRouteWithChildren =
-  AuthenticatedAdminUsersRouteRoute._addFileChildren(
-    AuthenticatedAdminUsersRouteRouteChildren,
-  )
-
-interface AuthenticatedAdminRouteRouteChildren {
-  AuthenticatedAdminGroupsRouteRoute: typeof AuthenticatedAdminGroupsRouteRouteWithChildren
-  AuthenticatedAdminUsersRouteRoute: typeof AuthenticatedAdminUsersRouteRouteWithChildren
-  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
-}
-
-const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
-  {
-    AuthenticatedAdminGroupsRouteRoute:
-      AuthenticatedAdminGroupsRouteRouteWithChildren,
-    AuthenticatedAdminUsersRouteRoute:
-      AuthenticatedAdminUsersRouteRouteWithChildren,
-    AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
-  }
-
-const AuthenticatedAdminRouteRouteWithChildren =
-  AuthenticatedAdminRouteRoute._addFileChildren(
-    AuthenticatedAdminRouteRouteChildren,
-  )
 
 interface AuthenticatedConnectionsRouteRouteChildren {
   AuthenticatedConnectionsConnectionIdRoute: typeof AuthenticatedConnectionsConnectionIdRoute
@@ -463,19 +413,72 @@ const AuthenticatedNamespacesRouteRouteWithChildren =
     AuthenticatedNamespacesRouteRouteChildren,
   )
 
+interface AuthenticatedPeopleGroupsRouteRouteChildren {
+  AuthenticatedPeopleGroupsGroupIdRoute: typeof AuthenticatedPeopleGroupsGroupIdRoute
+  AuthenticatedPeopleGroupsIndexRoute: typeof AuthenticatedPeopleGroupsIndexRoute
+}
+
+const AuthenticatedPeopleGroupsRouteRouteChildren: AuthenticatedPeopleGroupsRouteRouteChildren =
+  {
+    AuthenticatedPeopleGroupsGroupIdRoute:
+      AuthenticatedPeopleGroupsGroupIdRoute,
+    AuthenticatedPeopleGroupsIndexRoute: AuthenticatedPeopleGroupsIndexRoute,
+  }
+
+const AuthenticatedPeopleGroupsRouteRouteWithChildren =
+  AuthenticatedPeopleGroupsRouteRoute._addFileChildren(
+    AuthenticatedPeopleGroupsRouteRouteChildren,
+  )
+
+interface AuthenticatedPeopleUsersRouteRouteChildren {
+  AuthenticatedPeopleUsersUserIdRoute: typeof AuthenticatedPeopleUsersUserIdRoute
+  AuthenticatedPeopleUsersIndexRoute: typeof AuthenticatedPeopleUsersIndexRoute
+}
+
+const AuthenticatedPeopleUsersRouteRouteChildren: AuthenticatedPeopleUsersRouteRouteChildren =
+  {
+    AuthenticatedPeopleUsersUserIdRoute: AuthenticatedPeopleUsersUserIdRoute,
+    AuthenticatedPeopleUsersIndexRoute: AuthenticatedPeopleUsersIndexRoute,
+  }
+
+const AuthenticatedPeopleUsersRouteRouteWithChildren =
+  AuthenticatedPeopleUsersRouteRoute._addFileChildren(
+    AuthenticatedPeopleUsersRouteRouteChildren,
+  )
+
+interface AuthenticatedPeopleRouteRouteChildren {
+  AuthenticatedPeopleGroupsRouteRoute: typeof AuthenticatedPeopleGroupsRouteRouteWithChildren
+  AuthenticatedPeopleUsersRouteRoute: typeof AuthenticatedPeopleUsersRouteRouteWithChildren
+  AuthenticatedPeopleIndexRoute: typeof AuthenticatedPeopleIndexRoute
+}
+
+const AuthenticatedPeopleRouteRouteChildren: AuthenticatedPeopleRouteRouteChildren =
+  {
+    AuthenticatedPeopleGroupsRouteRoute:
+      AuthenticatedPeopleGroupsRouteRouteWithChildren,
+    AuthenticatedPeopleUsersRouteRoute:
+      AuthenticatedPeopleUsersRouteRouteWithChildren,
+    AuthenticatedPeopleIndexRoute: AuthenticatedPeopleIndexRoute,
+  }
+
+const AuthenticatedPeopleRouteRouteWithChildren =
+  AuthenticatedPeopleRouteRoute._addFileChildren(
+    AuthenticatedPeopleRouteRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
   AuthenticatedConnectionsRouteRoute: typeof AuthenticatedConnectionsRouteRouteWithChildren
   AuthenticatedNamespacesRouteRoute: typeof AuthenticatedNamespacesRouteRouteWithChildren
+  AuthenticatedPeopleRouteRoute: typeof AuthenticatedPeopleRouteRouteWithChildren
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
   AuthenticatedConnectionsRouteRoute:
     AuthenticatedConnectionsRouteRouteWithChildren,
   AuthenticatedNamespacesRouteRoute:
     AuthenticatedNamespacesRouteRouteWithChildren,
+  AuthenticatedPeopleRouteRoute: AuthenticatedPeopleRouteRouteWithChildren,
   AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
 }
 

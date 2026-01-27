@@ -17,7 +17,11 @@
 
 import { Breadcrumbs } from "@/components/navigation/breadcrumbs";
 import { NavSidebar } from "@/components/navigation/nav-sidebar";
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { authService } from "@/lib/auth";
 import { Separator } from "@radix-ui/react-separator";
