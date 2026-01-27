@@ -23,7 +23,7 @@ type Crumb = {
 };
 
 function hasBreadcrumb(x: unknown): x is { breadcrumb: string } {
-  return !!x && typeof (x as any).breadcrumb === "string";
+  return !!x && (x as any).breadcrumb !== undefined;
 }
 
 function hasSplatParams(p: unknown): p is { _splat: string } {
@@ -53,7 +53,7 @@ export function useBreadcrumbs(): Crumb[] {
     }
 
     // Splat route handling
-    if (hasSplatParams(match.params)) {
+    if (hasSplatParams(match._strictParams)) {
       const parts = match.params._splat.split("/");
 
       let basePath = match.pathname.replace(/\/[^/]+$/, "");

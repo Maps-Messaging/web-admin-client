@@ -15,7 +15,6 @@
  *  limitations under the License.
  */
 
-import { Link } from "@tanstack/react-router";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -25,11 +24,10 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { useBreadcrumbs } from "@/hooks/use-breadcrumbs";
-import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 
 export function Breadcrumbs() {
   const breadcrumbs = useBreadcrumbs();
-  useState(breadcrumbs);
   const lastIndex = breadcrumbs.length - 1;
 
   return (
