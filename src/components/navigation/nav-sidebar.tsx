@@ -15,18 +15,7 @@
  *  limitations under the License.
  */
 
-import * as React from "react";
-import {
-  Box,
-  Boxes,
-  BrainCircuit,
-  Cable,
-  EthernetPort,
-  Form,
-  Logs,
-  Settings2,
-  Users,
-} from "lucide-react";
+import { useServerInfo } from "@/components/navigation/hooks";
 
 import { NavMain } from "@/components/navigation/nav-main";
 import { NavUser } from "@/components/navigation/nav-user";
@@ -38,6 +27,18 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import {
+  Box,
+  Boxes,
+  BrainCircuit,
+  Cable,
+  EthernetPort,
+  Form,
+  Logs,
+  Settings2,
+  Users,
+} from "lucide-react";
+import * as React from "react";
 import { NavTree } from "./nav-tree";
 
 // This is sample data.
@@ -47,10 +48,10 @@ const data = {
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
-  servers: [
+  servers: (name: string) => [
     {
-      name: "Cluster",
-      logo: Boxes,
+      name,
+      logo: Box,
     },
     {
       name: "Server A",
@@ -61,11 +62,16 @@ const data = {
       logo: Box,
     },
     {
-      name: "Server C",
-      logo: Box,
+      name: "Cluster",
+      logo: Boxes,
     },
   ],
   navMain: [
+    {
+      title: "Namespaces",
+      url: "/namespaces",
+      icon: Box,
+    },
     {
       title: "Connections",
       url: "/connections",
@@ -88,12 +94,12 @@ const data = {
     { title: "Logging", url: "/logging", icon: Logs },
     { title: "Models", url: "/models", icon: BrainCircuit },
     {
-      title: "Admin",
-      url: "/admin",
+      title: "People",
+      url: "/people",
       icon: Users,
       items: [
-        { title: "Users", url: "/admin/users" },
-        { title: "Groups", url: "/admin/groups" },
+        { title: "Users", url: "/people/users" },
+        { title: "Groups", url: "/people/groups" },
       ],
     },
     { title: "Settings", url: "/settings", icon: Settings2 },
@@ -107,14 +113,17 @@ const data = {
 };
 
 export function NavSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: serverInfo } = useServerInfo();
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <ServerSwitcher servers={data.servers} />
+        <ServerSwitcher
+          servers={data.servers(serverInfo?.serverName ?? "abc")}
+        />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavTree item={data.navTree} label="Namespaces" basePath="/" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
