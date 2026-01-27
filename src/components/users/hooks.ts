@@ -64,7 +64,7 @@ export function useUsersWithLock({
 
 export const useGetUser = (
   userUuid: operations["getUser"]["parameters"]["path"]["userUuid"],
-  queryOptions: { enabled: boolean } | undefined,
+  queryOptions?: { enabled: boolean } | undefined,
 ) => {
   return apiClient.useQuery(
     "get",
@@ -109,4 +109,12 @@ export const useUnlockUser = () => {
 
 export const useResetUserPassword = () => {
   return apiClient.useMutation("put", "/api/v1/auth/users/{userUuid}/password");
+};
+
+export const useUserAcls = (
+  userUuid: operations["getIdentityAcl"]["parameters"]["path"]["userUuid"],
+) => {
+  return apiClient.useQuery("get", "/api/v1/auth/identities/{userUuid}/acl", {
+    params: { path: { userUuid } },
+  });
 };
