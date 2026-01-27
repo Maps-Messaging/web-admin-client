@@ -96,3 +96,11 @@ export const useRemoveUserFromGroup = () => {
     },
   );
 };
+
+export const useGroupAcls = (
+  groupUuid: operations["getGroupAcl"]["parameters"]["path"]["groupUuid"],
+) => {
+  return apiClient.useQuery("get", "/api/v1/auth/groups/{groupUuid}/acl", {
+    params: { path: { groupUuid } },
+  });
+};
