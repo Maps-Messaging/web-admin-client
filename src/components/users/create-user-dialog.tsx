@@ -87,8 +87,7 @@ export const CreateUserDialog = () => {
             setOpen(false);
             form.reset();
           },
-          onError: (error) =>
-            toast.error(`Error creating user: ${error}`),
+          onError: (error) => toast.error(`Error creating user: ${error}`),
         },
       );
     },

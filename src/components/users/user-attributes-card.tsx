@@ -35,9 +35,9 @@ export const UserAttributesCard: FunctionComponent<UserAttributesCardProps> = ({
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle>User attributes</CardTitle>
+        <CardTitle className="text-xl">Attributes</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-2">
         <p className="flex items-center justify-between">
           <strong>Username:</strong> {user?.username}
         </p>

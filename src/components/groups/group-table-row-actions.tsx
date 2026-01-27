@@ -51,7 +51,7 @@ export const GroupTableRowActions: FunctionComponent<
         <DropdownMenuContent align="end">
           <DropdownMenuItem>
             <Link
-              to="/admin/groups/$groupId"
+              to="/people/groups/$groupId"
               params={{
                 groupId,
               }}

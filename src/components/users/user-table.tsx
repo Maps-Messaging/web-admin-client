@@ -82,7 +82,7 @@ const columns: ColumnDef<UserWithLock>[] = [
     cell: ({ row }) => (
       <Button variant="link" asChild className="px-0">
         <Link
-          to="/admin/users/$userId"
+          to="/people/users/$userId"
           params={{ userId: row.original.uniqueId }}
         >
           {row.original.username}
@@ -155,7 +155,7 @@ export const UserTable: FunctionComponent<UserTableProps> = ({ users }) => {
     );
   }
   return (
-    <div className="w-full max-w-4xl">
+    <div className="w-full">
       <div className="flex items-center justify-between pb-4">
         <Input
           placeholder="Search by username..."
@@ -180,7 +180,7 @@ export const UserTable: FunctionComponent<UserTableProps> = ({ users }) => {
                 username: row.original.username,
               }))}
             />
-            <Button variant="destructive" size="sm" onClick={deleteUsers}>
+            <Button variant="destructive" onClick={deleteUsers}>
               Delete Users
             </Button>
           </div>

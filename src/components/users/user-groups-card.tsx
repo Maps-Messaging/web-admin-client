@@ -26,10 +26,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { LinkButton } from "@/components/ui/link-button";
 import { AddGroupDialog } from "@/components/users/add-group-dialog/add-group-dialog";
 import { useGetUser } from "@/components/users/hooks";
 import type { UserId } from "@/components/users/models";
-import { Link } from "@tanstack/react-router";
 import { Unlink } from "lucide-react";
 import type { FunctionComponent } from "react";
 
@@ -59,7 +59,7 @@ export const UserGroupsCard: FunctionComponent<UserGroupsCardProps> = ({
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle>User groups</CardTitle>
+        <CardTitle className="text-xl">Groups</CardTitle>
         <CardDescription>
           This user is a member of the following groups
         </CardDescription>
@@ -76,16 +76,14 @@ export const UserGroupsCard: FunctionComponent<UserGroupsCardProps> = ({
           .filter((group) => group !== null)
           .map(({ name, uniqueId }) => (
             <div className="flex justify-between" key={uniqueId}>
-              <Button variant="link" asChild>
-                <Link
-                  to="/admin/groups/$groupId"
-                  params={{ groupId: uniqueId }}
-                >
-                  {name}
-                </Link>
-              </Button>
+              <LinkButton
+                to="/people/groups/$groupId"
+                params={{ groupId: uniqueId }}
+              >
+                {name}
+              </LinkButton>
               <Button
-                variant="destructive"
+                variant="ghost"
                 size="icon"
                 onClick={() => unlinkGroup(uniqueId)}
               >

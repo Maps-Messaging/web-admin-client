@@ -24,6 +24,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { DeleteUserDialog } from "@/components/users/delete-user-dialog";
 import { useDeleteUser, useUnlockUser } from "@/components/users/hooks";
 import type { UserId } from "@/components/users/models";
 import { ResetUserPasswordDialog } from "@/components/users/reset-user-password-dialog";
@@ -39,9 +40,21 @@ export const UserTableRowActions: FunctionComponent<
   UserTableRowActionsProps
 > = ({ userId }) => {
   const [showResetPasswordDialog, setShowResetPasswordDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const { mutate: deleteUser } = useDeleteUser();
   const { mutate: unlockUser } = useUnlockUser();
+
+  const handleDelete = () => {
+    deleteUser(
+      { params: { path: { userUuid: userId } } },
+      {
+        onSuccess: () => {
+          setShowDeleteDialog(false);
+        },
+      },
+    );
+  };
 
   return (
     <>
@@ -55,7 +68,7 @@ export const UserTableRowActions: FunctionComponent<
         <DropdownMenuContent align="end">
           <DropdownMenuItem>
             <Link
-              to="/admin/users/$userId"
+              to="/people/users/$userId"
               params={{
                 userId,
               }}
@@ -76,9 +89,7 @@ export const UserTableRowActions: FunctionComponent<
               Unlock User
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() =>
-                deleteUser({ params: { path: { userUuid: userId } } })
-              }
+              onClick={() => setShowDeleteDialog(true)}
               className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
             >
               Delete User
@@ -90,6 +101,12 @@ export const UserTableRowActions: FunctionComponent<
         userId={userId}
         open={showResetPasswordDialog}
         setOpen={setShowResetPasswordDialog}
+      />
+      <DeleteUserDialog
+        userId={userId}
+        open={showDeleteDialog}
+        setOpen={setShowDeleteDialog}
+        onConfirm={handleDelete}
       />
     </>
   );
