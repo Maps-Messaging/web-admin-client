@@ -20,7 +20,10 @@ import { useSyncExternalStore } from "react";
 import { authService } from "@/lib/auth";
 
 export const useAuth = () => {
-  const user = useSyncExternalStore(authService.subscribe, authService.getSnapshot);
+  const user = useSyncExternalStore(
+    authService.subscribe,
+    authService.getSnapshot,
+  );
   return {
     user,
     login: authService.login.bind(authService),

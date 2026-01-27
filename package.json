@@ -10,7 +10,8 @@
     "build": "vite build && tsc",
     "preview": "vite preview",
     "test": "vitest run",
-    "gen-api": "openapi-typescript ./resources/openapi.json -o ./src/api/spec.d.ts"
+    "gen-api": "openapi-typescript ./resources/openapi.json -o ./src/api/spec.d.ts",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.11",

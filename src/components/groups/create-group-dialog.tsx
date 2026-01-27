@@ -68,8 +68,7 @@ export const CreateGroupDialog = () => {
             setOpen(false);
             form.reset();
           },
-          onError: (error) =>
-            toast.error(`Error creating group: ${error}`),
+          onError: (error) => toast.error(`Error creating group: ${error}`),
         },
       );
     },
