@@ -1,6 +1,6 @@
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+ * Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@
 import React from 'react';
 
 import MqttConfigComponent from "@/components/network/config/protocol/mqtt-config-component";
-import MqttV5ConfigComponent from "@/components/network/config/protocol/mqtt-v5-config-component";
 import NmeaConfigComponent from "@/components/network/config/protocol/nmea-config-component";
 import SemtechConfigComponent from "@/components/network/config/protocol/semtech-config-component";
 import StompConfigComponent from "@/components/network/config/protocol/stomp-config-component";
@@ -34,7 +33,6 @@ import {
   LoRaProtocolConfigDTO,
   MqttConfigDTO,
   MqttSnConfigDTO,
-  MqttV5ConfigDTO,
   NmeaConfigDTO,
   ProtocolConfigDTO,
   SemtechConfigDTO,
@@ -65,9 +63,6 @@ function isLoraConfig(config: ProtocolConfigDTO): config is LoRaProtocolConfigDT
 function isMqttConfig(config: ProtocolConfigDTO): config is MqttConfigDTO {
   return config.type === 'mqtt';
 }
-function isMqttV5Config(config: ProtocolConfigDTO): config is MqttV5ConfigDTO {
-  return config.type === 'mqttV5';
-}
 function isNmeaConfig(config: ProtocolConfigDTO): config is NmeaConfigDTO {
   return config.type === 'NMEA-0183';
 }
@@ -78,7 +73,7 @@ function isStompConfig(config: ProtocolConfigDTO): config is StompConfigDTO {
   return config.type === 'stomp';
 }
 function isWebSocketConfig(config: ProtocolConfigDTO): config is WebSocketConfigDTO {
-  return config.type === 'websocket';
+  return config.type === 'ws';
 }
 function isExtensionConfig(config: ProtocolConfigDTO): config is ExtensionConfigDTO {
   return config.type === 'extension';
@@ -96,11 +91,6 @@ const ProtocolConfigRenderer:React.FC<ProtocolConfigRendererProps> = ({ config, 
     return <LoraConfigComponent config={config} />;
   } else if (isMqttConfig(config)) {
     return <MqttConfigComponent
-      config={config}
-      onChange={onChange}
-    />;
-  } else if (isMqttV5Config(config)) {
-    return <MqttV5ConfigComponent
       config={config}
       onChange={onChange}
     />;

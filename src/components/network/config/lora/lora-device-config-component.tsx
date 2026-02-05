@@ -1,6 +1,6 @@
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+ * Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,148 +18,174 @@
 
 import React from 'react';
 import * as Yup from 'yup';
-import {useFormik} from 'formik';
-import {Box, Button, TextField} from '@mui/material';
-import {LoRaChipConfigDTO} from '@/generated/model'; // Adjust import path as necessary
+import { useFormik } from 'formik';
+import { Box, Button, MenuItem, TextField } from '@mui/material';
+
+import type { LoRaChipConfigDTO, LoRaChipConfigDTOAllOfFrequency } from '@/generated/model';
+import { LoRaChipConfigDTOAllOfFrequency as LoRaFrequencyEnum } from '@/generated/model';
 
 interface LoRaDeviceConfigComponentProps {
   config: LoRaChipConfigDTO;
   onChange: (updatedConfig: LoRaChipConfigDTO) => void;
 }
 
-const LoRaDeviceConfigComponent: React.FC<LoRaDeviceConfigComponentProps> = ({ config, onChange }) => {
-  const formik = useFormik({
+const frequencyValues = Object.values(LoRaFrequencyEnum) as LoRaChipConfigDTOAllOfFrequency[];
+
+function LoRaDeviceConfigComponent({ config, onChange }: LoRaDeviceConfigComponentProps): React.JSX.Element {
+  const formik = useFormik<LoRaChipConfigDTO>({
     initialValues: {
-      type: config.type || "loraDevice",
-      cadTimeout: config.cadTimeout || 0,
-      cs: config.cs || 0,
-      frequency: config.frequency || 868000000,  // Example default frequency
-      irq: config.irq || 0,
-      name: config.name || '',
-      power: config.power || 14,  // Default LoRa transmission power
-      radio: config.radio || '',
-      rst: config.rst || 0,
+      type: config.type ?? ('loraChip' as LoRaChipConfigDTO['type']),
+      name: config.name ?? '',
+      address: config.address ?? 1,
+      frequency: config.frequency ?? LoRaFrequencyEnum.NUMBER_863,
+      power: config.power ?? 14,
+      radio: config.radio ?? '',
+      transmissionRate: config.transmissionRate ?? 0,
+      hexKey: config.hexKey ?? null,
+      hardware: {
+        cadTimeout: config.hardware?.cadTimeout ?? 1,
+        cs: config.hardware?.cs ?? 0,
+        irq: config.hardware?.irq ?? 0,
+        rst: config.hardware?.rst ?? 0,
+        schemaLoadingVersion: config.hardware?.schemaLoadingVersion ?? null,
+        radio: config.hardware?.radio ?? undefined,
+      },
     },
+    enableReinitialize: true,
     validationSchema: Yup.object({
-      cadTimeout: Yup.number().min(0, 'Must be at least 0').required('Required'),
-      cs: Yup.number().min(0, 'Must be at least 0').required('Required'),
-      frequency: Yup.number().min(0, 'Must be at least 0').required('Required'),
-      irq: Yup.number().min(0, 'Must be at least 0').required('Required'),
       name: Yup.string().required('Name is required'),
-      power: Yup.number().min(0, 'Must be at least 0').required('Required'),
-      radio: Yup.string().required('Radio is required'),
-      rst: Yup.number().min(0, 'Must be at least 0').required('Required'),
+
+      address: Yup.number().min(1, 'Must be at least 1').max(254, 'Must be at most 254').notRequired(),
+
+      frequency: Yup.mixed<LoRaChipConfigDTOAllOfFrequency>()
+        .oneOf(frequencyValues, 'Invalid frequency')
+        .required('Required'),
+
+      power: Yup.number().min(0, 'Must be at least 0').max(16, 'Must be at most 16').notRequired(),
+
+      radio: Yup.string().notRequired(),
+
+      transmissionRate: Yup.number().min(0, 'Must be at least 0').max(1024, 'Must be at most 1024').notRequired(),
+
+      hexKey: Yup.string().nullable().notRequired(),
+
+      hardware: Yup.object({
+        cadTimeout: Yup.number().min(1, 'Must be at least 1').max(512, 'Must be at most 512').required('Required'),
+        cs: Yup.number().min(0, 'Must be at least 0').max(255, 'Must be at most 255').required('Required'),
+        irq: Yup.number().min(0, 'Must be at least 0').max(255, 'Must be at most 255').required('Required'),
+        rst: Yup.number().min(0, 'Must be at least 0').max(255, 'Must be at most 255').required('Required'),
+      }).required(),
     }),
     onSubmit: (values) => {
       onChange(values);
     },
   });
 
+  function getFieldError(path: string): string | undefined {
+    const meta = formik.getFieldMeta(path);
+    if (!meta.touched || meta.error === null) {
+      return undefined;
+    }
+    return typeof meta.error === 'string' ? meta.error : 'Invalid value';
+  }
+
+  function renderNumberField(
+    label: string,
+    name: string,
+    value: number | null | undefined
+  ): React.JSX.Element {
+    const fieldError = getFieldError(name);
+    return (
+      <TextField
+        fullWidth
+        label={label}
+        margin="normal"
+        name={name}
+        type="number"
+        value={value ?? ''}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        error={Boolean(fieldError)}
+        helperText={fieldError}
+      />
+    );
+  }
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <Box sx={{ maxWidth: 600, margin: '0 auto', padding: 2 }}>
-
         <TextField
           fullWidth
           label="Name"
           margin="normal"
           name="name"
-          value={formik.values.name}
+          value={formik.values.name ?? ''}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={Boolean(formik.touched.name && formik.errors.name)}
-          helperText={formik.touched.name && formik.errors.name}
+          error={Boolean(getFieldError('name'))}
+          helperText={getFieldError('name')}
         />
 
-        <TextField
-          fullWidth
-          label="CAD Timeout"
-          margin="normal"
-          name="cadTimeout"
-          type="number"
-          value={formik.values.cadTimeout}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={Boolean(formik.touched.cadTimeout && formik.errors.cadTimeout)}
-          helperText={formik.touched.cadTimeout && formik.errors.cadTimeout}
-        />
+        {renderNumberField('Address', 'address', formik.values.address)}
 
         <TextField
+          select
           fullWidth
-          label="Chip Select (CS) Pin"
-          margin="normal"
-          name="cs"
-          type="number"
-          value={formik.values.cs}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={Boolean(formik.touched.cs && formik.errors.cs)}
-          helperText={formik.touched.cs && formik.errors.cs}
-        />
-
-        <TextField
-          fullWidth
-          label="Frequency (Hz)"
+          label="Frequency (MHz)"
           margin="normal"
           name="frequency"
-          type="number"
-          value={formik.values.frequency}
+          value={formik.values.frequency ?? LoRaFrequencyEnum.NUMBER_863}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={Boolean(formik.touched.frequency && formik.errors.frequency)}
-          helperText={formik.touched.frequency && formik.errors.frequency}
-        />
+          error={Boolean(getFieldError('frequency'))}
+          helperText={getFieldError('frequency')}
+        >
+          {frequencyValues.map((freq) => (
+            <MenuItem key={freq} value={freq}>
+              {freq} MHz
+            </MenuItem>
+          ))}
+        </TextField>
+
+        {renderNumberField('Power', 'power', formik.values.power)}
 
         <TextField
           fullWidth
-          label="IRQ Pin"
-          margin="normal"
-          name="irq"
-          type="number"
-          value={formik.values.irq}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={Boolean(formik.touched.irq && formik.errors.irq)}
-          helperText={formik.touched.irq && formik.errors.irq}
-        />
-
-        <TextField
-          fullWidth
-          label="Power (dBm)"
-          margin="normal"
-          name="power"
-          type="number"
-          value={formik.values.power}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={Boolean(formik.touched.power && formik.errors.power)}
-          helperText={formik.touched.power && formik.errors.power}
-        />
-
-        <TextField
-          fullWidth
-          label="Radio Module"
+          label="Radio"
           margin="normal"
           name="radio"
-          value={formik.values.radio}
+          value={formik.values.radio ?? ''}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={Boolean(formik.touched.radio && formik.errors.radio)}
-          helperText={formik.touched.radio && formik.errors.radio}
+          error={Boolean(getFieldError('radio'))}
+          helperText={getFieldError('radio')}
         />
+
+        {renderNumberField(
+          'Transmission Rate (packets/sec, 0 = unlimited)',
+          'transmissionRate',
+          formik.values.transmissionRate
+        )}
 
         <TextField
           fullWidth
-          label="Reset (RST) Pin"
+          label="Hex Key (16 bytes hex, optional)"
           margin="normal"
-          name="rst"
-          type="number"
-          value={formik.values.rst}
-          onChange={formik.handleChange}
+          name="hexKey"
+          value={formik.values.hexKey ?? ''}
+          onChange={(event) => {
+            const value = event.target.value;
+            void formik.setFieldValue('hexKey', value === '' ? null : value);
+          }}
           onBlur={formik.handleBlur}
-          error={Boolean(formik.touched.rst && formik.errors.rst)}
-          helperText={formik.touched.rst && formik.errors.rst}
+          error={Boolean(getFieldError('hexKey'))}
+          helperText={getFieldError('hexKey')}
         />
+
+        {renderNumberField('CAD Timeout', 'hardware.cadTimeout', formik.values.hardware?.cadTimeout)}
+        {renderNumberField('Chip Select (CS) Pin', 'hardware.cs', formik.values.hardware?.cs)}
+        {renderNumberField('IRQ Pin', 'hardware.irq', formik.values.hardware?.irq)}
+        {renderNumberField('Reset (RST) Pin', 'hardware.rst', formik.values.hardware?.rst)}
 
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
           <Button type="submit" variant="contained" color="primary" disabled={formik.isSubmitting}>
@@ -169,6 +195,6 @@ const LoRaDeviceConfigComponent: React.FC<LoRaDeviceConfigComponentProps> = ({ c
       </Box>
     </form>
   );
-};
+}
 
 export default LoRaDeviceConfigComponent;

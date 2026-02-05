@@ -1,6 +1,6 @@
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+ * Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,13 +24,14 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 
 import {
+  useGetAuthorisationStaticInfo,
+  useGetIdentityAcl,
   useGetUser,
 } from "@/generated/authentication-and-authorisation-management/authentication-and-authorisation-management";
 
 import UserGroupGrid from "@/components/dashboard/account/user-group-grid";
 import UserAttributesTable from "@/components/users/user/user-attributes-table";
 import AccessAcl from "@/components/users/acl/access-acl";
-import {useGetAuthorisationStaticInfo, useGetIdentityAcl} from "@/generated/default/default";
 import toast from "react-hot-toast";
 import {GroupInfoDTO} from "@/generated/model";
 

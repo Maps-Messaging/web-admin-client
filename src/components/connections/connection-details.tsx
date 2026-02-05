@@ -1,6 +1,6 @@
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+ * Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,10 +21,11 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 
-import {type EndPointSummaryDTO, type GetAllConnectionsParams} from "@/generated/model";
+
 import Typography from "@mui/material/Typography";
-import {useGetAllConnections} from "@/generated/connection-management/connection-management";
 import {ConnectionTable} from "@/components/connections/connection-table";
+import {EndPointSummaryDTO, GetAllConnectionsParams} from "@/generated/model";
+import {useGetAllConnections} from "@/generated/connection-management/connection-management";
 
 export default function ConnectionDetails(): React.JSX.Element {
   const page = 0;

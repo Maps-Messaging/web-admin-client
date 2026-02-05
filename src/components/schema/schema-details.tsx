@@ -1,6 +1,6 @@
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+ * Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useSearchParams } from 'next/navigation';
 
-import type { GetAllSchemasParams, SchemaConfig } from '@/generated/model';
+import type {GetAllSchemasParams, SchemaConfigDTO} from '@/generated/model';
 import { useGetAllSchemas } from '@/generated/schema-management/schema-management';
 import { SchemaTable } from '@/components/schema/schema-table';
 
@@ -40,7 +40,7 @@ export default function SchemaDetails(): React.JSX.Element {
   if (isLoading) return <Typography>Loading…</Typography>;
   if (error) return <Typography color="error">Error: {error.message}</Typography>;
 
-  const rows: SchemaConfig[] = data?.data ?? [];
+  const rows: SchemaConfigDTO[] = data?.data ?? [];
   const total = rows.length;
   const paged = applyPagination(rows, page, rowsPerPage);
 
@@ -63,10 +63,10 @@ export default function SchemaDetails(): React.JSX.Element {
 }
 
 function applyPagination(
-  rows: SchemaConfig[],
+  rows: SchemaConfigDTO[],
   page: number,
   rowsPerPage: number
-): SchemaConfig[] {
+): SchemaConfigDTO[] {
   const start = page * rowsPerPage;
   return rows.slice(start, start + rowsPerPage);
 }

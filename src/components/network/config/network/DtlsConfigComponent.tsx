@@ -1,6 +1,6 @@
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+ * Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,53 +16,142 @@
  *
  */
 
-import React from 'react';
+import type React from 'react';
 import * as Yup from 'yup';
-import {useFormik} from 'formik';
-import {Box, Button, Checkbox, FormControlLabel, TextField, Typography} from '@mui/material';
-import {DtlsConfigDTO} from '@/generated/model'; // Adjust the import path as necessary
+import { useFormik } from 'formik';
+import { Box, Button, Checkbox, FormControlLabel, TextField, Typography } from '@mui/material';
+import type { DtlsConfigDTO } from '@/generated/model';
 
 interface DtlsConfigComponentProps {
   config: DtlsConfigDTO;
   onChange: (updatedConfig: DtlsConfigDTO) => void;
 }
 
-const DtlsConfigComponent: React.FC<DtlsConfigComponentProps> = ({ config, onChange }) => {
-  const formik = useFormik({
+function DtlsConfigComponent({ config, onChange }: DtlsConfigComponentProps): React.JSX.Element {
+  const formik = useFormik<DtlsConfigDTO>({
     initialValues: {
-      type: config.type || 'dtls',
-      // UDP-specific fields for DTLS
-      packetReuseTimeout: config.packetReuseTimeout || 0,
-      idleSessionTimeout: config.idleSessionTimeout || 0,
-      hmacConfigList: config.hmacConfigList || [],
-      hmacHostLookupCacheExpiry: config.hmacHostLookupCacheExpiry || 0,
-      // SSL configuration fields
-      clientCertificateRequired: config.sslConfig?.clientCertificateRequired || false,
-      clientCertificateWanted: config.sslConfig?.clientCertificateWanted || false,
-      context: config.sslConfig?.context || '',
-      crlInterval: config.sslConfig?.crlInterval || 0,
-      crlUrl: config.sslConfig?.crlUrl || '',
-      keyStore: config.sslConfig?.keyStore || {},  // Placeholder for KeyStoreConfig
-      trustStore: config.sslConfig?.trustStore || {}, // Placeholder for KeyStoreConfig
+      type: config.type ?? ('dtls' as DtlsConfigDTO['type']),
+
+      packetReuseTimeout: config.packetReuseTimeout ?? 10,
+      idleSessionTimeout: config.idleSessionTimeout ?? 60,
+      hmacHostLookupCacheExpiry: config.hmacHostLookupCacheExpiry ?? 10,
+      hmacConfigList: config.hmacConfigList ?? [],
+
+      sslConfig: config.sslConfig
+        ? {
+          clientCertificateRequired: config.sslConfig.clientCertificateRequired ?? false,
+          clientCertificateWanted: config.sslConfig.clientCertificateWanted ?? false,
+          context: config.sslConfig.context ?? 'TLS',
+          crlInterval: config.sslConfig.crlInterval ?? 60000,
+          crlUrl: config.sslConfig.crlUrl ?? null,
+
+          schemaLoadingVersion: config.sslConfig.schemaLoadingVersion ?? null,
+
+          keyStore: config.sslConfig.keyStore ?? null,
+          trustStore: config.sslConfig.trustStore ?? null,
+        }
+        : {
+          clientCertificateRequired: false,
+          clientCertificateWanted: false,
+          context: 'TLS',
+          crlInterval: 60000,
+          crlUrl: null,
+          schemaLoadingVersion: null,
+          keyStore: null,
+          trustStore: null,
+        },
     },
+    enableReinitialize: true,
     validationSchema: Yup.object({
-      packetReuseTimeout: Yup.number().min(0, 'Must be at least 0').required('Required'),
-      idleSessionTimeout: Yup.number().min(0, 'Must be at least 0').required('Required'),
-      hmacHostLookupCacheExpiry: Yup.number().min(0, 'Must be at least 0').required('Required'),
-      crlInterval: Yup.number().min(0, 'Must be at least 0').required('Required'),
-      crlUrl: Yup.string().url('Must be a valid URL'),
+      packetReuseTimeout: Yup.number()
+        .min(10, 'Must be at least 10 ms')
+        .max(60000, 'Must be at most 60000 ms')
+        .notRequired(),
+
+      idleSessionTimeout: Yup.number()
+        .min(60, 'Must be at least 60 seconds')
+        .max(1200, 'Must be at most 1200 seconds')
+        .notRequired(),
+
+      hmacHostLookupCacheExpiry: Yup.number()
+        .min(10, 'Must be at least 10 seconds')
+        .max(1200, 'Must be at most 1200 seconds')
+        .notRequired(),
+
+      sslConfig: Yup.object({
+        clientCertificateRequired: Yup.boolean().required(),
+        clientCertificateWanted: Yup.boolean().required(),
+
+        context: Yup.string()
+          .matches(/^TLS(?:v1\.(?:2|3))?$/, 'Must be TLS, TLSv1.2, or TLSv1.3')
+          .required('Required'),
+
+        crlInterval: Yup.number()
+          .min(60000, 'Must be at least 60000 ms')
+          .max(2419200000, 'Must be at most 2419200000 ms')
+          .required('Required'),
+
+        crlUrl: Yup.string().nullable().notRequired().url('Must be a valid URL'),
+
+        keyStore: Yup.mixed().nullable().notRequired(),
+        trustStore: Yup.mixed().nullable().notRequired(),
+      }).required(),
     }),
     onSubmit: (values) => {
       onChange(values);
     },
   });
 
+  function getFieldError(path: string): string | undefined {
+    const meta = formik.getFieldMeta(path);
+
+    if (!meta.touched) {
+      return undefined;
+    }
+
+    if (meta.error === undefined || meta.error === null) {
+      return undefined;
+    }
+
+    return typeof meta.error === 'string' ? meta.error : 'Invalid value';
+  }
+
+  function ensureKeyStoreObject(fieldName: 'sslConfig.keyStore' | 'sslConfig.trustStore'): void {
+    const sslConfig = formik.values.sslConfig;
+    if (!sslConfig) {
+      return;
+    }
+
+    const currentValue =
+      fieldName === 'sslConfig.keyStore' ? sslConfig.keyStore : sslConfig.trustStore;
+
+    if (currentValue) {
+      return;
+    }
+
+    void formik.setFieldValue(fieldName, {
+      type: 'JKS',
+      alias: null,
+      managerFactory: null,
+      passphrase: null,
+      path: null,
+      provider: null,
+      providerName: null,
+      schemaLoadingVersion: null,
+    });
+  }
+
+  function clearKeyStoreObject(fieldName: 'sslConfig.keyStore' | 'sslConfig.trustStore'): void {
+    void formik.setFieldValue(fieldName, null);
+  }
+
+  const hasKeyStore = Boolean(formik.values.sslConfig?.keyStore);
+  const hasTrustStore = Boolean(formik.values.sslConfig?.trustStore);
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <Box sx={{ maxWidth: 600, margin: '0 auto', padding: 2 }}>
-
-        {/* UDP-Specific Fields */}
-        <Typography variant="h6">UDP-Specific Configuration</Typography>
+        <Typography variant="h6">UDP / DTLS</Typography>
 
         <TextField
           fullWidth
@@ -70,47 +159,50 @@ const DtlsConfigComponent: React.FC<DtlsConfigComponentProps> = ({ config, onCha
           margin="normal"
           name="packetReuseTimeout"
           type="number"
-          value={formik.values.packetReuseTimeout}
+          value={formik.values.packetReuseTimeout ?? ''}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={Boolean(formik.touched.packetReuseTimeout && formik.errors.packetReuseTimeout)}
-          helperText={formik.touched.packetReuseTimeout && formik.errors.packetReuseTimeout}
+          error={Boolean(getFieldError('packetReuseTimeout'))}
+          helperText={getFieldError('packetReuseTimeout')}
         />
 
         <TextField
           fullWidth
-          label="Idle Session Timeout (ms)"
+          label="Idle Session Timeout (seconds)"
           margin="normal"
           name="idleSessionTimeout"
           type="number"
-          value={formik.values.idleSessionTimeout}
+          value={formik.values.idleSessionTimeout ?? ''}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={Boolean(formik.touched.idleSessionTimeout && formik.errors.idleSessionTimeout)}
-          helperText={formik.touched.idleSessionTimeout && formik.errors.idleSessionTimeout}
+          error={Boolean(getFieldError('idleSessionTimeout'))}
+          helperText={getFieldError('idleSessionTimeout')}
         />
 
         <TextField
           fullWidth
-          label="HMAC Host Lookup Cache Expiry (ms)"
+          label="HMAC Host Lookup Cache Expiry (seconds)"
           margin="normal"
           name="hmacHostLookupCacheExpiry"
           type="number"
-          value={formik.values.hmacHostLookupCacheExpiry}
+          value={formik.values.hmacHostLookupCacheExpiry ?? ''}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={Boolean(formik.touched.hmacHostLookupCacheExpiry && formik.errors.hmacHostLookupCacheExpiry)}
-          helperText={formik.touched.hmacHostLookupCacheExpiry && formik.errors.hmacHostLookupCacheExpiry}
+          error={Boolean(getFieldError('hmacHostLookupCacheExpiry'))}
+          helperText={getFieldError('hmacHostLookupCacheExpiry')}
         />
 
-        {/* SSL Configuration Fields */}
-        <Typography variant="h6" sx={{ mt: 3 }}>SSL Configuration</Typography>
+        <Typography variant="h6" sx={{ mt: 3 }}>
+          SSL Configuration
+        </Typography>
 
         <FormControlLabel
           control={
             <Checkbox
-              checked={formik.values.clientCertificateRequired}
-              onChange={(event) => formik.setFieldValue('clientCertificateRequired', event.target.checked)}
+              checked={formik.values.sslConfig?.clientCertificateRequired ?? false}
+              onChange={(event) => {
+                void formik.setFieldValue('sslConfig.clientCertificateRequired', event.target.checked);
+              }}
             />
           }
           label="Client Certificate Required"
@@ -119,8 +211,10 @@ const DtlsConfigComponent: React.FC<DtlsConfigComponentProps> = ({ config, onCha
         <FormControlLabel
           control={
             <Checkbox
-              checked={formik.values.clientCertificateWanted}
-              onChange={(event) => formik.setFieldValue('clientCertificateWanted', event.target.checked)}
+              checked={formik.values.sslConfig?.clientCertificateWanted ?? false}
+              onChange={(event) => {
+                void formik.setFieldValue('sslConfig.clientCertificateWanted', event.target.checked);
+              }}
             />
           }
           label="Client Certificate Wanted"
@@ -128,86 +222,144 @@ const DtlsConfigComponent: React.FC<DtlsConfigComponentProps> = ({ config, onCha
 
         <TextField
           fullWidth
-          label="Context"
+          label="Context (TLS / TLSv1.2 / TLSv1.3)"
           margin="normal"
-          name="context"
-          value={formik.values.context}
+          name="sslConfig.context"
+          value={formik.values.sslConfig?.context ?? ''}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={Boolean(formik.touched.context && formik.errors.context)}
-          helperText={formik.touched.context && formik.errors.context}
+          error={Boolean(getFieldError('sslConfig.context'))}
+          helperText={getFieldError('sslConfig.context')}
         />
 
         <TextField
           fullWidth
           label="CRL Interval (ms)"
           margin="normal"
-          name="crlInterval"
+          name="sslConfig.crlInterval"
           type="number"
-          value={formik.values.crlInterval}
+          value={formik.values.sslConfig?.crlInterval ?? ''}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={Boolean(formik.touched.crlInterval && formik.errors.crlInterval)}
-          helperText={formik.touched.crlInterval && formik.errors.crlInterval}
+          error={Boolean(getFieldError('sslConfig.crlInterval'))}
+          helperText={getFieldError('sslConfig.crlInterval')}
         />
 
         <TextField
           fullWidth
-          label="CRL URL"
+          label="CRL URL (blank = disabled)"
           margin="normal"
-          name="crlUrl"
-          value={formik.values.crlUrl}
-          onChange={formik.handleChange}
+          name="sslConfig.crlUrl"
+          value={formik.values.sslConfig?.crlUrl ?? ''}
+          onChange={(event) => {
+            const value = event.target.value;
+            void formik.setFieldValue('sslConfig.crlUrl', value === '' ? null : value);
+          }}
           onBlur={formik.handleBlur}
-          error={Boolean(formik.touched.crlUrl && formik.errors.crlUrl)}
-          helperText={formik.touched.crlUrl && formik.errors.crlUrl}
+          error={Boolean(getFieldError('sslConfig.crlUrl'))}
+          helperText={getFieldError('sslConfig.crlUrl')}
         />
 
-        {/* KeyStore and TrustStore Configuration */}
         <Box mt={2}>
-          <Typography variant="h6">KeyStore Configuration</Typography>
-          <TextField
-            fullWidth
-            label="KeyStore Path"
-            margin="normal"
-            name="keyStore.path"
-            value={formik.values.keyStore.path || ''}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
+          <Typography variant="h6">KeyStore</Typography>
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={hasKeyStore}
+                onChange={(event) => {
+                  if (event.target.checked) {
+                    ensureKeyStoreObject('sslConfig.keyStore');
+                    return;
+                  }
+                  clearKeyStoreObject('sslConfig.keyStore');
+                }}
+              />
+            }
+            label="Enable KeyStore"
           />
-          <TextField
-            fullWidth
-            label="KeyStore Password"
-            margin="normal"
-            name="keyStore.password"
-            type="password"
-            value={formik.values.keyStore.passphrase || ''}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
+
+          {hasKeyStore ? (
+            <>
+              <TextField
+                fullWidth
+                label="KeyStore Path"
+                margin="normal"
+                name="sslConfig.keyStore.path"
+                value={formik.values.sslConfig?.keyStore?.path ?? ''}
+                onChange={(event) => {
+                  const value = event.target.value;
+                  void formik.setFieldValue('sslConfig.keyStore.path', value === '' ? null : value);
+                }}
+                onBlur={formik.handleBlur}
+              />
+
+              <TextField
+                fullWidth
+                label="KeyStore Passphrase"
+                margin="normal"
+                name="sslConfig.keyStore.passphrase"
+                type="password"
+                value={formik.values.sslConfig?.keyStore?.passphrase ?? ''}
+                onChange={(event) => {
+                  const value = event.target.value;
+                  void formik.setFieldValue('sslConfig.keyStore.passphrase', value === '' ? null : value);
+                }}
+                onBlur={formik.handleBlur}
+              />
+            </>
+          ) : null}
         </Box>
 
         <Box mt={2}>
-          <Typography variant="h6">TrustStore Configuration</Typography>
-          <TextField
-            fullWidth
-            label="TrustStore Path"
-            margin="normal"
-            name="trustStore.path"
-            value={formik.values.trustStore.path || ''}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
+          <Typography variant="h6">TrustStore</Typography>
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={hasTrustStore}
+                onChange={(event) => {
+                  if (event.target.checked) {
+                    ensureKeyStoreObject('sslConfig.trustStore');
+                    return;
+                  }
+                  clearKeyStoreObject('sslConfig.trustStore');
+                }}
+              />
+            }
+            label="Enable TrustStore"
           />
-          <TextField
-            fullWidth
-            label="TrustStore Password"
-            margin="normal"
-            name="trustStore.password"
-            type="password"
-            value={formik.values.trustStore.passphrase || ''}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
+
+          {hasTrustStore ? (
+            <>
+              <TextField
+                fullWidth
+                label="TrustStore Path"
+                margin="normal"
+                name="sslConfig.trustStore.path"
+                value={formik.values.sslConfig?.trustStore?.path ?? ''}
+                onChange={(event) => {
+                  const value = event.target.value;
+                  void formik.setFieldValue('sslConfig.trustStore.path', value === '' ? null : value);
+                }}
+                onBlur={formik.handleBlur}
+              />
+
+              <TextField
+                fullWidth
+                label="TrustStore Passphrase"
+                margin="normal"
+                name="sslConfig.trustStore.passphrase"
+                type="password"
+                value={formik.values.sslConfig?.trustStore?.passphrase ?? ''}
+                onChange={(event) => {
+                  const value = event.target.value;
+                  void formik.setFieldValue('sslConfig.trustStore.passphrase', value === '' ? null : value);
+                }}
+                onBlur={formik.handleBlur}
+              />
+            </>
+          ) : null}
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
@@ -218,6 +370,6 @@ const DtlsConfigComponent: React.FC<DtlsConfigComponentProps> = ({ config, onCha
       </Box>
     </form>
   );
-};
+}
 
 export default DtlsConfigComponent;

@@ -1,6 +1,6 @@
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+ * Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -107,7 +107,7 @@ export function MainNav(): React.JSX.Element {
               width={32}
             />
             <Typography variant="h4" component="h1" gutterBottom>
-              Server : { data?.data || 'Loading...'}
+              Server : { data?.data.name || 'Loading...'}
             </Typography>
           </Stack>
           <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>

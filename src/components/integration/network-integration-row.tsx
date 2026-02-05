@@ -1,6 +1,6 @@
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+ * Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ interface NetworkIntegrationRowProps {
 }
 
 export function NetworkIntegrationRow({
-                                      networkInfo = {},
+                                      networkInfo,
                                       key=''
                                       }: NetworkIntegrationRowProps): React.JSX.Element {
 
@@ -57,7 +57,7 @@ export function NetworkIntegrationRow({
 
       </TableCell>
       <TableCell>
-        <Typography variant="subtitle2">{networkInfo.config?.protocols}</Typography>
+        <Typography variant="subtitle2">{networkInfo.config?.protocolConfigs[0].type}</Typography>
       </TableCell>
       <TableCell>
         { formatNumberWithPowerUnit(networkInfo.config?.linkConfigs?.length || 0)}

@@ -8,6 +8,7 @@ module.exports = {
     {
       files: ['src/generated/**/*.ts'], // Adjust the pattern to match your generated files
       rules: {
+        '@typescript-eslint/no-invalid-void-type': 'off',
         'import/no-useless-path-segments': 'off',
         '@typescript-eslint/no-unnecessary-type-arguments': 'off',
         'no-implicit-coercion': 'off',

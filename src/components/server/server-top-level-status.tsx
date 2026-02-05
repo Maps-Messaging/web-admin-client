@@ -1,6 +1,6 @@
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+ * Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,13 +19,14 @@
 'use client'
 
 import React from 'react';
-import {useGetBuildInfo} from "@/generated/server-management/server-management";
+
 import Container from "@mui/material/Container";
 import {Grid} from "@mui/material";
 import {ServerOverviewBox} from "@/components/server/stats/server-overview-box";
 import {ServerMemoryUsageBox} from "@/components/server/stats/server-memory-usage-box";
 import {ServerThreadUsageBox} from "@/components/server/stats/server-thread-usage-box";
 import {ServerStatsBox} from "@/components/server/stats/server-stats-box";
+import {useGetBuildInfo} from "@/generated/server-management/server-management";
 
 export function ServerTopLevelStatus () :  React.JSX.Element {
 

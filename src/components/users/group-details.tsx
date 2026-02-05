@@ -1,6 +1,6 @@
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+ * Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,11 +26,12 @@ import {Download as DownloadIcon} from '@phosphor-icons/react/dist/ssr/Download'
 import {Plus as PlusIcon} from '@phosphor-icons/react/dist/ssr/Plus';
 import {Upload as UploadIcon} from '@phosphor-icons/react/dist/ssr/Upload';
 
-import {type GetAllGroupsParams, type GroupDTO} from "@/generated/model";
+
+import {GroupTable} from "@/components/users/group-table";
+import {GetAllGroupsParams, GroupDTO} from "@/generated/model";
 import {
   useGetAllGroups
 } from "@/generated/authentication-and-authorisation-management/authentication-and-authorisation-management";
-import {GroupTable} from "@/components/users/group-table";
 
 export default function GroupDetails(): React.JSX.Element {
   const page = 0;

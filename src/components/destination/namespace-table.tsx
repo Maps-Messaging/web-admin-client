@@ -1,6 +1,6 @@
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+ * Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,9 +30,10 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 
-import {useGetAllDestinations} from "@/generated/destination-management/destination-management";
+
 import {DestinationRow} from "@/components/destination/destination-row";
 import {GetAllDestinationsSortBy} from "@/generated/model";
+import {useGetAllDestinations} from "@/generated/destination-management/destination-management";
 
 function noop(): void {
   // do nothing
