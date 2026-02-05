@@ -114,16 +114,8 @@ export function ServerDetails () :  React.JSX.Element {
 
   // Display error if either query fails
   if (statsError || buildInfoError) {
-    const errorValue = statsError ?? buildInfoError;
 
-    const errorMessage =
-      typeof errorValue === 'string'
-        ? errorValue
-        : typeof (errorValue as any)?.message === 'string'
-          ? (errorValue as any).message
-          : JSON.stringify(errorValue);
-
-    return <div>Error loading data: {errorMessage}</div>;
+    return <div>Error loading data</div>;
   }
   return (
     <Container maxWidth="lg">
