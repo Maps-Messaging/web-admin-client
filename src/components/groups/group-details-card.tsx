@@ -16,10 +16,20 @@
  */
 
 import { AddUserDialog } from "@/components/groups/add-user-dialog/add-user-dialog";
-import { useAddUserToGroup, useGroup, useRemoveUserFromGroup } from "@/components/groups/hooks";
+import {
+  useAddUserToGroup,
+  useGroup,
+  useRemoveUserFromGroup,
+} from "@/components/groups/hooks";
 import type { GroupId } from "@/components/groups/models";
 import { Button } from "@/components/ui/button";
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { LinkButton } from "@/components/ui/link-button";
 import type { UserId } from "@/components/users/models";
 import { Unlink } from "lucide-react";
