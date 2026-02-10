@@ -56,7 +56,7 @@ export function useBreadcrumbs(): Crumb[] {
     if (hasSplatParams(match._strictParams)) {
       const parts = match.params._splat.split("/");
 
-      let basePath = match.pathname.replace(/\/[^/]+$/, "");
+      let basePath = match.fullPath.replace("$", "");
 
       for (const part of parts) {
         basePath += `/${part}`;

@@ -36,7 +36,7 @@ export const Route = createFileRoute("/login")({
   beforeLoad: ({ search }) => {
     const { isAuthenticated } = authService;
     if (isAuthenticated()) {
-      throw redirect({ to: search.redirect });
+      throw redirect({ to: search.redirect  });
     }
   },
 });
@@ -49,7 +49,7 @@ function LoginPage() {
   useEffect(() => {
     if (isAuthenticated()) {
       void router.invalidate();
-      router.history.push(redirect);
+      router.navigate({to: redirect})
     }
   }, [isAuthenticated, router, redirect]);
 
