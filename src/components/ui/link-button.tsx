@@ -22,16 +22,18 @@ import type { FunctionComponent, PropsWithChildren } from "react";
 
 interface LinkButtonProps extends PropsWithChildren {
   to: string;
+  from?: string;
   params?: Record<string, string>;
 }
 
 export const LinkButton: FunctionComponent<LinkButtonProps> = ({
   children,
   to,
+  from,
   params,
 }) => (
   <Button variant="link" className="px-0 grow justify-start group" asChild>
-    <Link to={to} params={params}>
+    <Link to={to} from={from} params={params}>
       {children}
       <ChevronRight className="opacity-0 group-hover:opacity-80 transition-opacity inline-block size-4" />
     </Link>

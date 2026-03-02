@@ -15,6 +15,8 @@
  *  limitations under the License.
  */
 
+import { NamespaceDetailsCard } from "@/components/namespaces/namespace-details-card";
+import { NamespaceNavigationCard } from "@/components/namespaces/namespace-navigation-card";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/namespaces/$")({
@@ -23,5 +25,13 @@ export const Route = createFileRoute("/_authenticated/namespaces/$")({
 
 function RouteComponent() {
   const { _splat } = Route.useParams();
-  return <div>Hello "{_splat}"!</div>;
+  return (
+    <div className="px-6 flex flex-col gap-4 w-6xl mx-auto">
+      <h1 className="text-4xl font-extrabold">Namespaces</h1>
+      <div className="flex gap-4">
+        <NamespaceNavigationCard path={_splat} />
+        <NamespaceDetailsCard path={_splat} className="flex-1/2" />
+      </div>
+    </div>
+  );
 }

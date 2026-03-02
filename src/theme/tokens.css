@@ -16,7 +16,7 @@
  */
 
 :root {
-  --color-primary: #0052cc;
+  --color-primary: #1c57ba; /*rgb(10, 38, 99) rgb(28, 87, 186)*/
   --color-secondary: #6c757d;
   --color-success: #28a745;
   --color-danger: #dc3545;
