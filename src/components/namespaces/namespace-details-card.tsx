@@ -63,16 +63,16 @@ export const NamespaceDetailsCard: FunctionComponent<
         <p className="flex items-center justify-between">
           <strong>Type:</strong> {type}
         </p>
-        <p className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
           <strong>Schema:</strong>
           {schemaId ? (
             <LinkButton to="/schemas/$schemaId" params={{ schemaId }}>
               {schemaId}
             </LinkButton>
           ) : null}
-        </p>
+        </div>
         <Separator />
-        <p>
+        <div>
           <h3>Average Timings (ns)</h3>
           <div className="flex justify-center gap-4">
             <div className="flex flex-col items-center">
@@ -90,7 +90,7 @@ export const NamespaceDetailsCard: FunctionComponent<
               {deleteTimeAveNs}
             </div>
           </div>
-        </p>
+        </div>
         <Separator />
         <h3>Message Counts</h3>
         <p className="flex items-center justify-between">

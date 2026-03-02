@@ -26,11 +26,11 @@ export const Route = createFileRoute("/_authenticated/namespaces/$")({
 function RouteComponent() {
   const { _splat } = Route.useParams();
   return (
-    <div className="px-6 flex flex-col gap-4 w-6xl mx-auto">
+    <div className="px-6 flex flex-col gap-4">
       <h1 className="text-4xl font-extrabold">Namespaces</h1>
       <div className="flex gap-4">
-        <NamespaceNavigationCard path={_splat} />
-        <NamespaceDetailsCard path={_splat} className="flex-1/2" />
+        <NamespaceNavigationCard path={_splat} className="grow max-w-2xl" />
+        <NamespaceDetailsCard path={_splat} className="grow max-w-2xl" />
       </div>
     </div>
   );

@@ -16,7 +16,6 @@ import { Route as AuthenticatedPeopleRouteRouteImport } from './routes/_authenti
 import { Route as AuthenticatedNamespacesRouteRouteImport } from './routes/_authenticated/namespaces/route'
 import { Route as AuthenticatedConnectionsRouteRouteImport } from './routes/_authenticated/connections/route'
 import { Route as AuthenticatedPeopleIndexRouteImport } from './routes/_authenticated/people/index'
-import { Route as AuthenticatedNamespacesIndexRouteImport } from './routes/_authenticated/namespaces/index'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 import { Route as AuthenticatedConnectionsIndexRouteImport } from './routes/_authenticated/connections/index'
 import { Route as AuthenticatedNamespacesSplatRouteImport } from './routes/_authenticated/namespaces/$'
@@ -65,12 +64,6 @@ const AuthenticatedPeopleIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedPeopleRouteRoute,
-  } as any)
-const AuthenticatedNamespacesIndexRoute =
-  AuthenticatedNamespacesIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedNamespacesRouteRoute,
   } as any)
 const AuthenticatedDashboardIndexRoute =
   AuthenticatedDashboardIndexRouteImport.update({
@@ -145,7 +138,6 @@ export interface FileRoutesByFullPath {
   '/namespaces/$': typeof AuthenticatedNamespacesSplatRoute
   '/connections/': typeof AuthenticatedConnectionsIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
-  '/namespaces/': typeof AuthenticatedNamespacesIndexRoute
   '/people/': typeof AuthenticatedPeopleIndexRoute
   '/people/groups/$groupId': typeof AuthenticatedPeopleGroupsGroupIdRoute
   '/people/users/$userId': typeof AuthenticatedPeopleUsersUserIdRoute
@@ -155,11 +147,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/namespaces': typeof AuthenticatedNamespacesRouteRouteWithChildren
   '/connections/$connectionId': typeof AuthenticatedConnectionsConnectionIdRoute
   '/namespaces/$': typeof AuthenticatedNamespacesSplatRoute
   '/connections': typeof AuthenticatedConnectionsIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
-  '/namespaces': typeof AuthenticatedNamespacesIndexRoute
   '/people': typeof AuthenticatedPeopleIndexRoute
   '/people/groups/$groupId': typeof AuthenticatedPeopleGroupsGroupIdRoute
   '/people/users/$userId': typeof AuthenticatedPeopleUsersUserIdRoute
@@ -180,7 +172,6 @@ export interface FileRoutesById {
   '/_authenticated/namespaces/$': typeof AuthenticatedNamespacesSplatRoute
   '/_authenticated/connections/': typeof AuthenticatedConnectionsIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
-  '/_authenticated/namespaces/': typeof AuthenticatedNamespacesIndexRoute
   '/_authenticated/people/': typeof AuthenticatedPeopleIndexRoute
   '/_authenticated/people/groups/$groupId': typeof AuthenticatedPeopleGroupsGroupIdRoute
   '/_authenticated/people/users/$userId': typeof AuthenticatedPeopleUsersUserIdRoute
@@ -201,7 +192,6 @@ export interface FileRouteTypes {
     | '/namespaces/$'
     | '/connections/'
     | '/dashboard'
-    | '/namespaces/'
     | '/people/'
     | '/people/groups/$groupId'
     | '/people/users/$userId'
@@ -211,11 +201,11 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/namespaces'
     | '/connections/$connectionId'
     | '/namespaces/$'
     | '/connections'
     | '/dashboard'
-    | '/namespaces'
     | '/people'
     | '/people/groups/$groupId'
     | '/people/users/$userId'
@@ -235,7 +225,6 @@ export interface FileRouteTypes {
     | '/_authenticated/namespaces/$'
     | '/_authenticated/connections/'
     | '/_authenticated/dashboard/'
-    | '/_authenticated/namespaces/'
     | '/_authenticated/people/'
     | '/_authenticated/people/groups/$groupId'
     | '/_authenticated/people/users/$userId'
@@ -299,13 +288,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/people/'
       preLoaderRoute: typeof AuthenticatedPeopleIndexRouteImport
       parentRoute: typeof AuthenticatedPeopleRouteRoute
-    }
-    '/_authenticated/namespaces/': {
-      id: '/_authenticated/namespaces/'
-      path: '/'
-      fullPath: '/namespaces/'
-      preLoaderRoute: typeof AuthenticatedNamespacesIndexRouteImport
-      parentRoute: typeof AuthenticatedNamespacesRouteRoute
     }
     '/_authenticated/dashboard/': {
       id: '/_authenticated/dashboard/'
@@ -399,13 +381,11 @@ const AuthenticatedConnectionsRouteRouteWithChildren =
 
 interface AuthenticatedNamespacesRouteRouteChildren {
   AuthenticatedNamespacesSplatRoute: typeof AuthenticatedNamespacesSplatRoute
-  AuthenticatedNamespacesIndexRoute: typeof AuthenticatedNamespacesIndexRoute
 }
 
 const AuthenticatedNamespacesRouteRouteChildren: AuthenticatedNamespacesRouteRouteChildren =
   {
     AuthenticatedNamespacesSplatRoute: AuthenticatedNamespacesSplatRoute,
-    AuthenticatedNamespacesIndexRoute: AuthenticatedNamespacesIndexRoute,
   }
 
 const AuthenticatedNamespacesRouteRouteWithChildren =

@@ -16,44 +16,69 @@
  */
 
 import { useDestinationList } from "@/components/namespaces/hooks";
+import { Button } from "@/components/ui/button";
 import { LinkButton } from "@/components/ui/link-button";
-import { File, Folder } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { File, Folder, FolderUp } from "lucide-react";
 import { type FunctionComponent, useEffect } from "react";
 
 interface ColumnViewProps {
   prefix?: string;
   currentPath: string;
+  includeParent?: boolean;
 }
 
 export const ColumnView: FunctionComponent<ColumnViewProps> = ({
   prefix,
   currentPath,
+  includeParent,
 }) => {
-  const { data, fetchNextPage, hasNextPage, isFetching } =
+  const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
     useDestinationList(prefix);
 
   useEffect(() => {
-    if (hasNextPage && !isFetching) {
+    if (!isLoading && !isFetching && hasNextPage) {
       fetchNextPage();
     }
   }, [hasNextPage, isFetching]);
 
-  return data?.pages.map((page, i) => (
-    <div key={`${prefix}${i}`}>
-      {(page.entries ?? []).map((entry) => (
-        <div
-          key={entry.fullPath}
-          className={currentPath === entry.fullPath ? "bg-secondary/80" : ""}
+  return (
+    <>
+      {includeParent && prefix ? (
+        <Button
+          variant="link"
+          className="px-0 grow justify-start group"
+          asChild
         >
-          <LinkButton
-            from={`/namespaces/${prefix ?? ""}`}
-            to={encodeURIComponent(entry.name)}
+          <Link
+            from="/namespaces"
+            to={`/namespaces/${prefix.substring(0, prefix.lastIndexOf("/"))}`}
           >
-            {entry.destinationType === "FOLDER" ? <Folder /> : <File />}
-            {entry.name}
-          </LinkButton>
+            <FolderUp />
+            Parent
+          </Link>
+        </Button>
+      ) : null}
+      {data?.pages.map((page, i) => (
+        <div key={`${prefix}${i}`}>
+          {(page.entries ?? []).map((entry) => (
+            <div
+              key={`${entry.fullPath}-${entry.destinationType}`}
+              className={
+                currentPath === entry.fullPath ? "bg-secondary/80" : ""
+              }
+            >
+              <LinkButton
+                from={`/namespaces/${prefix ?? ""}`}
+                to={encodeURIComponent(entry.name)}
+              >
+                {entry.destinationType === "FOLDER" ? <Folder /> : <File />}
+                {entry.name}
+              </LinkButton>
+            </div>
+          ))}
         </div>
       ))}
-    </div>
-  ));
+    </>
+  );
 };

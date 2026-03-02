@@ -15,13 +15,23 @@
  *  limitations under the License.
  */
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { FunctionComponent } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { Columns3, List } from "lucide-react";
+import { type FunctionComponent, useEffect, useRef, useState } from "react";
 import { ColumnView } from "./column-view";
 
 interface NamespaceNavigationCardProps {
   path?: string;
-  maxDepth?: number;
+  className?: string;
 }
 
 const buildPathSegments = (path: string = ""): string[] => {
@@ -37,31 +47,82 @@ const buildPathSegments = (path: string = ""): string[] => {
   return result;
 };
 
+const layouts = ["list", "columns"] as const;
+type Layout = (typeof layouts)[number];
+
 export const NamespaceNavigationCard: FunctionComponent<
   NamespaceNavigationCardProps
-> = ({ path = "", maxDepth = 4 }) => {
-  const segments = buildPathSegments(path).slice(-maxDepth);
-  const shouldTranslate = segments.length === maxDepth;
+> = ({ path = "", className }) => {
+  const [layout, setLayout] = useState<Layout>("list");
+
+  const segments =
+    layout === "columns"
+      ? buildPathSegments(path)
+      : buildPathSegments(path).slice(-1);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const id = requestAnimationFrame(() => {
+      el.scrollTo({
+        left: el.scrollWidth,
+        behavior: "smooth",
+      });
+    });
+
+    return () => cancelAnimationFrame(id);
+  }, [segments]);
 
   return (
-    <Card className="overflow-scroll">
+    <Card className={className}>
       <CardHeader>
         <CardTitle>{path}</CardTitle>
+        <CardAction>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon">
+                {layout === "columns" ? <Columns3 /> : <List />}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-32">
+              <DropdownMenuGroup>
+                <DropdownMenuRadioGroup
+                  value={layout}
+                  onValueChange={(value) => setLayout(value as Layout)}
+                >
+                  <DropdownMenuRadioItem value="list">
+                    <List />
+                    List
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="columns">
+                    <Columns3 />
+                    Columns
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </CardAction>
       </CardHeader>
-      <CardContent
-        className={`flex transition-transform w-182 ${
-          shouldTranslate ? "-translate-x-24" : ""
-        }`}
-      >
-        {segments.map((segment, index) => (
-          <div className="w-52 border-x-2 shrink-0">
-            <ColumnView
-              prefix={segment}
-              currentPath={index < segments.length ? segments[index + 1] : ""}
-              key={`${segment}-${index}`}
-            />
-          </div>
-        ))}
+      <CardContent ref={containerRef} className="overflow-x-auto">
+        <div className="flex">
+          {segments.map((segment, index) => (
+            <div
+              key={segment}
+              className={layout === "columns" ? "w-64 border-x-2 shrink-0" : ""}
+            >
+              <ColumnView
+                prefix={segment}
+                currentPath={index < segments.length ? segments[index + 1] : ""}
+                key={`${segment}-${index}`}
+                includeParent={layout === "list"}
+              />
+            </div>
+          ))}
+        </div>
       </CardContent>
     </Card>
   );
