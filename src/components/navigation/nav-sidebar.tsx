@@ -39,7 +39,6 @@ import {
   Users,
 } from "lucide-react";
 import * as React from "react";
-import { NavTree } from "./nav-tree";
 
 // This is sample data.
 const data = {
