@@ -7358,7 +7358,7 @@ export interface components {
        * @description Unique identifier for the schema
        * @example it_019c21a1-0626-7258-ae03-78fd8247d4f4
        */
-      uniqueId?: string | null;
+      uniqueId: string;
       /**
        * @description Schema version identifier
        * @example 1
