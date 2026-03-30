@@ -23,7 +23,14 @@ async function enableMocking() {
   if (import.meta.env.DEV && import.meta.env.VITE_ENABLE_MOCKS === "true") {
     const { worker } = await import("@/mocks/browser");
 
-    return worker.start();
+    return worker.start({
+      onUnhandledRequest(req, print) {
+        if (!req.url.includes("api")) {
+          return;
+        }
+        print.warning();
+      },
+    });
   }
 }
 
