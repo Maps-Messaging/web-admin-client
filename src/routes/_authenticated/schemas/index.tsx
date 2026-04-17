@@ -17,17 +17,17 @@
 
 import { useSchemas } from "@/components/schemas/hooks";
 import { SchemaTable } from "@/components/schemas/schema-table";
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/_authenticated/schemas/')({
+export const Route = createFileRoute("/_authenticated/schemas/")({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
   const { data } = useSchemas();
 
   return (
-    <div className="px-6 flex flex-col gap-4 w-6xl mx-auto">
+    <div className="w-6xl mx-auto">
       <h1 className="text-4xl font-extrabold">Schemas</h1>
       <SchemaTable schemas={data} />
     </div>

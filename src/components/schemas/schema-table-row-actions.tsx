@@ -15,6 +15,7 @@
  *  limitations under the License.
  */
 
+import { DeleteSchemaDialog } from "@/components/schemas/delete-schema-dialog";
 import { useDeleteSchema } from "@/components/schemas/hooks";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,11 +24,11 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Link } from "@tanstack/react-router";
 import { MoreHorizontal } from "lucide-react";
-import { type FunctionComponent } from "react";
+import { type FunctionComponent, useState } from "react";
 import type { Schema } from "./models";
 
 interface SchemaTableRowActionsProps {
@@ -37,7 +38,19 @@ interface SchemaTableRowActionsProps {
 export const SchemaTableRowActions: FunctionComponent<
   SchemaTableRowActionsProps
 > = ({ schemaId }) => {
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { mutate: deleteSchema } = useDeleteSchema();
+
+  const handleDelete = () => {
+    deleteSchema(
+      { params: { path: { schemaId } } },
+      {
+        onSuccess: () => {
+          setShowDeleteDialog(false);
+        },
+      },
+    );
+  };
 
   return (
     <>
@@ -62,7 +75,7 @@ export const SchemaTableRowActions: FunctionComponent<
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem
-              onClick={() => deleteSchema({ params: { path: { schemaId } } })}
+              onClick={() => setShowDeleteDialog(true)}
               className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
             >
               Delete Schema
@@ -70,6 +83,12 @@ export const SchemaTableRowActions: FunctionComponent<
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
+      <DeleteSchemaDialog
+        schemaId={schemaId}
+        onConfirm={handleDelete}
+        open={showDeleteDialog}
+        setOpen={setShowDeleteDialog}
+      />
     </>
   );
 };

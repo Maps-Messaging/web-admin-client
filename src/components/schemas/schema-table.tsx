@@ -45,9 +45,19 @@ const columns: ColumnDef<Schema>[] = [
         to="/schemas/$schemaId"
         params={{ schemaId: row.original.uniqueId }}
       >
-        {row.original.name}
+        {row.original.name ?? row.original.uniqueId}
       </LinkButton>
     ),
+  },
+  {
+    id: "format",
+    header: "Format",
+    cell: ({ row }) => row.original.format,
+  },
+  {
+    id: "versionId",
+    header: "Version",
+    cell: ({ row }) => row.original.versionId,
   },
   {
     id: "actions",

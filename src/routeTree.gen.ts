@@ -160,7 +160,7 @@ export interface FileRoutesByFullPath {
   '/namespaces/$': typeof AuthenticatedNamespacesSplatRoute
   '/schemas/$schemaId': typeof AuthenticatedSchemasSchemaIdRoute
   '/connections/': typeof AuthenticatedConnectionsIndexRoute
-  '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/people/': typeof AuthenticatedPeopleIndexRoute
   '/schemas/': typeof AuthenticatedSchemasIndexRoute
   '/people/groups/$groupId': typeof AuthenticatedPeopleGroupsGroupIdRoute
@@ -222,7 +222,7 @@ export interface FileRouteTypes {
     | '/namespaces/$'
     | '/schemas/$schemaId'
     | '/connections/'
-    | '/dashboard'
+    | '/dashboard/'
     | '/people/'
     | '/schemas/'
     | '/people/groups/$groupId'
@@ -287,7 +287,7 @@ declare module '@tanstack/react-router' {
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -343,7 +343,7 @@ declare module '@tanstack/react-router' {
     '/_authenticated/dashboard/': {
       id: '/_authenticated/dashboard/'
       path: '/dashboard'
-      fullPath: '/dashboard'
+      fullPath: '/dashboard/'
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }

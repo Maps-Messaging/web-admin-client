@@ -18,6 +18,7 @@
 import { apiClient } from "@/api/api-client";
 import { queryClient } from "@/api/query-client";
 import { useGetSchema } from "@/components/schemas/hooks";
+import { SchemaAttributesCard } from "@/components/schemas/schema-attributes-card";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/schemas/$schemaId")({
@@ -28,7 +29,7 @@ export const Route = createFileRoute("/_authenticated/schemas/$schemaId")({
         params: { path: { schemaId: params.schemaId } },
       }),
     );
-    return { breadcrumb: data.name };
+    return { breadcrumb: data.name ?? data.uniqueId };
   },
 });
 
@@ -39,8 +40,12 @@ function RouteComponent() {
   return (
     <div className="flex flex-col gap-4 w-6xl mx-auto">
       <div className="px-6 flex items-center justify-between w-full">
-        <h1 className="text-4xl font-extrabold">{schema?.name}</h1>
-
+        <h1 className="text-4xl font-extrabold">
+          {schema?.name ?? schema?.uniqueId}
+        </h1>
+      </div>
+      <div className="flex gap-4 w-full">
+        <SchemaAttributesCard schemaId={schemaId} className="flex-6" />
       </div>
     </div>
   );

@@ -18,3 +18,5 @@
 import type { components } from "@/api/spec";
 
 export type Schema = components["schemas"]["SchemaConfigDTO"];
+
+export type SchemaId = Schema["uniqueId"];

@@ -181,7 +181,7 @@ export const mockSchemaConfigDTO =
 
 const getAllSchemasHandler = http.get("/api/v1/server/schemas", () =>
   HttpResponse.json(
-    Array.from({ length: faker.number.int({ min: 1, max: 5 }) }).map(() =>
+    Array.from({ length: faker.number.int({ min: 5, max: 50 }) }).map(() =>
       mockSchemaConfigDTO(),
     ),
   ),
