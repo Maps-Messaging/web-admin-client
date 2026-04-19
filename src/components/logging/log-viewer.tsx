@@ -1,6 +1,6 @@
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+ * Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,8 +25,10 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
-import type {LogEntry} from "@/generated/model";
+
 import {requestSseToken} from "@/generated/logging-monitor/logging-monitor";
+import {LogEntry} from "@/generated/model";
+
 
 function LogViewer(): JSX.Element {
   const [logs, setLogs] = useState<LogEntry[]>([]);

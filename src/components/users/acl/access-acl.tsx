@@ -1,6 +1,6 @@
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+ * Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { IdentityAclEntryDTO, PermissionDetailsDTO } from "@/generated/model";
 
-interface UserAccessAclProps {
+interface AccessAclProps {
   entries: IdentityAclEntryDTO[];
   permissions: PermissionDetailsDTO[];
 }
@@ -64,10 +64,10 @@ function renderPermissionCell(entry: IdentityAclEntryDTO, permission: string): R
   return null;
 }
 
-export default function UserAccessAcl({
+export default function AccessAcl({
                                         entries,
                                         permissions,
-                                      }: UserAccessAclProps): React.JSX.Element {
+                                      }: AccessAclProps): React.JSX.Element {
 
   const serverEntries = React.useMemo(
     () => (entries || []).filter((entry) => entry.resourceType === 'Server'),

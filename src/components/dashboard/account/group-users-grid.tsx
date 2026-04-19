@@ -1,3 +1,4 @@
+
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
  * Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
@@ -16,27 +17,27 @@
  *
  */
 
-import React from 'react';
-import {Grid, Typography} from '@mui/material';
-import IconButton from "@mui/material/IconButton";
-import {Trash} from "@phosphor-icons/react";
+import React from "react";
+import {Grid, Typography} from "@mui/material";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
-import {GroupInfoDTO} from "@/generated/model";
+import IconButton from "@mui/material/IconButton";
+import {Trash} from "@phosphor-icons/react";
+import {UserDTO} from "@/generated/model";
 
-interface UserGroupGridProps {
-  groups: GroupInfoDTO[];
+interface GroupUsersGridProps {
+  users: UserDTO[];
   onDelete: (groupId: string) => void;
 }
 
-const UserGroupGrid: React.FC<UserGroupGridProps> = ({ groups, onDelete }) => {
+const GroupUsersGrid: React.FC<GroupUsersGridProps> = ({ users, onDelete }) => {
   return (
     <div>
-      <Typography variant="h6">Groups</Typography>
+      <Typography variant="h6">Users</Typography>
 
       <Grid container spacing={2}>
-        {groups.map((group) => (
-          <Grid item xs={12} sm={6} md={3} key={group?.uniqueId ||''}>
+        {users.map((user) => (
+          <Grid item xs={12} sm={6} md={3} key={user.uniqueId}>
             <Box
               sx={{
                 display: 'flex',
@@ -47,9 +48,9 @@ const UserGroupGrid: React.FC<UserGroupGridProps> = ({ groups, onDelete }) => {
                 borderRadius: 1,
               }}
             >
-              <Typography variant="body1">{group?.name}</Typography>
-              <Tooltip title="Remove from user">
-                <IconButton color="secondary" onClick={() => { onDelete(group?.uniqueId ||''); }}>
+              <Typography variant="body1">{user.username}</Typography>
+              <Tooltip title="Remove from group">
+                <IconButton color="secondary" onClick={() => { onDelete(user.uniqueId || ''); }}>
                   <Trash/>
                 </IconButton>
               </Tooltip>
@@ -62,4 +63,4 @@ const UserGroupGrid: React.FC<UserGroupGridProps> = ({ groups, onDelete }) => {
   );
 };
 
-export default UserGroupGrid;
+export default GroupUsersGrid;

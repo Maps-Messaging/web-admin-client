@@ -1,6 +1,6 @@
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+ * Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@
 'use client'
 
 import React, {useEffect, useState} from 'react';
-import {useGetBuildInfo, useGetStats} from "@/generated/server-management/server-management";
 import Container from "@mui/material/Container";
 import {Grid, Tab, Tabs} from "@mui/material";
 import DataGraph from "@/components/graphs/data-graph";
@@ -29,6 +28,7 @@ import SubSystemStatusTable from "@/components/server/sub-system-status-table";
 import ConnectionDetails from "@/components/connections/connection-details";
 import {NameSpaceTable} from "@/components/destination/namespace-table";
 import LogViewer from "@/components/logging/log-viewer";
+import {useGetBuildInfo, useGetStats} from "@/generated/server-management/server-management";
 
 
 const tabs = [
@@ -114,8 +114,8 @@ export function ServerDetails () :  React.JSX.Element {
 
   // Display error if either query fails
   if (statsError || buildInfoError) {
-    const errorMessage = statsError?.message || buildInfoError?.message;
-    return <div>Error loading data: {errorMessage}</div>;
+
+    return <div>Error loading data</div>;
   }
   return (
     <Container maxWidth="lg">

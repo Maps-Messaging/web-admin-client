@@ -1,6 +1,6 @@
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+ * Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,24 +16,22 @@
  *
  */
 
-import type {SchemaConfig} from "@/generated/model";
+import type { SchemaConfigDTO } from "@/generated/model";
 import * as React from "react";
 import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
 import TableRow from "@mui/material/TableRow";
-import {jsonToDateTimeZoned} from "@/helper-functions";
+import { jsonToDateTimeZoned } from "@/helper-functions";
 
 interface SchemaRowProps {
-  schema: SchemaConfig;
+  schema: SchemaConfigDTO;
 }
 
-export function SchemaRow({
-                            schema,
-                          }: SchemaRowProps): React.JSX.Element {
+export function SchemaRow({ schema }: SchemaRowProps): React.JSX.Element {
+  const rowId = schema.uniqueId ?? undefined;
+
   return (
-    <TableRow
-      id={schema.uniqueId}
-    >
+    <TableRow id={rowId}>
       <TableCell>
         <Typography variant="subtitle2">{schema.format}</Typography>
       </TableCell>
@@ -44,10 +42,12 @@ export function SchemaRow({
         <Typography variant="subtitle2">{schema.labels?.comments}</Typography>
       </TableCell>
       <TableCell>
-        <Typography variant="subtitle2">{schema.createdAt ? jsonToDateTimeZoned(schema.createdAt) : ""}</Typography>
+        <Typography variant="subtitle2">
+          {schema.createdAt ? jsonToDateTimeZoned(schema.createdAt) : ""}
+        </Typography>
       </TableCell>
       <TableCell>
-        <Typography variant="subtitle2">{schema.version || 1}</Typography>
+        <Typography variant="subtitle2">{schema.description ?? ""}</Typography>
       </TableCell>
     </TableRow>
   );

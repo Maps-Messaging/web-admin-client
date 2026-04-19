@@ -1,6 +1,6 @@
 /*
  * Copyright [ 2020 - 2024 ] [Matthew Buckton]
- * Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+ * Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,11 +30,11 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import type { SchemaConfig } from '@/generated/model';
+import type {SchemaConfigDTO} from '@/generated/model';
 import { SchemaRow } from '@/components/schema/schema-row';
 
 interface SchemaTableProps {
-  rows: SchemaConfig[];
+  rows: SchemaConfigDTO[];
   count: number;
   page: number;           // zero-based
   rowsPerPage: number;
