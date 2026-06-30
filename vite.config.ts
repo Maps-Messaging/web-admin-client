@@ -2,11 +2,11 @@ import { defineConfig } from "vite";
 import { devtools } from "@tanstack/devtools-vite";
 import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import monacoEditorPlugin from "vite-plugin-monaco-editor";
 
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import { fileURLToPath, URL } from "node:url";
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     devtools(),
@@ -16,6 +16,9 @@ export default defineConfig({
     }),
     viteReact(),
     tailwindcss(),
+    (monacoEditorPlugin as any).default
+      ? (monacoEditorPlugin as any).default({})
+      : monacoEditorPlugin({}),
   ],
   resolve: {
     alias: {
@@ -25,7 +28,8 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://syd.au.mapsmessaging.io/",
+        // target: "https://syd.au.mapsmessaging.io/",
+        target: "http://10.140.62.191:8080/",
         changeOrigin: true,
       },
     },

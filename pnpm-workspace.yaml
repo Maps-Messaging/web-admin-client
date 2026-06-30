@@ -1,2 +1,6 @@
+minimumReleaseAge: 20160
+minimumReleaseAgeIgnoreMissingTime: false
+minimumReleaseAgeStrict: true
+
 onlyBuiltDependencies:
   - msw

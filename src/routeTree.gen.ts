@@ -12,14 +12,20 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedSchemasRouteRouteImport } from './routes/_authenticated/schemas/route'
 import { Route as AuthenticatedPeopleRouteRouteImport } from './routes/_authenticated/people/route'
 import { Route as AuthenticatedNamespacesRouteRouteImport } from './routes/_authenticated/namespaces/route'
+import { Route as AuthenticatedLoggingRouteRouteImport } from './routes/_authenticated/logging/route'
+import { Route as AuthenticatedInterfacesRouteRouteImport } from './routes/_authenticated/interfaces/route'
+import { Route as AuthenticatedDevicesRouteRouteImport } from './routes/_authenticated/devices/route'
 import { Route as AuthenticatedConnectionsRouteRouteImport } from './routes/_authenticated/connections/route'
+import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedSchemasIndexRouteImport } from './routes/_authenticated/schemas/index'
 import { Route as AuthenticatedPeopleIndexRouteImport } from './routes/_authenticated/people/index'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 import { Route as AuthenticatedConnectionsIndexRouteImport } from './routes/_authenticated/connections/index'
+import { Route as AuthenticatedSettingsConfigNameRouteImport } from './routes/_authenticated/settings/$configName'
 import { Route as AuthenticatedSchemasSchemaIdRouteImport } from './routes/_authenticated/schemas/$schemaId'
 import { Route as AuthenticatedNamespacesSplatRouteImport } from './routes/_authenticated/namespaces/$'
 import { Route as AuthenticatedConnectionsConnectionIdRouteImport } from './routes/_authenticated/connections/$connectionId'
@@ -44,6 +50,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSettingsRouteRoute =
+  AuthenticatedSettingsRouteRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSchemasRouteRoute =
   AuthenticatedSchemasRouteRouteImport.update({
     id: '/schemas',
@@ -62,11 +74,35 @@ const AuthenticatedNamespacesRouteRoute =
     path: '/namespaces',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedLoggingRouteRoute =
+  AuthenticatedLoggingRouteRouteImport.update({
+    id: '/logging',
+    path: '/logging',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedInterfacesRouteRoute =
+  AuthenticatedInterfacesRouteRouteImport.update({
+    id: '/interfaces',
+    path: '/interfaces',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDevicesRouteRoute =
+  AuthenticatedDevicesRouteRouteImport.update({
+    id: '/devices',
+    path: '/devices',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedConnectionsRouteRoute =
   AuthenticatedConnectionsRouteRouteImport.update({
     id: '/connections',
     path: '/connections',
     getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSettingsIndexRoute =
+  AuthenticatedSettingsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
 const AuthenticatedSchemasIndexRoute =
   AuthenticatedSchemasIndexRouteImport.update({
@@ -91,6 +127,12 @@ const AuthenticatedConnectionsIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedConnectionsRouteRoute,
+  } as any)
+const AuthenticatedSettingsConfigNameRoute =
+  AuthenticatedSettingsConfigNameRouteImport.update({
+    id: '/$configName',
+    path: '/$configName',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
 const AuthenticatedSchemasSchemaIdRoute =
   AuthenticatedSchemasSchemaIdRouteImport.update({
@@ -151,18 +193,24 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/connections': typeof AuthenticatedConnectionsRouteRouteWithChildren
+  '/devices': typeof AuthenticatedDevicesRouteRoute
+  '/interfaces': typeof AuthenticatedInterfacesRouteRoute
+  '/logging': typeof AuthenticatedLoggingRouteRoute
   '/namespaces': typeof AuthenticatedNamespacesRouteRouteWithChildren
   '/people': typeof AuthenticatedPeopleRouteRouteWithChildren
   '/schemas': typeof AuthenticatedSchemasRouteRouteWithChildren
+  '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/people/groups': typeof AuthenticatedPeopleGroupsRouteRouteWithChildren
   '/people/users': typeof AuthenticatedPeopleUsersRouteRouteWithChildren
   '/connections/$connectionId': typeof AuthenticatedConnectionsConnectionIdRoute
   '/namespaces/$': typeof AuthenticatedNamespacesSplatRoute
   '/schemas/$schemaId': typeof AuthenticatedSchemasSchemaIdRoute
+  '/settings/$configName': typeof AuthenticatedSettingsConfigNameRoute
   '/connections/': typeof AuthenticatedConnectionsIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/people/': typeof AuthenticatedPeopleIndexRoute
   '/schemas/': typeof AuthenticatedSchemasIndexRoute
+  '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/people/groups/$groupId': typeof AuthenticatedPeopleGroupsGroupIdRoute
   '/people/users/$userId': typeof AuthenticatedPeopleUsersUserIdRoute
   '/people/groups/': typeof AuthenticatedPeopleGroupsIndexRoute
@@ -171,14 +219,19 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/devices': typeof AuthenticatedDevicesRouteRoute
+  '/interfaces': typeof AuthenticatedInterfacesRouteRoute
+  '/logging': typeof AuthenticatedLoggingRouteRoute
   '/namespaces': typeof AuthenticatedNamespacesRouteRouteWithChildren
   '/connections/$connectionId': typeof AuthenticatedConnectionsConnectionIdRoute
   '/namespaces/$': typeof AuthenticatedNamespacesSplatRoute
   '/schemas/$schemaId': typeof AuthenticatedSchemasSchemaIdRoute
+  '/settings/$configName': typeof AuthenticatedSettingsConfigNameRoute
   '/connections': typeof AuthenticatedConnectionsIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/people': typeof AuthenticatedPeopleIndexRoute
   '/schemas': typeof AuthenticatedSchemasIndexRoute
+  '/settings': typeof AuthenticatedSettingsIndexRoute
   '/people/groups/$groupId': typeof AuthenticatedPeopleGroupsGroupIdRoute
   '/people/users/$userId': typeof AuthenticatedPeopleUsersUserIdRoute
   '/people/groups': typeof AuthenticatedPeopleGroupsIndexRoute
@@ -190,18 +243,24 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/_authenticated/connections': typeof AuthenticatedConnectionsRouteRouteWithChildren
+  '/_authenticated/devices': typeof AuthenticatedDevicesRouteRoute
+  '/_authenticated/interfaces': typeof AuthenticatedInterfacesRouteRoute
+  '/_authenticated/logging': typeof AuthenticatedLoggingRouteRoute
   '/_authenticated/namespaces': typeof AuthenticatedNamespacesRouteRouteWithChildren
   '/_authenticated/people': typeof AuthenticatedPeopleRouteRouteWithChildren
   '/_authenticated/schemas': typeof AuthenticatedSchemasRouteRouteWithChildren
+  '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/_authenticated/people/groups': typeof AuthenticatedPeopleGroupsRouteRouteWithChildren
   '/_authenticated/people/users': typeof AuthenticatedPeopleUsersRouteRouteWithChildren
   '/_authenticated/connections/$connectionId': typeof AuthenticatedConnectionsConnectionIdRoute
   '/_authenticated/namespaces/$': typeof AuthenticatedNamespacesSplatRoute
   '/_authenticated/schemas/$schemaId': typeof AuthenticatedSchemasSchemaIdRoute
+  '/_authenticated/settings/$configName': typeof AuthenticatedSettingsConfigNameRoute
   '/_authenticated/connections/': typeof AuthenticatedConnectionsIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/people/': typeof AuthenticatedPeopleIndexRoute
   '/_authenticated/schemas/': typeof AuthenticatedSchemasIndexRoute
+  '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/people/groups/$groupId': typeof AuthenticatedPeopleGroupsGroupIdRoute
   '/_authenticated/people/users/$userId': typeof AuthenticatedPeopleUsersUserIdRoute
   '/_authenticated/people/groups/': typeof AuthenticatedPeopleGroupsIndexRoute
@@ -213,18 +272,24 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/connections'
+    | '/devices'
+    | '/interfaces'
+    | '/logging'
     | '/namespaces'
     | '/people'
     | '/schemas'
+    | '/settings'
     | '/people/groups'
     | '/people/users'
     | '/connections/$connectionId'
     | '/namespaces/$'
     | '/schemas/$schemaId'
+    | '/settings/$configName'
     | '/connections/'
     | '/dashboard/'
     | '/people/'
     | '/schemas/'
+    | '/settings/'
     | '/people/groups/$groupId'
     | '/people/users/$userId'
     | '/people/groups/'
@@ -233,14 +298,19 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/devices'
+    | '/interfaces'
+    | '/logging'
     | '/namespaces'
     | '/connections/$connectionId'
     | '/namespaces/$'
     | '/schemas/$schemaId'
+    | '/settings/$configName'
     | '/connections'
     | '/dashboard'
     | '/people'
     | '/schemas'
+    | '/settings'
     | '/people/groups/$groupId'
     | '/people/users/$userId'
     | '/people/groups'
@@ -251,18 +321,24 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/login'
     | '/_authenticated/connections'
+    | '/_authenticated/devices'
+    | '/_authenticated/interfaces'
+    | '/_authenticated/logging'
     | '/_authenticated/namespaces'
     | '/_authenticated/people'
     | '/_authenticated/schemas'
+    | '/_authenticated/settings'
     | '/_authenticated/people/groups'
     | '/_authenticated/people/users'
     | '/_authenticated/connections/$connectionId'
     | '/_authenticated/namespaces/$'
     | '/_authenticated/schemas/$schemaId'
+    | '/_authenticated/settings/$configName'
     | '/_authenticated/connections/'
     | '/_authenticated/dashboard/'
     | '/_authenticated/people/'
     | '/_authenticated/schemas/'
+    | '/_authenticated/settings/'
     | '/_authenticated/people/groups/$groupId'
     | '/_authenticated/people/users/$userId'
     | '/_authenticated/people/groups/'
@@ -298,6 +374,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/schemas': {
       id: '/_authenticated/schemas'
       path: '/schemas'
@@ -319,12 +402,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNamespacesRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/logging': {
+      id: '/_authenticated/logging'
+      path: '/logging'
+      fullPath: '/logging'
+      preLoaderRoute: typeof AuthenticatedLoggingRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/interfaces': {
+      id: '/_authenticated/interfaces'
+      path: '/interfaces'
+      fullPath: '/interfaces'
+      preLoaderRoute: typeof AuthenticatedInterfacesRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/devices': {
+      id: '/_authenticated/devices'
+      path: '/devices'
+      fullPath: '/devices'
+      preLoaderRoute: typeof AuthenticatedDevicesRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/connections': {
       id: '/_authenticated/connections'
       path: '/connections'
       fullPath: '/connections'
       preLoaderRoute: typeof AuthenticatedConnectionsRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings/': {
+      id: '/_authenticated/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
     '/_authenticated/schemas/': {
       id: '/_authenticated/schemas/'
@@ -353,6 +464,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/connections/'
       preLoaderRoute: typeof AuthenticatedConnectionsIndexRouteImport
       parentRoute: typeof AuthenticatedConnectionsRouteRoute
+    }
+    '/_authenticated/settings/$configName': {
+      id: '/_authenticated/settings/$configName'
+      path: '/$configName'
+      fullPath: '/settings/$configName'
+      preLoaderRoute: typeof AuthenticatedSettingsConfigNameRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
     '/_authenticated/schemas/$schemaId': {
       id: '/_authenticated/schemas/$schemaId'
@@ -520,21 +638,45 @@ const AuthenticatedSchemasRouteRouteWithChildren =
     AuthenticatedSchemasRouteRouteChildren,
   )
 
+interface AuthenticatedSettingsRouteRouteChildren {
+  AuthenticatedSettingsConfigNameRoute: typeof AuthenticatedSettingsConfigNameRoute
+  AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
+}
+
+const AuthenticatedSettingsRouteRouteChildren: AuthenticatedSettingsRouteRouteChildren =
+  {
+    AuthenticatedSettingsConfigNameRoute: AuthenticatedSettingsConfigNameRoute,
+    AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
+  }
+
+const AuthenticatedSettingsRouteRouteWithChildren =
+  AuthenticatedSettingsRouteRoute._addFileChildren(
+    AuthenticatedSettingsRouteRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedConnectionsRouteRoute: typeof AuthenticatedConnectionsRouteRouteWithChildren
+  AuthenticatedDevicesRouteRoute: typeof AuthenticatedDevicesRouteRoute
+  AuthenticatedInterfacesRouteRoute: typeof AuthenticatedInterfacesRouteRoute
+  AuthenticatedLoggingRouteRoute: typeof AuthenticatedLoggingRouteRoute
   AuthenticatedNamespacesRouteRoute: typeof AuthenticatedNamespacesRouteRouteWithChildren
   AuthenticatedPeopleRouteRoute: typeof AuthenticatedPeopleRouteRouteWithChildren
   AuthenticatedSchemasRouteRoute: typeof AuthenticatedSchemasRouteRouteWithChildren
+  AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedConnectionsRouteRoute:
     AuthenticatedConnectionsRouteRouteWithChildren,
+  AuthenticatedDevicesRouteRoute: AuthenticatedDevicesRouteRoute,
+  AuthenticatedInterfacesRouteRoute: AuthenticatedInterfacesRouteRoute,
+  AuthenticatedLoggingRouteRoute: AuthenticatedLoggingRouteRoute,
   AuthenticatedNamespacesRouteRoute:
     AuthenticatedNamespacesRouteRouteWithChildren,
   AuthenticatedPeopleRouteRoute: AuthenticatedPeopleRouteRouteWithChildren,
   AuthenticatedSchemasRouteRoute: AuthenticatedSchemasRouteRouteWithChildren,
+  AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
 }
 
