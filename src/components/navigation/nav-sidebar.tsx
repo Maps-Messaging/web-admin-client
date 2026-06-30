@@ -20,6 +20,7 @@ import { useServerInfo } from "@/components/navigation/hooks";
 import { NavMain } from "@/components/navigation/nav-main";
 import { NavUser } from "@/components/navigation/nav-user";
 import { ServerSwitcher } from "@/components/navigation/server-switcher";
+import { useListConfigs } from "@/components/settings/hooks";
 import {
   Sidebar,
   SidebarContent,
@@ -32,6 +33,8 @@ import {
   Boxes,
   BrainCircuit,
   Cable,
+  Cpu,
+  DatabaseZap,
   EthernetPort,
   Form,
   Logs,
@@ -40,79 +43,94 @@ import {
 } from "lucide-react";
 import * as React from "react";
 
-// This is sample data.
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  servers: (name: string) => [
-    {
-      name,
-      logo: Box,
-    },
-    {
-      name: "Server A",
-      logo: Box,
-    },
-    {
-      name: "Server B",
-      logo: Box,
-    },
-    {
-      name: "Cluster",
-      logo: Boxes,
-    },
-  ],
-  navMain: [
-    {
-      title: "Namespaces",
-      url: "/namespaces",
-      icon: Box,
-    },
-    {
-      title: "Connections",
-      url: "/connections",
-      icon: Cable,
-    },
-    {
-      title: "Schemas",
-      url: "/schemas",
-      icon: Form,
-    },
-    {
-      title: "Interfaces",
-      url: "/interfaces",
-      icon: EthernetPort,
-      items: [
-        { title: "Hardware", url: "/interfaces/hardware" },
-        { title: "LORA", url: "/interfaces/lora" },
-      ],
-    },
-    { title: "Logging", url: "/logging", icon: Logs },
-    { title: "Models", url: "/models", icon: BrainCircuit },
-    {
-      title: "People",
-      url: "/people",
-      icon: Users,
-      items: [
-        { title: "Users", url: "/people/users" },
-        { title: "Groups", url: "/people/groups" },
-      ],
-    },
-    { title: "Settings", url: "/settings", icon: Settings2 },
-  ],
-  navTree: [
-    "Namespaces",
-    "Region-1",
-    ["Region-2", ["Zone-1", "Node 1", ["Node 2", "Service 1"]], "Zone-2"],
-    "Region-3",
-  ],
-};
-
 export function NavSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: serverInfo } = useServerInfo();
+  const { data: configList, isLoading } = useListConfigs();
+
+  const data = {
+    user: {
+      name: "shadcn",
+      email: "m@example.com",
+      avatar: "/avatars/shadcn.jpg",
+    },
+    servers: (name: string) => [
+      {
+        name,
+        logo: Box,
+      },
+      {
+        name: "Server A",
+        logo: Box,
+      },
+      {
+        name: "Server B",
+        logo: Box,
+      },
+      {
+        name: "Cluster",
+        logo: Boxes,
+      },
+    ],
+    navMain: [
+      {
+        title: "Namespaces",
+        url: "/namespaces",
+        icon: Box,
+      },
+      {
+        title: "State Cache",
+        url: "/cache",
+        icon: DatabaseZap,
+      },
+      {
+        title: "Connections",
+        url: "/connections",
+        icon: Cable,
+      },
+      {
+        title: "Schemas",
+        url: "/schemas",
+        icon: Form,
+      },
+      {
+        title: "Interfaces",
+        url: "/interfaces",
+        icon: EthernetPort,
+      },
+      {
+        title: "Devices",
+        url: "/devices",
+        icon: Cpu,
+      },
+      { title: "Logging", url: "/logging", icon: Logs },
+      { title: "Models", url: "/models", icon: BrainCircuit },
+      {
+        title: "People",
+        url: "/people",
+        icon: Users,
+        items: [
+          { title: "Users", url: "/people/users" },
+          { title: "Groups", url: "/people/groups" },
+          { title: "Permissions", url: "/people/permissions" },
+        ],
+      },
+      {
+        title: "Settings",
+        url: "/settings",
+        icon: Settings2,
+        items: (configList ?? []).map(({ name, id }) => ({
+          title: name,
+          url: `/settings/${id}`,
+        })),
+      },
+    ],
+    navTree: [
+      "Namespaces",
+      "Region-1",
+      ["Region-2", ["Zone-1", "Node 1", ["Node 2", "Service 1"]], "Zone-2"],
+      "Region-3",
+    ],
+  };
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -122,10 +140,10 @@ export function NavSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        {isLoading ? null : <NavMain items={data.navMain} />}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

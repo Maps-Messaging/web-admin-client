@@ -54,6 +54,7 @@ export function useBreadcrumbs(): Crumb[] {
 
     // Splat route handling
     if (hasSplatParams(match._strictParams)) {
+      // @ts-ignore
       const parts = match.params._splat.split("/");
 
       let basePath = match.fullPath.replace("$", "");

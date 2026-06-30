@@ -19,10 +19,7 @@
     "url": "https://www.mapsmessaging.io/"
   },
   "servers": [
-    {
-      "url": "http://localhost:3000",
-      "description": "Default Server"
-    }
+    { "url": "http://localhost:3000", "description": "Default Server" }
   ],
   "security": [
     {
@@ -1432,7 +1429,10 @@
             "description": "List of configuration sections returned",
             "content": {
               "application/json": {
-                "schema": { "type": "array", "items": { "type": "string" } }
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ConfigNamingDTO" }
+                }
               }
             }
           },
@@ -1695,6 +1695,14 @@
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
               }
             }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
           }
         }
       }
@@ -1836,7 +1844,6 @@
             "schema": {
               "type": "string",
               "example": "Published",
-              "default": "Published",
               "enum": [
                 "Name",
                 "Published",
@@ -1845,7 +1852,8 @@
                 "Pending",
                 "Delayed",
                 "Expired"
-              ]
+              ],
+              "default": "Published"
             }
           }
         ],
@@ -1959,7 +1967,7 @@
           {
             "name": "filter",
             "in": "query",
-            "description": "Optional filter string ",
+            "description": "Optional filter string",
             "schema": {
               "type": "string",
               "example": "schemaSupport = TRUE OR systemTopicPrefix IS NOT NULL"
@@ -1968,7 +1976,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Update discovery configuration was successful",
+            "description": "Operation was successful",
             "content": {
               "application/json": {
                 "schema": {
@@ -2003,9 +2011,16 @@
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
               }
             }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
           }
-        },
-        "security": [{ "basicAuth": [] }]
+        }
       },
       "patch": {
         "tags": ["Discovery Management"],
@@ -2013,7 +2028,7 @@
         "description": "Manages the state of the discovery manager",
         "operationId": "handleDiscoveryActionRequest",
         "requestBody": {
-          "description": "Requested action to apply to all inter-server connections",
+          "description": "Requested action to apply to the discovery manager",
           "content": {
             "application/json": {
               "schema": { "$ref": "#/components/schemas/RequestedAction" }
@@ -2053,6 +2068,22 @@
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
               }
             }
+          },
+          "404": {
+            "description": "Discovery manager not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
           }
         }
       }
@@ -2061,7 +2092,7 @@
       "get": {
         "tags": ["Hardware Management"],
         "summary": "Get known devices",
-        "description": "Retreive a list of all detected devices currently online. Requires authentication if enabled in the configuration.",
+        "description": "Retrieve a list of all detected devices currently online. Requires authentication if enabled in the configuration.",
         "operationId": "getAllDiscoveredDevices",
         "responses": {
           "200": {
@@ -2075,14 +2106,6 @@
               }
             }
           },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/StatusResponse" }
-              }
-            }
-          },
           "401": {
             "description": "Invalid credentials or unauthorized access",
             "content": {
@@ -2093,6 +2116,14 @@
           },
           "403": {
             "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
@@ -2117,14 +2148,6 @@
               }
             }
           },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/StatusResponse" }
-              }
-            }
-          },
           "401": {
             "description": "Invalid credentials or unauthorized access",
             "content": {
@@ -2135,6 +2158,14 @@
           },
           "403": {
             "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
@@ -2191,7 +2222,22 @@
               }
             }
           },
-          "404": { "description": "Integration name was not found" }
+          "404": {
+            "description": "Integration name was not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
         }
       },
       "patch": {
@@ -2248,6 +2294,22 @@
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
               }
             }
+          },
+          "404": {
+            "description": "Integration name was not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
           }
         }
       }
@@ -2255,8 +2317,8 @@
     "/api/v1/server/integration/{name}/connection": {
       "get": {
         "tags": ["Server Integration Management"],
-        "summary": "Get integration status by name",
-        "description": "Retrieves the current status on the inter-server integration connection. Requires authentication if enabled in the configuration.",
+        "summary": "Get integration connection status by name",
+        "description": "Retrieves the current connection summary for the inter-server integration connection. Requires authentication if enabled in the configuration.",
         "operationId": "getIntegrationConnection",
         "parameters": [
           {
@@ -2299,7 +2361,22 @@
               }
             }
           },
-          "404": { "description": "Integration name was not found" }
+          "404": {
+            "description": "Integration name was not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
         }
       }
     },
@@ -2351,6 +2428,22 @@
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
               }
             }
+          },
+          "404": {
+            "description": "Integration name was not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
           }
         }
       }
@@ -2365,7 +2458,7 @@
           {
             "name": "filter",
             "in": "query",
-            "description": "Optional filter string ",
+            "description": "Optional filter string",
             "schema": { "type": "string", "example": "state = PAUSED" }
           }
         ],
@@ -2375,7 +2468,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/IntegrationListStatus"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IntegrationStatusDTO"
+                  }
                 }
               }
             }
@@ -2398,6 +2494,14 @@
           },
           "403": {
             "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
@@ -2417,7 +2521,7 @@
           {
             "name": "filter",
             "in": "query",
-            "description": "Optional filter string ",
+            "description": "Optional filter string",
             "schema": { "type": "string", "example": "state = PAUSED" }
           }
         ],
@@ -2427,7 +2531,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/IntegrationDetailResponse"
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/IntegrationInfoDTO" }
                 }
               }
             }
@@ -2450,6 +2555,14 @@
           },
           "403": {
             "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
@@ -2504,11 +2617,19 @@
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
               }
             }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
           }
         }
       }
     },
-    "/api/v1/server/interfaces/{endpoint}": {
+    "/api/v1/server/interface/{endpoint}": {
       "get": {
         "tags": ["Server Interface Management"],
         "summary": "Get end point configurations",
@@ -2555,7 +2676,14 @@
               }
             }
           },
-          "404": { "description": "Endpoint not found" }
+          "404": {
+            "description": "Endpoint not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
         }
       },
       "put": {
@@ -2572,13 +2700,15 @@
           }
         ],
         "requestBody": {
+          "description": "End point configuration to apply",
           "content": {
-            "*/*": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/EndPointServerConfigDTO"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -2613,13 +2743,20 @@
               }
             }
           },
-          "404": { "description": "Endpoint not found" }
+          "404": {
+            "description": "Endpoint not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
         }
       },
       "patch": {
         "tags": ["Server Interface Management"],
         "summary": "Controls the specific end point",
-        "description": "Applies the requested state to all configured interface endpoints.",
+        "description": "Applies the requested state to the configured interface endpoint.",
         "operationId": "manageSpecificInterface",
         "parameters": [
           {
@@ -2630,7 +2767,7 @@
           }
         ],
         "requestBody": {
-          "description": "Requested action to apply to all inter-server connections",
+          "description": "Requested action to apply to the interface endpoint",
           "content": {
             "application/json": {
               "schema": { "$ref": "#/components/schemas/RequestedAction" }
@@ -2670,11 +2807,27 @@
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
               }
             }
+          },
+          "404": {
+            "description": "Endpoint not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
           }
         }
       }
     },
-    "/api/v1/server/interfaces/{endpoint}/connections": {
+    "/api/v1/server/interface/{endpoint}/connections": {
       "get": {
         "tags": ["Server Interface Management"],
         "summary": "Get end point connections",
@@ -2723,11 +2876,19 @@
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
               }
             }
+          },
+          "404": {
+            "description": "Endpoint not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
           }
         }
       }
     },
-    "/api/v1/server/interfaces/{endpoint}/status": {
+    "/api/v1/server/interface/{endpoint}/status": {
       "get": {
         "tags": ["Server Interface Management"],
         "summary": "Get end point status",
@@ -2773,6 +2934,14 @@
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
               }
             }
+          },
+          "404": {
+            "description": "Endpoint not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
           }
         }
       }
@@ -2787,7 +2956,7 @@
           {
             "name": "filter",
             "in": "query",
-            "description": "Optional filter string ",
+            "description": "Optional filter string",
             "schema": { "type": "string", "example": "state = 'started'" }
           }
         ],
@@ -2826,6 +2995,14 @@
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
               }
             }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
           }
         }
       }
@@ -2840,8 +3017,12 @@
           {
             "name": "filter",
             "in": "query",
-            "description": "Optional filter string ",
-            "schema": { "type": "string", "example": "state = 'started'" }
+            "description": "Optional filter string",
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "example": "state = 'started'"
+            }
           }
         ],
         "responses": {
@@ -2874,6 +3055,14 @@
           },
           "403": {
             "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
@@ -2928,6 +3117,14 @@
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
               }
             }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
           }
         }
       }
@@ -2973,6 +3170,14 @@
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
               }
             }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
           }
         }
       }
@@ -2986,7 +3191,7 @@
         "responses": {
           "200": {
             "description": "String token to use to access the log SSE",
-            "content": { "text": {} }
+            "content": { "text/plain": { "schema": { "type": "string" } } }
           },
           "400": {
             "description": "Bad request",
@@ -3006,6 +3211,14 @@
           },
           "403": {
             "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
@@ -3033,11 +3246,7 @@
         "responses": {
           "200": {
             "description": "SSE stream of LogEntry events",
-            "content": {
-              "text/event-stream": {
-                "schema": { "$ref": "#/components/schemas/LogEntry" }
-              }
-            }
+            "content": { "text/event-stream": {} }
           },
           "400": {
             "description": "Bad request",
@@ -3056,13 +3265,9 @@
             }
           },
           "403": {
-            "description": "User is not authorised to access the resource",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/StatusResponse" }
-              }
-            }
-          }
+            "description": "User is not authorised to access the resource, or token is invalid"
+          },
+          "500": { "description": "Internal server error" }
         }
       }
     },
@@ -3084,14 +3289,6 @@
               }
             }
           },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/StatusResponse" }
-              }
-            }
-          },
           "401": {
             "description": "Invalid credentials or unauthorized access",
             "content": {
@@ -3102,6 +3299,14 @@
           },
           "403": {
             "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
@@ -3165,6 +3370,14 @@
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
               }
             }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
           }
         }
       }
@@ -3221,6 +3434,22 @@
           },
           "403": {
             "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "LoRa device or endpoint not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
@@ -3747,14 +3976,56 @@
           }
         ],
         "responses": {
-          "200": { "description": "Model content" },
-          "404": { "description": "Model not found" }
+          "200": {
+            "description": "Model content",
+            "content": { "application/octet-stream": {} }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Model not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "406": {
+            "description": "ML not supported",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
         }
       },
       "post": {
         "tags": ["ML Model Store"],
         "summary": "ML Model upload",
-        "description": "uploads a model",
+        "description": "Uploads a model.",
         "operationId": "uploadModel",
         "parameters": [
           {
@@ -3768,15 +4039,55 @@
           "content": {
             "multipart/form-data": {
               "schema": {
+                "required": ["file"],
                 "type": "object",
-                "properties": { "file": { "type": "object" } }
+                "description": "Multipart form containing the model file."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Upload succeeded",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "406": {
+            "description": "ML not supported",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
               }
             }
           }
-        },
-        "responses": {
-          "200": { "description": "Model content" },
-          "404": { "description": "Model not found" }
         }
       },
       "delete": {
@@ -3800,6 +4111,46 @@
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
               }
             }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Model not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "406": {
+            "description": "ML not supported",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
           }
         }
       },
@@ -3818,7 +4169,32 @@
         ],
         "responses": {
           "200": { "description": "Model exists" },
-          "404": { "description": "Model not found" }
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": { "description": "Model not found" },
+          "406": { "description": "ML not supported" }
         }
       }
     },
@@ -3837,7 +4213,30 @@
               }
             }
           },
-          "406": { "description": "ML not supported" }
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "406": {
+            "description": "ML not supported",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
         }
       }
     },
@@ -4766,6 +5165,7 @@
       },
       "AuthorisationConfigDTO": {
         "title": "Authorisation Static Configuration DTO",
+        "required": ["schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -4774,7 +5174,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -4795,6 +5194,7 @@
       },
       "PermissionDetailsDTO": {
         "title": "Permission details",
+        "required": ["schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -4803,7 +5203,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -4816,6 +5215,7 @@
       },
       "ResourceTypeDetailsDTO": {
         "title": "Resource Type details",
+        "required": ["schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -4824,7 +5224,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -5096,8 +5495,292 @@
           }
         }
       },
+      "ConfigNamingDTO": {
+        "required": ["id", "name"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Human-readable name for this configuration mapping.",
+            "example": "Networks"
+          },
+          "id": {
+            "type": "string",
+            "description": "Internal configuration name this mapping is bound to.",
+            "example": "NetworkManagerConfig"
+          }
+        },
+        "description": "Represents a named configuration mapping."
+      },
+      "AggregatorConfigDTO": {
+        "title": "Aggregator Configuration DTO (Stage 1)",
+        "minLength": 1,
+        "required": [
+          "inputs",
+          "name",
+          "outputTopic",
+          "schemaLoadingVersion",
+          "timeoutMs",
+          "windowDurationMs"
+        ],
+        "type": "object",
+        "properties": {
+          "schemaLoadingVersion": {
+            "maximum": 10,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
+            "format": "int32",
+            "example": 1,
+            "default": 1
+          },
+          "name": {
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9_.-]+$",
+            "type": "string",
+            "description": "Unique name of this aggregator instance",
+            "example": "sensor-aggregator-1"
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Enable or disable this aggregator instance",
+            "nullable": true,
+            "example": true,
+            "default": true
+          },
+          "inputs": {
+            "minLength": 1,
+            "type": "array",
+            "description": "Input configurations (one per topic) for this aggregator",
+            "items": { "$ref": "#/components/schemas/AggregatorInputConfigDTO" }
+          },
+          "outputTopic": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "type": "string",
+            "description": "Output topic for the aggregated envelope",
+            "example": "maps/aggregated/out"
+          },
+          "windowCloseMode": {
+            "title": "Aggregator Window Close Mode",
+            "type": "string",
+            "description": "Defines how an aggregation window is closed.",
+            "example": "ALL_INPUTS_OR_TIMEOUT",
+            "enum": ["ALL_INPUTS", "TIMEOUT_ONLY", "ALL_INPUTS_OR_TIMEOUT"],
+            "default": "ALL_INPUTS_OR_TIMEOUT"
+          },
+          "windowDurationMs": {
+            "maximum": 3600000,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Time bucket duration in milliseconds (arrival-time based)",
+            "format": "int64",
+            "example": 1000
+          },
+          "timeoutMs": {
+            "maximum": 3600000,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Maximum time to wait before closing a window, even if not all inputs have arrived (milliseconds)",
+            "format": "int64",
+            "example": 5000
+          },
+          "maxEventsPerTopic": {
+            "maximum": 1000,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Maximum number of events to buffer per input within a single window (Stage 1 default: 1)",
+            "format": "int32",
+            "nullable": true,
+            "example": 1,
+            "default": 1
+          },
+          "outputTransformers": {
+            "required": ["schemaLoadingVersion", "type"],
+            "type": "object",
+            "properties": {
+              "schemaLoadingVersion": {
+                "maximum": 10,
+                "minimum": 0,
+                "type": "integer",
+                "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
+                "format": "int32",
+                "example": 1,
+                "default": 1
+              },
+              "type": {
+                "type": "string",
+                "description": "Type of transformation configuration. All values are lower-case and hyphen-separated.",
+                "example": "jsontoxml",
+                "enum": [
+                  "CLOUD_EVENT_JSON",
+                  "CLOUD_EVENT_NATIVE",
+                  "CLOUD_EVENT_ENVELOPE",
+                  "JSON_TO_XML",
+                  "XML_TO_JSON",
+                  "JSON_TO_VALUE",
+                  "JSON_QUERY",
+                  "GEOHASH",
+                  "SCHEMA_TO_JSON",
+                  "JSON_MUTATE",
+                  "JSON_TO_SCHEMA"
+                ]
+              }
+            },
+            "additionalProperties": true,
+            "description": "Abstract base class for all transformation configurations",
+            "nullable": true,
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "jsontoxml": "#/components/schemas/JsonToXmlTransformationDTO",
+                "xmltojson": "#/components/schemas/XmlToJsonTransformationDTO",
+                "jsontoschema": "#/components/schemas/JsonToSchemaTransformationDTO",
+                "jsontovalue": "#/components/schemas/JsonToValueTransformationDTO",
+                "jsonquery": "#/components/schemas/JsonQueryTransformationDTO",
+                "geohash": "#/components/schemas/GeoHashResolverTransformationDTO",
+                "jsonmutate": "#/components/schemas/JsonMutateTransformationDTO",
+                "cloudevent-envelope": "#/components/schemas/CloudEventEnvelopeTransformationDTO",
+                "cloudevent-json": "#/components/schemas/CloudEventJsonTransformationDTO",
+                "cloudevent-native": "#/components/schemas/CloudEventNativeTransformationDTO"
+              }
+            }
+          }
+        },
+        "description": "Stage 1 Aggregator configuration. Fan-in time-bucket aggregation only: no correlation, no DLQ, no policies, no persistence."
+      },
+      "AggregatorInputConfigDTO": {
+        "title": "Aggregator Input Configuration DTO",
+        "minLength": 1,
+        "required": ["schemaLoadingVersion", "topicName"],
+        "type": "object",
+        "properties": {
+          "schemaLoadingVersion": {
+            "maximum": 10,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
+            "format": "int32",
+            "example": 1,
+            "default": 1
+          },
+          "topicName": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "type": "string",
+            "description": "Input topic name",
+            "example": "maps/sensors/gps"
+          },
+          "selector": {
+            "maxLength": 8192,
+            "minLength": 1,
+            "type": "string",
+            "description": "Optional JMS selector applied to events from this input topic",
+            "nullable": true,
+            "example": "speed > 10 AND region = 'AU'"
+          },
+          "transformer": {
+            "type": "array",
+            "description": "Transformer chain configuration (array of objects). Each entry specifies transformer name and parameters.",
+            "nullable": true,
+            "example": [
+              {
+                "name": "JsonQuery",
+                "parameters": {
+                  "query": "[\"object\",{\"latitude\":[\"divide\",[\"get\",\"payload\",\"decoded\",\"lat\"],10000000]}]"
+                }
+              }
+            ],
+            "items": { "$ref": "#/components/schemas/TransformationConfigDTO" }
+          },
+          "contributionMode": {
+            "type": "string",
+            "description": "Contribution policy for a single input within a window",
+            "nullable": true,
+            "example": "FIRST",
+            "enum": ["FIRST", "LAST", "FIRST", "LAST"],
+            "default": "LAST"
+          }
+        },
+        "description": "Per-input configuration for an Aggregator. Supports optional selector and transformer chain."
+      },
+      "AggregatorManagerConfigDTO": {
+        "required": ["aggregatorConfigList", "schemaLoadingVersion", "type"],
+        "type": "object",
+        "properties": {
+          "schemaLoadingVersion": {
+            "maximum": 10,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
+            "format": "int32",
+            "example": 1,
+            "default": 1
+          },
+          "type": {
+            "type": "string",
+            "description": "Discriminator for the concrete configuration manager DTO.",
+            "readOnly": true,
+            "example": "AuthManagerConfig"
+          },
+          "stripeCount": {
+            "maximum": 128,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Number of worker stripes (threads) used to run aggregators. 0 means auto (CPU heuristic).",
+            "format": "int32",
+            "example": 0,
+            "default": 0
+          },
+          "maxBatchPerAggregator": {
+            "maximum": 8192,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Maximum number of events to drain per aggregator per scheduler pass (fairness limit).",
+            "format": "int32",
+            "example": 128,
+            "default": 128
+          },
+          "idleSleepMs": {
+            "maximum": 1000,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Scheduler idle sleep in milliseconds when no work is detected.",
+            "format": "int32",
+            "example": 1,
+            "default": 1
+          },
+          "mailboxCapacity": {
+            "maximum": 1048576,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Default mailbox capacity for each aggregator (bounded safety buffer).",
+            "format": "int32",
+            "example": 8192,
+            "default": 8192
+          },
+          "maxAggregators": {
+            "maximum": 1000000,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Maximum number of aggregators allowed to be loaded (safety guardrail). 0 means unlimited.",
+            "format": "int32",
+            "example": 0,
+            "default": 0
+          },
+          "aggregatorConfigList": {
+            "minLength": 1,
+            "type": "array",
+            "description": "List of aggregator instance configurations",
+            "items": { "$ref": "#/components/schemas/AggregatorConfigDTO" }
+          },
+          "name": { "type": "string" }
+        },
+        "description": "Aggregator Manager Configuration DTO (Stage 1)"
+      },
       "AmqpConfigDTO": {
-        "required": ["type"],
+        "required": ["proxyProtocol", "schemaLoadingVersion", "type"],
         "type": "object",
         "description": "AMQP Protocol Configuration DTO",
         "allOf": [
@@ -5146,6 +5829,7 @@
       },
       "AuthConfigDTO": {
         "title": "Auth Configuration DTO",
+        "required": ["schemaLoadingVersion", "username"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -5154,11 +5838,11 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
           "username": {
+            "minLength": 1,
             "type": "string",
             "description": "Username for authentication",
             "example": "user123"
@@ -5166,22 +5850,26 @@
           "password": {
             "type": "string",
             "description": "Password for authentication",
+            "nullable": true,
             "example": "password"
           },
           "sessionId": {
             "type": "string",
             "description": "Session ID for the authentication session",
+            "nullable": true,
             "example": "session-xyz"
           },
           "tokenGenerator": {
             "type": "string",
             "description": "Token generator type",
+            "nullable": true,
             "example": "JWT"
           },
           "tokenConfig": {
             "type": "object",
             "additionalProperties": true,
             "description": "Configuration settings for the token generator",
+            "nullable": true,
             "example": { "expiry": 3600 }
           }
         },
@@ -5189,7 +5877,7 @@
         "nullable": true
       },
       "AuthManagerConfigDTO": {
-        "required": ["type"],
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -5198,7 +5886,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -5393,11 +6080,13 @@
             "nullable": true,
             "example": 2000,
             "default": 2000
-          }
+          },
+          "name": { "type": "string" }
         },
         "description": "Auth Manager Configuration DTO"
       },
       "AutoRefreshConfigDTO": {
+        "required": ["schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -5406,7 +6095,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -5430,7 +6118,7 @@
         "nullable": true
       },
       "BaseManagerConfigDTO": {
-        "required": ["type"],
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -5439,7 +6127,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -5448,11 +6135,13 @@
             "description": "Discriminator for the concrete configuration manager DTO.",
             "readOnly": true,
             "example": "AuthManagerConfig"
-          }
+          },
+          "name": { "type": "string" }
         },
         "description": "Base configuration DTO for configuration managers.",
         "discriminator": { "propertyName": "type" },
         "oneOf": [
+          { "$ref": "#/components/schemas/AggregatorManagerConfigDTO" },
           { "$ref": "#/components/schemas/NetworkConnectionManagerConfigDTO" },
           { "$ref": "#/components/schemas/RestApiManagerConfigDTO" },
           { "$ref": "#/components/schemas/RoutingManagerConfigDTO" },
@@ -5468,11 +6157,12 @@
           { "$ref": "#/components/schemas/LicenseManagerConfigDTO" },
           { "$ref": "#/components/schemas/SecurityManagerDTO" },
           { "$ref": "#/components/schemas/NetworkManagerConfigDTO" },
-          { "$ref": "#/components/schemas/DeviceManagerConfigDTO" }
+          { "$ref": "#/components/schemas/DeviceManagerConfigDTO" },
+          { "$ref": "#/components/schemas/TwinManagerConfigDTO" }
         ]
       },
       "BaseTriggerConfigDTO": {
-        "required": ["name", "type"],
+        "required": ["name", "schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -5481,7 +6171,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -5509,8 +6198,58 @@
           }
         }
       },
+      "CanAerospaceConfigDTO": {
+        "required": [
+          "proxyProtocol",
+          "schemaLoadingVersion",
+          "topicNameTemplate",
+          "type",
+          "unknownPacketTopic"
+        ],
+        "type": "object",
+        "description": "CANAerospace protocol configuration",
+        "allOf": [
+          { "$ref": "#/components/schemas/ProtocolConfigDTO" },
+          {
+            "type": "object",
+            "properties": {
+              "yamlPath": {
+                "minLength": 1,
+                "type": "string",
+                "description": "Optional path to an external CANAerospace YAML schema file. If omitted, the built-in schema bundled in the server is used.",
+                "nullable": true,
+                "example": "/etc/maps/canaerospace/canaerospace-schema.yaml"
+              },
+              "topicNameTemplate": {
+                "type": "string",
+                "description": "Topic name template used when publishing decoded CANAerospace messages. Supported placeholders: {candevice}, {messageName}.",
+                "example": "/{candevice}/{messageName}",
+                "default": "/{candevice}/{messageName}"
+              },
+              "unknownPacketTopic": {
+                "type": "string",
+                "description": "Topic used when publishing raw CANAerospace frames that could not be mapped to a decoded message name.",
+                "example": "/{candevice}/unknown",
+                "default": "/{candevice}/unknown"
+              },
+              "inboundTopicName": {
+                "type": "string",
+                "description": "Optional inbound topic subscription used to receive outbound CANAerospace messages for transmission onto the CAN bus.",
+                "nullable": true,
+                "example": "/can1/#"
+              },
+              "parseToJson": {
+                "type": "boolean",
+                "description": "Convert incoming CANAerospace frames into JSON using the configured schema. If false, raw binary CAN frames are published.",
+                "example": true,
+                "default": true
+              }
+            }
+          }
+        ]
+      },
       "CanbusConfigDTO": {
-        "required": ["deviceName", "type"],
+        "required": ["deviceName", "schemaLoadingVersion", "type"],
         "type": "object",
         "allOf": [
           { "$ref": "#/components/schemas/EndPointConfigDTO" },
@@ -5525,8 +6264,26 @@
           }
         ]
       },
+      "CloudEventEnvelopeTransformationDTO": {
+        "required": ["schemaLoadingVersion", "type"],
+        "type": "object",
+        "description": "Transformation DTO that converts JSON payloads into XML.",
+        "allOf": [{ "$ref": "#/components/schemas/TransformationConfigDTO" }]
+      },
+      "CloudEventJsonTransformationDTO": {
+        "required": ["schemaLoadingVersion", "type"],
+        "type": "object",
+        "description": "Transformation DTO that converts the message payload to JSON (when possible) and wraps it in a CloudEvents JSON structured event.",
+        "allOf": [{ "$ref": "#/components/schemas/TransformationConfigDTO" }]
+      },
+      "CloudEventNativeTransformationDTO": {
+        "required": ["schemaLoadingVersion", "type"],
+        "type": "object",
+        "description": "Transformation DTO that encodes the message payload as Base64 and wraps it in a CloudEvents native format event.",
+        "allOf": [{ "$ref": "#/components/schemas/TransformationConfigDTO" }]
+      },
       "CoapConfigDTO": {
-        "required": ["type"],
+        "required": ["proxyProtocol", "schemaLoadingVersion", "type"],
         "type": "object",
         "description": "CoAP Protocol Configuration DTO",
         "allOf": [
@@ -5564,7 +6321,12 @@
         "description": "Configuration object together with its JSON Schema (Draft 2020-12)."
       },
       "ConnectionAuthConfigDTO": {
-        "required": ["clientId", "password", "username"],
+        "required": [
+          "clientId",
+          "password",
+          "schemaLoadingVersion",
+          "username"
+        ],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -5573,7 +6335,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -5614,7 +6375,7 @@
         "nullable": true
       },
       "CronTriggerConfigDTO": {
-        "required": ["name", "type"],
+        "required": ["name", "schemaLoadingVersion", "type"],
         "type": "object",
         "description": "Cron Trigger Configuration DTO",
         "allOf": [
@@ -5633,7 +6394,13 @@
       },
       "DestinationConfigDTO": {
         "minimum": 1,
-        "required": ["directory", "namespace", "namespaceMapping", "type"],
+        "required": [
+          "directory",
+          "namespace",
+          "namespaceMapping",
+          "schemaLoadingVersion",
+          "type"
+        ],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -5642,7 +6409,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -5672,8 +6438,8 @@
             "type": "string",
             "description": "Type of destination",
             "example": "Partition",
-            "default": "Partition",
-            "enum": ["Partition", "Memory", "MemoryTier"]
+            "enum": ["Partition", "Memory", "MemoryTier"],
+            "default": "Partition"
           },
           "format": {
             "type": "object",
@@ -5711,7 +6477,7 @@
         "description": "Destination Configuration DTO"
       },
       "DestinationManagerConfigDTO": {
-        "required": ["data", "type"],
+        "required": ["data", "schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -5720,7 +6486,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -5735,12 +6500,13 @@
             "type": "array",
             "description": "List of destination configurations",
             "items": { "$ref": "#/components/schemas/DestinationConfigDTO" }
-          }
+          },
+          "name": { "type": "string" }
         },
         "description": "Destination Manager Configuration DTO"
       },
       "DeviceManagerConfigDTO": {
-        "required": ["enabled", "type"],
+        "required": ["enabled", "schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -5749,7 +6515,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -5789,7 +6554,8 @@
           "oneWireBus": { "$ref": "#/components/schemas/OneWireBusConfigDTO" },
           "serialDeviceBusConfig": {
             "$ref": "#/components/schemas/SerialBusConfigDTO"
-          }
+          },
+          "name": { "type": "string" }
         },
         "description": "Device Manager Configuration DTO"
       },
@@ -5799,6 +6565,7 @@
           "domainName",
           "enabled",
           "hostnames",
+          "schemaLoadingVersion",
           "type"
         ],
         "type": "object",
@@ -5809,7 +6576,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -5840,12 +6606,13 @@
             "type": "string",
             "description": "mDNS domain to advertise under. Commonly \"local\" (with or without leading/trailing dot).",
             "example": "local"
-          }
+          },
+          "name": { "type": "string" }
         },
         "description": "Discovery Manager (mDNS) configuration"
       },
       "DtlsConfigDTO": {
-        "required": ["type"],
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
         "description": "TLS Configuration DTO",
         "allOf": [
@@ -5888,7 +6655,7 @@
         ]
       },
       "EndPointConfigDTO": {
-        "required": ["type"],
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -5897,7 +6664,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -5955,11 +6721,11 @@
             "description": "Proxy Protocol support mode. 'ENABLED' allows but doesn't require it, 'REQUIRED' enforces it, 'DISABLED' will NOT check for incoming PROXY requests.",
             "nullable": true,
             "example": "REQUIRED",
-            "default": "DISABLED",
-            "enum": ["ENABLED", "DISABLED", "REQUIRED"]
+            "enum": ["ENABLED", "DISABLED", "REQUIRED"],
+            "default": "DISABLED"
           },
           "allowedProxyHosts": {
-            "pattern": "^\\s*[^,\\s][^,]*\\s*(?:,\\s*[^,\\s][^,]*\\s*)*$",
+            "pattern": "^(?:\\s*[^,\\s][^,]*\\s*(?:,\\s*[^,\\s][^,]*\\s*)*)?$",
             "type": "string",
             "description": "Comma-separated list of allowed proxy source addresses. Supports hostnames, IPv4/IPv6 addresses, and CIDR blocks (e.g., 192.168.0.0/24, ::1, example.com).",
             "nullable": true,
@@ -5974,7 +6740,8 @@
             "example": 5000
           }
         },
-        "description": "Abstract base class for all schema configurations",
+        "additionalProperties": true,
+        "description": "Abstract base class for all endpoint configurations",
         "discriminator": {
           "propertyName": "type",
           "mapping": {
@@ -5993,12 +6760,12 @@
       "EndPointConnectionServerConfigDTO": {
         "title": "Connection Configuration",
         "required": [
-          "authenticationRealm",
           "cost",
           "endPointConfig",
           "name",
           "pluginConnection",
           "protocolConfigs",
+          "schemaLoadingVersion",
           "url"
         ],
         "type": "object",
@@ -6009,7 +6776,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -6031,7 +6797,6 @@
           },
           "saslConfig": { "$ref": "#/components/schemas/SaslConfigDTO" },
           "protocolConfigs": {
-            "minLength": 1,
             "type": "array",
             "description": "List of protocol configurations for the endpoint",
             "items": { "$ref": "#/components/schemas/ProtocolConfigDTO" }
@@ -6039,6 +6804,7 @@
           "authenticationRealm": {
             "type": "string",
             "description": "Authentication realm",
+            "nullable": true,
             "example": "defaultRealm"
           },
           "backlog": {
@@ -6088,7 +6854,7 @@
           },
           "cost": {
             "maximum": 1000,
-            "minimum": 1,
+            "minimum": 0,
             "type": "integer",
             "description": "An arbitrary cost associated with using this connection (lower is preferred)",
             "format": "int32",
@@ -6100,17 +6866,18 @@
             "description": "Optional group name for this connection",
             "nullable": true,
             "example": "Main data uplink"
-          }
+          },
+          "willConfig": { "$ref": "#/components/schemas/MqttWillConfigDTO" }
         },
         "description": "Endpoint Connection Server Configuration DTO"
       },
       "EndPointServerConfigDTO": {
         "title": "EndPoint Server Configuration DTO",
         "required": [
-          "authenticationRealm",
           "endPointConfig",
           "name",
           "protocolConfigs",
+          "schemaLoadingVersion",
           "url"
         ],
         "type": "object",
@@ -6121,7 +6888,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -6143,7 +6909,6 @@
           },
           "saslConfig": { "$ref": "#/components/schemas/SaslConfigDTO" },
           "protocolConfigs": {
-            "minLength": 1,
             "type": "array",
             "description": "List of protocol configurations for the endpoint",
             "items": { "$ref": "#/components/schemas/ProtocolConfigDTO" }
@@ -6151,6 +6916,7 @@
           "authenticationRealm": {
             "type": "string",
             "description": "Authentication realm",
+            "nullable": true,
             "example": "defaultRealm"
           },
           "backlog": {
@@ -6177,30 +6943,43 @@
         "description": "Represents configuration settings for an endpoint server."
       },
       "ExtensionConfigDTO": {
-        "required": ["type"],
+        "title": "Extension Protocol Configuration DTO",
+        "required": [
+          "protocol",
+          "proxyProtocol",
+          "schemaLoadingVersion",
+          "type"
+        ],
         "type": "object",
+        "additionalProperties": true,
+        "description": "Generic protocol configuration for third-party integrations (e.g., IBM MQ, Pulsar, ROS). The 'config' object is intentionally untyped and may contain any JSON object structure.",
         "allOf": [
           { "$ref": "#/components/schemas/ProtocolConfigDTO" },
           {
             "type": "object",
             "properties": {
-              "config": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "description": "Map of config entries"
-                },
-                "description": "Map of config entries"
-              },
               "protocol": {
                 "type": "string",
-                "description": "name of the extension protocl"
+                "description": "Name of the extension protocol implementation (e.g., ibmmq, pulsar, ros).",
+                "example": "pulsar"
+              },
+              "config": {
+                "type": "object",
+                "additionalProperties": true,
+                "description": "Protocol-specific configuration object. This is intentionally untyped and may contain any JSON object structure.",
+                "nullable": true,
+                "example": {
+                  "url": "pulsar://localhost:6650",
+                  "tenant": "public",
+                  "namespace": "default"
+                }
               }
             }
           }
         ]
       },
       "FileConfig": {
+        "required": ["schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -6209,7 +6988,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -6223,7 +7001,7 @@
       },
       "FileRepositoryConfigDTO": {
         "title": "File Repository configuration",
-        "required": ["directoryPath", "type"],
+        "required": ["directoryPath", "schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -6232,7 +7010,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -6250,7 +7027,125 @@
         },
         "description": "Configuration details for the file-based schema repository. Used when repositoryType is set to 'File'."
       },
+      "GeoHashResolverTransformationDTO": {
+        "required": [
+          "layout",
+          "onMissing",
+          "precision",
+          "schemaLoadingVersion",
+          "type",
+          "units"
+        ],
+        "type": "object",
+        "description": "Transformation DTO that resolves destination topics based on geo-hash computed from message latitude/longitude.",
+        "allOf": [
+          { "$ref": "#/components/schemas/TransformationConfigDTO" },
+          {
+            "type": "object",
+            "properties": {
+              "prefix": {
+                "maxLength": 2048,
+                "type": "string",
+                "description": "Topic prefix for output destination name.",
+                "nullable": true,
+                "example": "maps/location"
+              },
+              "latKey": {
+                "maxLength": 2048,
+                "minLength": 1,
+                "type": "string",
+                "description": "Primary latitude key to read from IdentifierResolver.",
+                "nullable": true,
+                "example": "latitude"
+              },
+              "lonKey": {
+                "maxLength": 2048,
+                "minLength": 1,
+                "type": "string",
+                "description": "Primary longitude key to read from IdentifierResolver.",
+                "nullable": true,
+                "example": "longitude"
+              },
+              "precision": {
+                "maximum": 12,
+                "minimum": 1,
+                "type": "integer",
+                "description": "GeoHash precision (number of characters).",
+                "format": "int32",
+                "example": 5,
+                "default": 5
+              },
+              "latKeys": {
+                "type": "array",
+                "items": {
+                  "maxLength": 2048,
+                  "minLength": 1,
+                  "type": "string",
+                  "description": "Fallback latitude keys to try if latKey is missing.",
+                  "nullable": true,
+                  "example": "lat"
+                }
+              },
+              "lonKeys": {
+                "type": "array",
+                "items": {
+                  "maxLength": 2048,
+                  "minLength": 1,
+                  "type": "string",
+                  "description": "Fallback longitude keys to try if lonKey is missing.",
+                  "nullable": true,
+                  "example": "lon"
+                }
+              },
+              "units": {
+                "type": "string",
+                "description": "Units of the latitude/longitude values.",
+                "example": "deg",
+                "enum": ["DEG", "RAD", "E7", "MICROS"]
+              },
+              "layout": {
+                "type": "string",
+                "description": "How the geo-hash is represented in the output topic structure.",
+                "example": "chars-per-segment",
+                "enum": ["CHARS_PER_SEGMENT", "TWO_PER_SEGMENT", "RAW"]
+              },
+              "onMissing": {
+                "type": "string",
+                "description": "Behavior when latitude/longitude cannot be extracted.",
+                "example": "skip",
+                "enum": ["DROP", "SKIP", "DEFAULT_TO"]
+              },
+              "defaultLatitude": {
+                "maximum": 90,
+                "minimum": -90,
+                "type": "number",
+                "description": "Default latitude used only when onMissing is 'default-to'.",
+                "format": "double",
+                "nullable": true,
+                "example": 0.0
+              },
+              "defaultLongitude": {
+                "maximum": 180,
+                "minimum": -180,
+                "type": "number",
+                "description": "Default longitude used only when onMissing is 'default-to'.",
+                "format": "double",
+                "nullable": true,
+                "example": 0.0
+              },
+              "splitHash": {
+                "type": "boolean",
+                "description": "When true, geo-hash is split into topic segments. Deprecated in favour of 'layout'. If 'layout' is set, it takes precedence.",
+                "nullable": true,
+                "example": true,
+                "deprecated": true
+              }
+            }
+          }
+        ]
+      },
       "HmacConfigDTO": {
+        "required": ["schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -6259,7 +7154,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -6300,7 +7194,13 @@
         "description": "HMAC Configuration DTO"
       },
       "I2CBusConfigDTO": {
-        "required": ["bus", "enabled", "topicNameTemplate", "trigger"],
+        "required": [
+          "bus",
+          "enabled",
+          "schemaLoadingVersion",
+          "topicNameTemplate",
+          "trigger"
+        ],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -6309,7 +7209,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -6346,8 +7245,8 @@
             "type": "string",
             "description": "Filters raw value; depending on filter type will only send if there is a change or every trigger",
             "example": "ON_CHANGE",
-            "default": "ON_CHANGE",
-            "enum": ["ALWAYS_SEND", "ON_CHANGE"]
+            "enum": ["ALWAYS_SEND", "ON_CHANGE"],
+            "default": "ON_CHANGE"
           },
           "selector": {
             "type": "string",
@@ -6378,7 +7277,7 @@
         "nullable": true
       },
       "I2CDeviceConfigDTO": {
-        "required": ["address", "name"],
+        "required": ["address", "name", "schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -6387,7 +7286,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -6414,7 +7312,7 @@
         "description": "DTO for I2C Device configuration properties"
       },
       "InterruptTriggerConfigDTO": {
-        "required": ["name", "type"],
+        "required": ["name", "schemaLoadingVersion", "type"],
         "type": "object",
         "description": "Interrupt Trigger Configuration DTO",
         "allOf": [
@@ -6443,7 +7341,7 @@
         ]
       },
       "JolokiaConfigDTO": {
-        "required": ["enable", "type"],
+        "required": ["enable", "schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -6452,7 +7350,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -6480,12 +7377,284 @@
                 }
               ]
             }
-          }
+          },
+          "name": { "type": "string" }
         },
         "description": "Jolokia Configuration DTO"
       },
+      "JsonArray": {
+        "type": "object",
+        "properties": {
+          "asBigDecimal": { "type": "number" },
+          "asBigInteger": { "type": "integer" },
+          "asNumber": { "type": "number" },
+          "asString": { "type": "string" },
+          "asFloat": { "type": "number", "format": "float" },
+          "asByte": { "type": "string", "format": "byte" },
+          "asCharacter": { "type": "string" },
+          "asShort": { "type": "integer", "format": "int32" },
+          "empty": { "type": "boolean" },
+          "asDouble": { "type": "number", "format": "double" },
+          "asInt": { "type": "integer", "format": "int32" },
+          "asLong": { "type": "integer", "format": "int64" },
+          "asBoolean": { "type": "boolean" },
+          "jsonPrimitive": { "type": "boolean" },
+          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
+          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
+          "jsonObject": { "type": "boolean" },
+          "jsonArray": { "type": "boolean" },
+          "jsonNull": { "type": "boolean" },
+          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" },
+          "asJsonArray": { "$ref": "#/components/schemas/JsonArray" }
+        }
+      },
+      "JsonElement": {
+        "type": "object",
+        "properties": {
+          "jsonPrimitive": { "type": "boolean" },
+          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
+          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
+          "asBigDecimal": { "type": "number" },
+          "asBigInteger": { "type": "integer" },
+          "jsonObject": { "type": "boolean" },
+          "jsonArray": { "type": "boolean" },
+          "jsonNull": { "type": "boolean" },
+          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" },
+          "asJsonArray": { "$ref": "#/components/schemas/JsonArray" },
+          "asNumber": { "type": "number" },
+          "asString": { "type": "string" },
+          "asFloat": { "type": "number", "format": "float" },
+          "asByte": { "type": "string", "format": "byte" },
+          "asCharacter": { "type": "string" },
+          "asShort": { "type": "integer", "format": "int32" },
+          "asDouble": { "type": "number", "format": "double" },
+          "asInt": { "type": "integer", "format": "int32" },
+          "asLong": { "type": "integer", "format": "int64" },
+          "asBoolean": { "type": "boolean" }
+        },
+        "description": "Value for set. Stored as JSON element so it can be number/string/object/array.",
+        "nullable": true
+      },
+      "JsonMutateOpDTO": {
+        "title": "JSON Mutate Operation DTO",
+        "required": ["op"],
+        "type": "object",
+        "properties": {
+          "op": {
+            "type": "string",
+            "description": "Operation type",
+            "enum": ["SET", "REMOVE", "RENAME", "set", "remove", "rename"]
+          },
+          "path": {
+            "type": "string",
+            "description": "Target path for set/remove. Dot path with optional array indexes, e.g. payload.temp or payload.items[0].name",
+            "nullable": true,
+            "example": "payload.temperature"
+          },
+          "from": {
+            "type": "string",
+            "description": "Source path for rename",
+            "nullable": true,
+            "example": "payload.tempC"
+          },
+          "to": {
+            "type": "string",
+            "description": "Destination path for rename",
+            "nullable": true,
+            "example": "payload.temperatureC"
+          },
+          "value": { "$ref": "#/components/schemas/JsonElement" }
+        },
+        "description": "Single JSON mutation operation."
+      },
+      "JsonMutateTransformationDTO": {
+        "title": "JSON Mutate Transformation DTO",
+        "required": ["operations", "schemaLoadingVersion", "type"],
+        "type": "object",
+        "description": "Applies a small set of JSON mutations: set/remove/rename using dot paths.",
+        "allOf": [
+          { "$ref": "#/components/schemas/TransformationConfigDTO" },
+          {
+            "type": "object",
+            "properties": {
+              "operations": {
+                "minItems": 1,
+                "type": "array",
+                "description": "Ordered list of mutation operations",
+                "items": { "$ref": "#/components/schemas/JsonMutateOpDTO" }
+              }
+            }
+          }
+        ]
+      },
+      "JsonNull": {
+        "type": "object",
+        "properties": {
+          "jsonPrimitive": { "type": "boolean" },
+          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
+          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
+          "asBigDecimal": { "type": "number" },
+          "asBigInteger": { "type": "integer" },
+          "jsonObject": { "type": "boolean" },
+          "jsonArray": { "type": "boolean" },
+          "jsonNull": { "type": "boolean" },
+          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" },
+          "asJsonArray": { "$ref": "#/components/schemas/JsonArray" },
+          "asNumber": { "type": "number" },
+          "asString": { "type": "string" },
+          "asFloat": { "type": "number", "format": "float" },
+          "asByte": { "type": "string", "format": "byte" },
+          "asCharacter": { "type": "string" },
+          "asShort": { "type": "integer", "format": "int32" },
+          "asDouble": { "type": "number", "format": "double" },
+          "asInt": { "type": "integer", "format": "int32" },
+          "asLong": { "type": "integer", "format": "int64" },
+          "asBoolean": { "type": "boolean" }
+        }
+      },
+      "JsonObject": {
+        "type": "object",
+        "properties": {
+          "empty": { "type": "boolean" },
+          "jsonPrimitive": { "type": "boolean" },
+          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
+          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
+          "asBigDecimal": { "type": "number" },
+          "asBigInteger": { "type": "integer" },
+          "jsonObject": { "type": "boolean" },
+          "jsonArray": { "type": "boolean" },
+          "jsonNull": { "type": "boolean" },
+          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" },
+          "asJsonArray": { "$ref": "#/components/schemas/JsonArray" },
+          "asNumber": { "type": "number" },
+          "asString": { "type": "string" },
+          "asFloat": { "type": "number", "format": "float" },
+          "asByte": { "type": "string", "format": "byte" },
+          "asCharacter": { "type": "string" },
+          "asShort": { "type": "integer", "format": "int32" },
+          "asDouble": { "type": "number", "format": "double" },
+          "asInt": { "type": "integer", "format": "int32" },
+          "asLong": { "type": "integer", "format": "int64" },
+          "asBoolean": { "type": "boolean" }
+        },
+        "description": "Schema definition as JSON. Either schema or schemaBase64 must be provided.",
+        "nullable": true
+      },
+      "JsonPrimitive": {
+        "type": "object",
+        "properties": {
+          "asBigDecimal": { "type": "number" },
+          "asBigInteger": { "type": "integer" },
+          "asNumber": { "type": "number" },
+          "asString": { "type": "string" },
+          "asFloat": { "type": "number", "format": "float" },
+          "asByte": { "type": "string", "format": "byte" },
+          "asCharacter": { "type": "string" },
+          "asShort": { "type": "integer", "format": "int32" },
+          "boolean": { "type": "boolean" },
+          "string": { "type": "boolean" },
+          "number": { "type": "boolean" },
+          "asDouble": { "type": "number", "format": "double" },
+          "asInt": { "type": "integer", "format": "int32" },
+          "asLong": { "type": "integer", "format": "int64" },
+          "asBoolean": { "type": "boolean" },
+          "jsonPrimitive": { "type": "boolean" },
+          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
+          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
+          "jsonObject": { "type": "boolean" },
+          "jsonArray": { "type": "boolean" },
+          "jsonNull": { "type": "boolean" },
+          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" },
+          "asJsonArray": { "$ref": "#/components/schemas/JsonArray" }
+        }
+      },
+      "JsonQueryTransformationDTO": {
+        "required": ["schemaLoadingVersion", "type"],
+        "type": "object",
+        "description": "Transformation DTO that runs JsonQuery over incoming messages.",
+        "allOf": [
+          { "$ref": "#/components/schemas/TransformationConfigDTO" },
+          {
+            "type": "object",
+            "properties": {
+              "query": {
+                "maxLength": 65535,
+                "minLength": 1,
+                "type": "string",
+                "description": "JsonQuery program text or a JsonQuery AST represented as JSON. If null or blank, the transformer becomes a no-op.",
+                "nullable": true,
+                "example": "."
+              }
+            }
+          }
+        ]
+      },
+      "JsonToSchemaTransformationDTO": {
+        "required": ["schemaLoadingVersion", "type"],
+        "type": "object",
+        "description": "Transformation DTO allows a schema lookup to use to convert from json to the native schema format",
+        "allOf": [
+          { "$ref": "#/components/schemas/TransformationConfigDTO" },
+          {
+            "type": "object",
+            "properties": {
+              "schemaName": {
+                "maxLength": 512,
+                "minLength": 1,
+                "type": "string",
+                "description": "Exact schema name used to resolve the schema from the SchemaManager. This is the preferred and unambiguous lookup key. If provided, it takes precedence over format and messageName.",
+                "nullable": true,
+                "example": "base.location.Location"
+              },
+              "format": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string",
+                "description": "Schema format type used together with messageName to locate a schema when schemaName is not known. Examples include protobuf, avro, json-schema, xml, csv, or other registered schema formats. This field is ignored when schemaName is supplied.",
+                "nullable": true,
+                "example": "protobuf"
+              },
+              "messageName": {
+                "maxLength": 512,
+                "minLength": 1,
+                "type": "string",
+                "description": "Logical message name used together with format to locate a schema when schemaName is not supplied. This may be a simple message name such as Location or a fully qualified message name if required to avoid ambiguity. If multiple schemas match, schemaName must be provided.",
+                "nullable": true,
+                "example": "Location"
+              }
+            }
+          }
+        ]
+      },
+      "JsonToValueTransformationDTO": {
+        "required": ["schemaLoadingVersion", "type"],
+        "type": "object",
+        "description": "Transformation DTO that extracts a specific value from a JSON payload.",
+        "allOf": [
+          { "$ref": "#/components/schemas/TransformationConfigDTO" },
+          {
+            "type": "object",
+            "properties": {
+              "key": {
+                "maxLength": 2048,
+                "minLength": 1,
+                "type": "string",
+                "description": "Json path key used by JsonParserExtension to locate a value. If null, the transformer becomes a no-op and returns the original payload.",
+                "nullable": true,
+                "example": "data.temperature"
+              }
+            }
+          }
+        ]
+      },
+      "JsonToXmlTransformationDTO": {
+        "required": ["schemaLoadingVersion", "type"],
+        "type": "object",
+        "description": "Transformation DTO that converts JSON payloads into XML.",
+        "allOf": [{ "$ref": "#/components/schemas/TransformationConfigDTO" }]
+      },
       "KeyStoreConfigDTO": {
-        "required": ["type"],
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -6494,7 +7663,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -6508,8 +7676,16 @@
             "type": "string",
             "description": "Type of the key store",
             "example": "PKCS12",
-            "default": "PKCS12",
-            "enum": ["JKS", "PKCS11", "PKCS12", "JCEKS", "BKS", "UBER", "BCFKS"]
+            "enum": [
+              "JKS",
+              "PKCS11",
+              "PKCS12",
+              "JCEKS",
+              "BKS",
+              "UBER",
+              "BCFKS"
+            ],
+            "default": "PKCS12"
           },
           "providerName": {
             "type": "string",
@@ -6553,7 +7729,7 @@
         }
       },
       "LicenseManagerConfigDTO": {
-        "required": ["type"],
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -6562,7 +7738,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -6583,7 +7758,8 @@
             "description": "MAPS license secret retrived from Maps support",
             "nullable": true,
             "example": "license string"
-          }
+          },
+          "name": { "type": "string" }
         },
         "description": "License Management Configuration DTO"
       },
@@ -6592,7 +7768,8 @@
           "direction",
           "includeSchema",
           "localNamespace",
-          "remoteNamespace"
+          "remoteNamespace",
+          "schemaLoadingVersion"
         ],
         "type": "object",
         "properties": {
@@ -6602,7 +7779,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -6648,48 +7824,37 @@
                 }
               }
             ],
-            "items": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "object",
-                "description": "Transformer chain configuration (array of objects). Each entry specifies transformer name and parameters.",
-                "nullable": true,
-                "example": [
-                  {
-                    "name": "JsonQuery",
-                    "parameters": {
-                      "query": "[\"object\",{\"latitude\":[\"divide\",[\"get\",\"payload\",\"decoded\",\"lat\"],10000000]}]"
-                    }
-                  }
-                ]
-              },
-              "description": "Transformer chain configuration (array of objects). Each entry specifies transformer name and parameters.",
-              "nullable": true,
-              "example": [
-                {
-                  "name": "JsonQuery",
-                  "parameters": {
-                    "query": "[\"object\",{\"latitude\":[\"divide\",[\"get\",\"payload\",\"decoded\",\"lat\"],10000000]}]"
-                  }
-                }
-              ]
-            }
+            "items": { "$ref": "#/components/schemas/TransformationConfigDTO" }
           },
           "statistics": { "$ref": "#/components/schemas/StatisticsConfigDTO" },
           "namespaceFilters": {
-            "$ref": "#/components/schemas/NamespaceFilters"
+            "type": "array",
+            "description": "Specific filtering applied to namespaces",
+            "nullable": true,
+            "items": { "$ref": "#/components/schemas/NamespaceFilterDTO" }
           },
           "qualityOfService": {
             "type": "string",
-            "description": "Requested QoS for the link (0, 1, or 2). For non-MQTT links, 1 or 2 may imply transactional handling.",
+            "description": "Requested QoS for the link.",
             "nullable": true,
-            "example": "1",
+            "example": "AT_LEAST_ONCE",
             "enum": [
-              "QualityOfService.AT_MOST_ONCE(level=0, description=Best Effort, no guarantee of delivery, storeOffLine=false, sendPacketId=false, clientAcknowledgement=AUTO)",
-              "QualityOfService.AT_LEAST_ONCE(level=1, description=Guarantees at least once but may be duplicated delivery if connection fails between sending and Ack, storeOffLine=true, sendPacketId=true, clientAcknowledgement=INDIVIDUAL)",
-              "QualityOfService.EXACTLY_ONCE(level=2, description=Only once delivery, in that the event is delivered to the client once and once only, storeOffLine=true, sendPacketId=true, clientAcknowledgement=INDIVIDUAL)",
-              "QualityOfService.MQTT_SN_REGISTERED(level=3, description=Used by MQTT-SN to send publish events to a known topic without the need to have a connection established, this is reserved for MQTT-SN, storeOffLine=true, sendPacketId=false, clientAcknowledgement=AUTO)"
+              "AT_MOST_ONCE",
+              "AT_LEAST_ONCE",
+              "EXACTLY_ONCE",
+              "MQTT_SN_REGISTERED"
             ]
+          },
+          "linkProperties": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Link-specific properties for this individual namespace binding. These values are loaded from YAML and are intentionally untyped so protocol or handler specific settings can be supplied on a per-link basis. This map applies only to this link and may be used for remote or local subscription behaviour, topic-level handling, or protocol-specific options such as ROS2, IBM MQ, or Pulsar.",
+            "nullable": true,
+            "example": {
+              "url": "pulsar://localhost:6650",
+              "tenant": "public",
+              "namespace": "default"
+            }
           }
         },
         "description": "Link Configuration DTO",
@@ -6703,6 +7868,7 @@
         ]
       },
       "LlmConfigDTO": {
+        "required": ["schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -6711,7 +7877,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -6739,6 +7904,7 @@
           "frequency",
           "name",
           "power",
+          "schemaLoadingVersion",
           "transmissionRate",
           "type"
         ],
@@ -6805,7 +7971,7 @@
         ]
       },
       "LoRaDeviceConfigDTO": {
-        "required": ["frequency", "name"],
+        "required": ["frequency", "name", "schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -6814,7 +7980,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -6849,7 +8014,7 @@
         "x-maps-oneOfRequired": { "fields": "hardware,serialDevice" }
       },
       "LoRaDeviceManagerConfigDTO": {
-        "required": ["type"],
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -6858,7 +8023,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -6873,12 +8037,13 @@
             "description": "List of LoRa device configurations",
             "nullable": true,
             "items": { "$ref": "#/components/schemas/LoRaDeviceConfigDTO" }
-          }
+          },
+          "name": { "type": "string" }
         },
         "description": "LoRa Device Management Configuration DTO"
       },
       "LoRaHardwareConfigDTO": {
-        "required": ["cadTimeout", "cs", "irq", "rst"],
+        "required": ["cadTimeout", "cs", "irq", "rst", "schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -6887,7 +8052,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -6932,7 +8096,7 @@
         "description": "configures the LoRa device"
       },
       "LoRaProtocolConfigDTO": {
-        "required": ["type"],
+        "required": ["proxyProtocol", "schemaLoadingVersion", "type"],
         "type": "object",
         "description": "LoRa Protocol Configuration DTO",
         "allOf": [
@@ -6956,6 +8120,7 @@
           "frequency",
           "name",
           "power",
+          "schemaLoadingVersion",
           "transmissionRate",
           "type"
         ],
@@ -7015,7 +8180,13 @@
         ]
       },
       "MLEventStreamDTO": {
-        "required": ["id", "outlierTopic", "schemaId", "topicFilter"],
+        "required": [
+          "id",
+          "outlierTopic",
+          "schemaId",
+          "schemaLoadingVersion",
+          "topicFilter"
+        ],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -7024,7 +8195,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -7089,7 +8259,7 @@
         "example": []
       },
       "MLModelManagerDTO": {
-        "required": ["type"],
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -7098,7 +8268,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -7152,11 +8321,13 @@
             "description": "List of configured model event streams",
             "example": [],
             "items": { "$ref": "#/components/schemas/MLEventStreamDTO" }
-          }
+          },
+          "name": { "type": "string" }
         },
         "description": "Machine Learning Model Manager configuration"
       },
       "MapsConfig": {
+        "required": ["schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -7165,7 +8336,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -7189,7 +8359,7 @@
       },
       "MapsRepositoryConfigDTO": {
         "title": "Maps Repository configuration",
-        "required": ["type"],
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -7198,7 +8368,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -7242,9 +8411,15 @@
         "description": "Configuration details for the MapsMessaging-based repository. Used when repositoryType is set to 'Maps'."
       },
       "MavlinkConfigDTO": {
-        "required": ["topicNameTemplate", "type"],
+        "required": [
+          "proxyProtocol",
+          "schemaLoadingVersion",
+          "statusTopicNameTemplate",
+          "topicNameTemplate",
+          "type"
+        ],
         "type": "object",
-        "description": "MAVLink protocol configuration. Controls session handling, topic mapping, JSON conversion, and optional frame forwarding.",
+        "description": "MAVLink protocol configuration. Controls session handling, topic mapping, JSON conversion, source filtering, message filtering, raw frame forwarding, and rejected frame DLQ publishing.",
         "allOf": [
           { "$ref": "#/components/schemas/ProtocolConfigDTO" },
           {
@@ -7298,9 +8473,15 @@
               },
               "topicNameTemplate": {
                 "type": "string",
-                "description": "Topic name template used when publishing decoded MAVLink messages. Supported placeholders: {remoteSocket}, {systemId}, {componentId}, {messageName}.",
+                "description": "Topic name template used when publishing decoded MAVLink messages. Supported placeholders: {remoteSocket}, {systemId}, {systemName}, {componentId}, {messageName}.",
                 "example": "/{remoteSocket}/{systemId}/{componentId}/{messageName}",
                 "default": "/{remoteSocket}/{systemId}/{componentId}/{messageName}"
+              },
+              "statusTopicNameTemplate": {
+                "type": "string",
+                "description": "Topic name template used when publishing MAVLink session state changes induced when sequence number monitor detects issues. Supported placeholders: {remoteSocket}, {systemId}, {systemName}, {componentId}, {messageName}.",
+                "example": "/{remoteSocket}/{systemId}/{componentId}/{messageName}",
+                "default": "/{remoteSocket}/{systemId}/{componentId}/{messageName}/status"
               },
               "parseToJson": {
                 "type": "boolean",
@@ -7321,6 +8502,13 @@
                 "example": true,
                 "default": true
               },
+              "forwardRejectedRawFrames": {
+                "type": "boolean",
+                "description": "If true, frames rejected by source or message filtering are forwarded as raw MAVLink frames to the configured forwardUrls. This allows other MAVLink systems to receive frames even when this server chooses not to parse or publish them locally.",
+                "nullable": true,
+                "example": false,
+                "default": false
+              },
               "dropIfTargetEqualsSource": {
                 "type": "boolean",
                 "description": "Prevent forwarding a MAVLink packet back to its source address and port if that address is present in forwardUrls.",
@@ -7337,13 +8525,108 @@
                 "nullable": true,
                 "example": 0,
                 "default": 0
+              },
+              "acceptedMessageIds": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "description": "Global allow-list of MAVLink message IDs. If empty, all MAVLink message IDs are accepted unless explicitly rejected by rejectedMessageIds. If populated, only message IDs in this list are accepted.",
+                  "format": "int32"
+                }
+              },
+              "rejectedMessageIds": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "description": "Global reject-list of MAVLink message IDs. Applied after acceptedMessageIds. If empty, no message IDs are explicitly rejected.",
+                  "format": "int32"
+                }
+              },
+              "knownSources": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MavlinkKnownSourceDTO"
+                }
+              },
+              "rejectUnknownSources": {
+                "type": "boolean",
+                "description": "If true, only MAVLink sources listed in knownSources are accepted. Frames from unknown systemId/componentId pairs are rejected. If false, unknown sources are accepted and knownSources entries are used only for metadata and filtering overrides.",
+                "nullable": true,
+                "example": false,
+                "default": false
+              },
+              "rejectedFrameNamespace": {
+                "type": "string",
+                "description": "Namespace used when publishing rejected MAVLink frames. The rejection reason may be appended as a child topic (for example: /protocol/mavlink/dlq/message-id-not-accepted).",
+                "example": "/protocol/mavlink/dlq",
+                "default": "/protocol/mavlink/dlq"
+              },
+              "includeRejectedFrameMetadata": {
+                "type": "boolean",
+                "description": "If true, rejected frame events include metadata such as source address, systemId, componentId, messageId, and rejection reason in addition to the raw MAVLink frame payload.",
+                "nullable": true,
+                "example": true,
+                "default": true
               }
             }
           }
         ]
       },
+      "MavlinkKnownSourceDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Friendly name for the source.",
+            "example": "drone-1"
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional source description.",
+            "example": "Primary aircraft autopilot"
+          },
+          "systemId": {
+            "maximum": 255,
+            "minimum": 1,
+            "type": "integer",
+            "description": "MAVLink system ID.",
+            "format": "int32",
+            "example": 1
+          },
+          "componentId": {
+            "maximum": 255,
+            "minimum": 0,
+            "type": "integer",
+            "description": "MAVLink component ID.",
+            "format": "int32",
+            "example": 1
+          },
+          "vehicleClass": {
+            "type": "string",
+            "description": "Vehicle class (UAV=air, USV=surface, UGV=ground, UUV=underwater, GCS=control).",
+            "enum": ["UAV", "USV", "UGV", "UUV", "GCS"]
+          },
+          "acceptedMessageIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "description": "Per-source allow-list of message IDs.",
+              "format": "int32"
+            }
+          },
+          "rejectedMessageIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "description": "Per-source reject-list of message IDs.",
+              "format": "int32"
+            }
+          }
+        },
+        "description": "Known MAVLink source definition."
+      },
       "MessageDaemonConfigDTO": {
-        "required": ["type"],
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -7352,7 +8635,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -7491,11 +8773,13 @@
             "nullable": true,
             "example": true,
             "default": false
-          }
+          },
+          "name": { "type": "string" }
         },
         "description": "Message Daemon Configuration DTO"
       },
       "MessageOverrideDTO": {
+        "required": ["schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -7504,7 +8788,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -7602,6 +8885,7 @@
         "default": {}
       },
       "ModelStoreConfigDTO": {
+        "required": ["schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -7610,7 +8894,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -7618,8 +8901,8 @@
             "type": "string",
             "description": "Type of model store",
             "example": "s3",
-            "default": "file",
-            "enum": ["s3", "file", "nexus", "maps"]
+            "enum": ["s3", "file", "nexus", "maps"],
+            "default": "file"
           },
           "config": { "$ref": "#/components/schemas/ModelStoreConfigBlockDTO" }
         },
@@ -7627,7 +8910,7 @@
         "nullable": true
       },
       "MqttConfigDTO": {
-        "required": ["type"],
+        "required": ["proxyProtocol", "schemaLoadingVersion", "type"],
         "type": "object",
         "description": "MQTT Protocol Configuration DTO",
         "allOf": [
@@ -7693,7 +8976,7 @@
         ]
       },
       "MqttSnConfigDTO": {
-        "required": ["type"],
+        "required": ["proxyProtocol", "schemaLoadingVersion", "type"],
         "type": "object",
         "description": "MQTT-SN Protocol Configuration DTO",
         "allOf": [
@@ -7781,30 +9064,187 @@
           }
         ]
       },
-      "NamespaceFilter": {
+      "MqttWillConfigDTO": {
+        "required": ["schemaLoadingVersion", "topic"],
         "type": "object",
         "properties": {
-          "namespace": { "type": "string" },
-          "depth": { "type": "integer", "format": "int32" },
-          "selector": { "type": "string" },
-          "forcePriority": { "type": "boolean" },
-          "executor": { "$ref": "#/components/schemas/ParserExecutor" }
-        }
-      },
-      "NamespaceFilters": {
-        "type": "object",
-        "properties": {
-          "allFilters": {
-            "type": "array",
-            "items": { "$ref": "#/components/schemas/NamespaceFilter" }
+          "schemaLoadingVersion": {
+            "maximum": 10,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
+            "format": "int32",
+            "example": 1,
+            "default": 1
+          },
+          "topic": {
+            "type": "string",
+            "description": "Topic to publish the Will message to",
+            "example": "system/bridge/client1/status"
+          },
+          "payload": {
+            "type": "string",
+            "description": "Payload to publish when the Will is triggered",
+            "nullable": true,
+            "example": "{\"status\":\"offline\"}"
+          },
+          "payloadEncoding": {
+            "type": "string",
+            "description": "Payload encoding type (string or base64)",
+            "example": "string",
+            "enum": ["string", "base64"],
+            "default": "string"
+          },
+          "qos": {
+            "maximum": 2,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Quality of Service level for the Will message (0, 1, or 2)",
+            "format": "int32",
+            "example": 1,
+            "default": 0
+          },
+          "retain": {
+            "type": "boolean",
+            "description": "Retain flag for the Will message",
+            "example": true,
+            "default": false
+          },
+          "delayInterval": {
+            "minimum": 0,
+            "type": "integer",
+            "description": "MQTT v5 Will Delay Interval in seconds before publishing the Will",
+            "format": "int32",
+            "example": 15,
+            "default": 0
+          },
+          "messageExpiryInterval": {
+            "minimum": 0,
+            "type": "integer",
+            "description": "MQTT v5 Message Expiry Interval in seconds",
+            "format": "int64",
+            "example": 300,
+            "default": 0
+          },
+          "contentType": {
+            "type": "string",
+            "description": "MQTT v5 Content Type of the Will message",
+            "nullable": true,
+            "example": "application/json"
+          },
+          "payloadFormatIndicator": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "integer",
+            "description": "MQTT v5 Payload Format Indicator (0 = unspecified, 1 = UTF-8)",
+            "format": "int32",
+            "example": 1,
+            "default": 0
           }
         },
-        "description": "Specific filtering applied to namespaces",
+        "description": "MQTT Last Will and Testament (LWT) configuration",
+        "nullable": true
+      },
+      "N2KConfigDTO": {
+        "required": [
+          "proxyProtocol",
+          "schemaLoadingVersion",
+          "topicNameTemplate",
+          "type",
+          "unknownPacketTopic"
+        ],
+        "type": "object",
+        "description": "N2K protocol configuration. Controls session handling, topic mapping, JSON conversion, and optional frame forwarding.",
+        "allOf": [
+          { "$ref": "#/components/schemas/ProtocolConfigDTO" },
+          {
+            "type": "object",
+            "properties": {
+              "databasePath": {
+                "minLength": 1,
+                "type": "string",
+                "description": "Optional path to an external NMEA 2000 database file. If omitted, the built-in database bundled in the server JAR is used.",
+                "nullable": true,
+                "example": "/etc/maps/n2k/n2k-database.xml"
+              },
+              "base64EncodedDatabase": {
+                "minLength": 1,
+                "type": "string",
+                "description": "Optional XML definition to use encoded as base64",
+                "nullable": true
+              },
+              "topicNameTemplate": {
+                "type": "string",
+                "description": "Topic name template used when publishing decoded NMEA 2000 (N2K) messages. Supported placeholders: {candevice}, {pgn}, {messageName}.",
+                "example": "/{candevice}/{pgn}/{messageName}",
+                "default": "/{candevice}/{pgn}/{messageName}"
+              },
+              "unknownPacketTopic": {
+                "type": "string",
+                "description": "Topic to which raw CAN/NMEA 2000 frames are published when the PGN or message type is unknown. ",
+                "example": "/{candevice}/unknown",
+                "default": "/{candevice}/"
+              },
+              "inboundTopicName": {
+                "type": "string",
+                "description": "Topic to which raw CAN/NMEA 2000 frames are published when the PGN or message type is unknown. ",
+                "nullable": true,
+                "example": "/can1/#"
+              },
+              "parseToJson": {
+                "type": "boolean",
+                "description": "Convert incoming CANBUS frames into JSON using the registered N2K message definitions. If false, raw binary frames are published.",
+                "nullable": true,
+                "example": true,
+                "default": true
+              },
+              "publishMavlinkDrones": {
+                "type": "boolean",
+                "description": "Monitors and publishes the mavlink drone position and details as AIS N2K events",
+                "nullable": true,
+                "example": true,
+                "default": true
+              }
+            }
+          }
+        ]
+      },
+      "NamespaceFilterDTO": {
+        "title": "Namespace Filter",
+        "required": ["depth", "namespace", "selector"],
+        "type": "object",
+        "properties": {
+          "namespace": {
+            "type": "string",
+            "description": "Namespace to which the filter applies",
+            "example": "root/system"
+          },
+          "depth": {
+            "minimum": 0,
+            "type": "integer",
+            "description": "Depth to which the namespace filter applies",
+            "format": "int32",
+            "example": 3
+          },
+          "selector": {
+            "type": "string",
+            "description": "Selector expression applied to the namespace",
+            "example": "state = ACTIVE"
+          },
+          "forcePriority": {
+            "type": "boolean",
+            "description": "Forces this filter to take priority over others",
+            "example": false,
+            "default": false
+          }
+        },
+        "description": "Defines filtering rules applied to a namespace, including depth and selector evaluation.",
         "nullable": true
       },
       "NatsConfigDTO": {
-        "required": ["type"],
+        "required": ["proxyProtocol", "schemaLoadingVersion", "type"],
         "type": "object",
+        "additionalProperties": true,
         "description": "NATS Protocol Configuration DTO",
         "allOf": [
           { "$ref": "#/components/schemas/ProtocolConfigDTO" },
@@ -7859,7 +9299,7 @@
         ]
       },
       "NetworkConnectionManagerConfigDTO": {
-        "required": ["type"],
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -7868,7 +9308,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -7885,12 +9324,17 @@
             "items": {
               "$ref": "#/components/schemas/EndPointConnectionServerConfigDTO"
             }
-          }
+          },
+          "name": { "type": "string" }
         },
         "description": "Network Connection Manager Configuration DTO"
       },
       "NetworkManagerConfigDTO": {
-        "required": ["endPointServerConfigList", "type"],
+        "required": [
+          "endPointServerConfigList",
+          "schemaLoadingVersion",
+          "type"
+        ],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -7899,7 +9343,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -7938,11 +9381,13 @@
             "type": "array",
             "description": "List of endpoint server configurations",
             "items": { "$ref": "#/components/schemas/EndPointServerConfigDTO" }
-          }
+          },
+          "name": { "type": "string" }
         },
         "description": "Network Manager Configuration DTO"
       },
       "NexusConfig": {
+        "required": ["schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -7951,7 +9396,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -7974,7 +9418,7 @@
         "description": "Nexus repository configuration for the model store"
       },
       "NmeaConfigDTO": {
-        "required": ["type"],
+        "required": ["proxyProtocol", "schemaLoadingVersion", "type"],
         "type": "object",
         "description": "NMEA Protocol Configuration DTO",
         "allOf": [
@@ -7988,7 +9432,7 @@
         ]
       },
       "OneWireBusConfigDTO": {
-        "required": ["enabled", "topicNameTemplate"],
+        "required": ["enabled", "schemaLoadingVersion", "topicNameTemplate"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -7997,7 +9441,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -8034,8 +9477,8 @@
             "type": "string",
             "description": "Filters raw value; depending on filter type will only send if there is a change or every trigger",
             "example": "ON_CHANGE",
-            "default": "ON_CHANGE",
-            "enum": ["ALWAYS_SEND", "ON_CHANGE"]
+            "enum": ["ALWAYS_SEND", "ON_CHANGE"],
+            "default": "ON_CHANGE"
           },
           "selector": {
             "type": "string",
@@ -8057,9 +9500,8 @@
         "description": "OneWire Bus Configuration DTO",
         "nullable": true
       },
-      "ParserExecutor": { "type": "object" },
       "PeriodicTriggerConfigDTO": {
-        "required": ["name", "type"],
+        "required": ["name", "schemaLoadingVersion", "type"],
         "type": "object",
         "description": "Periodic Trigger Configuration DTO",
         "allOf": [
@@ -8078,7 +9520,7 @@
         ]
       },
       "PredefinedServerConfigDTO": {
-        "required": ["name", "url"],
+        "required": ["name", "schemaLoadingVersion", "url"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -8087,7 +9529,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -8107,6 +9548,7 @@
         "example": []
       },
       "PredefinedTopics": {
+        "required": ["schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -8115,7 +9557,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -8139,8 +9580,7 @@
         "description": "List of predefined topics"
       },
       "ProtocolConfigDTO": {
-        "minLength": 1,
-        "required": ["type"],
+        "required": ["proxyProtocol", "schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -8149,7 +9589,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -8172,13 +9611,14 @@
               "stomp",
               "ws",
               "mavlink",
-              "extension"
+              "extension",
+              "n2k",
+              "canaerospace"
             ]
           },
           "proxyProtocol": {
             "type": "boolean",
             "description": "Enable support for the PROXY protocol (v1/v2) on incoming connections",
-            "nullable": true,
             "example": false,
             "default": false
           },
@@ -8189,6 +9629,7 @@
             "$ref": "#/components/schemas/MessageOverrideDTO"
           }
         },
+        "additionalProperties": true,
         "description": "Abstract base class for all protocol configurations",
         "discriminator": {
           "propertyName": "type",
@@ -8209,12 +9650,14 @@
             "stomp": "#/components/schemas/StompConfigDTO",
             "ws": "#/components/schemas/WebSocketConfigDTO",
             "nats": "#/components/schemas/NatsConfigDTO",
-            "extension": "#/components/schemas/ExtensionConfigDTO"
+            "extension": "#/components/schemas/ExtensionConfigDTO",
+            "n2k": "#/components/schemas/N2KConfigDTO",
+            "canaerospace": "#/components/schemas/CanAerospaceConfigDTO"
           }
         }
       },
       "RepositoryConfigDTO": {
-        "required": ["type"],
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -8223,7 +9666,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -8235,6 +9677,7 @@
           }
         },
         "description": "Repository-specific configuration object. Concrete schema is selected by the 'type' discriminator.",
+        "example": "file",
         "oneOf": [
           { "$ref": "#/components/schemas/SimpleRepositoryConfigDTO" },
           { "$ref": "#/components/schemas/FileRepositoryConfigDTO" },
@@ -8257,6 +9700,7 @@
           "enabled",
           "hostnames",
           "port",
+          "schemaLoadingVersion",
           "type"
         ],
         "type": "object",
@@ -8267,7 +9711,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -8433,12 +9876,13 @@
           },
           "tlsConfig": { "$ref": "#/components/schemas/TlsConfig" },
           "staticConfig": { "$ref": "#/components/schemas/StaticConfig" },
-          "corsHeaders": { "$ref": "#/components/schemas/CorsHeaders" }
+          "corsHeaders": { "$ref": "#/components/schemas/CorsHeaders" },
+          "name": { "type": "string" }
         },
         "description": "Rest API Configuration DTO"
       },
       "RoutingManagerConfigDTO": {
-        "required": ["type"],
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -8447,7 +9891,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -8476,11 +9919,13 @@
             "items": {
               "$ref": "#/components/schemas/PredefinedServerConfigDTO"
             }
-          }
+          },
+          "name": { "type": "string" }
         },
         "description": "Routing Manager Configuration DTO"
       },
       "S3Config": {
+        "required": ["schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -8489,7 +9934,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -8533,7 +9977,12 @@
       },
       "SaslConfigDTO": {
         "title": "SASL Configuration DTO",
-        "required": ["identityProvider", "mechanism", "realmName"],
+        "required": [
+          "identityProvider",
+          "mechanism",
+          "realmName",
+          "schemaLoadingVersion"
+        ],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -8542,7 +9991,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -8573,7 +10021,7 @@
         "nullable": true
       },
       "SatelliteConfigDTO": {
-        "required": ["type"],
+        "required": ["proxyProtocol", "schemaLoadingVersion", "type"],
         "type": "object",
         "description": "Base Satellite Configuration DTO",
         "allOf": [
@@ -8584,14 +10032,14 @@
               "incomingMessagePollInterval": {
                 "type": "integer",
                 "description": "Time in seconds to poll the modem for incoming messages",
-                "format": "int64",
+                "format": "int32",
                 "example": 15,
                 "default": 10
               },
               "outgoingMessagePollInterval": {
                 "type": "integer",
                 "description": "Time in seconds to poll for outgoing messages",
-                "format": "int64",
+                "format": "int32",
                 "example": 60,
                 "default": 60
               },
@@ -8607,7 +10055,7 @@
                 "description": "minimum sized buffer that will be compressed",
                 "format": "int32",
                 "example": 512,
-                "default": 256
+                "default": 128
               },
               "messageLifeTimeInMinutes": {
                 "type": "integer",
@@ -8663,14 +10111,14 @@
               "mapsInboundPublishRoot": {
                 "type": "string",
                 "description": "Topic template for publishing decoded MAPS (SIN 147) inbound messages into a namespace tree (after parsing).",
-                "example": "/{deviceId}/maps/in/{namespace}/#",
-                "default": "/{deviceId}/maps/in/{namespace}/#"
+                "example": "/{deviceId}/maps/in",
+                "default": "/{deviceId}/maps/in"
               },
               "mapsOutboundPublishRoot": {
                 "type": "string",
                 "description": "Topic template for accepting outbound MAPS (SIN 147) messages from a namespace tree to be encoded and sent to the modem.",
-                "example": "/{deviceId}/maps/out/{namespace}/#",
-                "default": "/{deviceId}/maps/out/{namespace}/#"
+                "example": "/{deviceId}/maps/out",
+                "default": "/{deviceId}/maps/out"
               },
               "outboundBroadcast": {
                 "type": "string",
@@ -8693,13 +10141,38 @@
         ]
       },
       "SatelliteEndPointDTO": {
-        "required": ["type"],
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
         "allOf": [{ "$ref": "#/components/schemas/EndPointConfigDTO" }]
       },
+      "SchemaImportLocationDTO": {
+        "title": "Schema Import Location",
+        "required": ["format", "name", "path"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name to apply to the schema when loaded",
+            "example": "protobuf_schema_1"
+          },
+          "path": {
+            "type": "string",
+            "description": "Directory path containing schema files",
+            "example": "/opt/schema/protobuf"
+          },
+          "format": {
+            "type": "string",
+            "description": "Schema format contained in the directory",
+            "example": "protobuf",
+            "enum": ["protobuf", "json"]
+          }
+        },
+        "description": "Defines a directory path and the schema format to load from that directory",
+        "nullable": true
+      },
       "SchemaManagerConfigDTO": {
         "title": "Schema Manager config",
-        "required": ["repositoryConfig", "type"],
+        "required": ["repositoryConfig", "schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -8708,7 +10181,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -8720,13 +10192,33 @@
           },
           "repositoryConfig": {
             "$ref": "#/components/schemas/RepositoryConfigDTO"
-          }
+          },
+          "protocPath": {
+            "type": "string",
+            "description": "Optional path to the protoc compiler executable. If not supplied the system PATH will be used.",
+            "nullable": true,
+            "example": "/usr/local/bin/protoc"
+          },
+          "importLocations": {
+            "type": "array",
+            "description": "List of directories that are scanned for schema source files such as protobuf or JSON schemas. These schemas are loaded and exposed as built-in or well-known schemas.",
+            "nullable": true,
+            "items": { "$ref": "#/components/schemas/SchemaImportLocationDTO" }
+          },
+          "parseMode": {
+            "type": "string",
+            "description": "Defines how schema parsing errors are handled. IGNORE keeps current behaviour and suppresses parse errors, STRICT throws an error.",
+            "example": "IGNORE",
+            "enum": ["IGNORE", "STRICT"],
+            "default": "IGNORE"
+          },
+          "name": { "type": "string" }
         },
         "description": "Configures the schema manager on where it can find and store schemas"
       },
       "SecurityManagerDTO": {
         "title": "Security Manager",
-        "required": ["map", "type"],
+        "required": ["map", "schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -8735,7 +10227,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -8754,12 +10245,13 @@
               "default": "PublicAuthConfig",
               "Default": "PublicAuthConfig"
             }
-          }
+          },
+          "name": { "type": "string" }
         },
         "description": "Mapping between auth config names and JAAS configuration names"
       },
       "SemtechConfigDTO": {
-        "required": ["type"],
+        "required": ["proxyProtocol", "schemaLoadingVersion", "type"],
         "type": "object",
         "description": "Semtech Protocol Configuration DTO",
         "allOf": [
@@ -8769,34 +10261,92 @@
             "properties": {
               "maxQueued": {
                 "type": "integer",
-                "description": "Maximum queue size for Semtech",
+                "description": "Maximum queue size for Semtech outbound messages per gateway",
                 "format": "int32",
                 "example": 10
               },
               "inboundTopicName": {
                 "type": "string",
                 "description": "Inbound topic name for Semtech messages",
-                "example": "/semtech/inbound"
+                "example": "/semtech/inbound/{gatewayId}"
               },
               "outboundTopicName": {
                 "type": "string",
                 "description": "Outbound topic name for Semtech messages",
-                "example": "/semtech/outbound"
+                "example": "/semtech/outbound/{gatewayId}"
+              },
+              "telemetryTopicName": {
+                "type": "string",
+                "description": "Telemetry data from the gateway (Semtech stat packet)",
+                "example": "/semtech/telemetry/{gatewayId}"
               },
               "statusTopicName": {
                 "type": "string",
-                "description": "Status topic name for Semtech",
-                "example": "/semtech/status"
+                "description": "Link status for the gateway (Maps internal state changes only)",
+                "example": "/semtech/status/{gatewayId}"
+              },
+              "transmitDefaults": {
+                "$ref": "#/components/schemas/SemtechTransmitDefaultsDTO"
               }
             }
           }
         ]
+      },
+      "SemtechTransmitDefaultsDTO": {
+        "type": "object",
+        "properties": {
+          "imme": {
+            "type": "boolean",
+            "description": "Transmit immediately (no scheduling)",
+            "example": true
+          },
+          "freq": {
+            "type": "number",
+            "description": "Transmit frequency in MHz",
+            "format": "double",
+            "example": 866.349812
+          },
+          "rfch": {
+            "type": "integer",
+            "description": "RF chain to use",
+            "format": "int32",
+            "example": 0
+          },
+          "powe": {
+            "type": "integer",
+            "description": "Transmit power in dBm",
+            "format": "int32",
+            "example": 14
+          },
+          "modu": {
+            "type": "string",
+            "description": "Modulation (LORA or FSK)",
+            "example": "LORA"
+          },
+          "datr": {
+            "type": "string",
+            "description": "LoRa datarate string (e.g., SF7BW125). For Semtech packet forwarder, datr is a string.",
+            "example": "SF7BW125"
+          },
+          "codr": {
+            "type": "string",
+            "description": "LoRa coding rate (e.g., 4/5)",
+            "example": "4/5"
+          },
+          "ipol": {
+            "type": "boolean",
+            "description": "Invert polarization (recommended true for LoRaWAN downlinks)",
+            "example": true
+          }
+        },
+        "description": "Default transmit parameters for Semtech PULL_RESP (txpk) when outbound payload is not already Semtech JSON."
       },
       "SerialBusConfigDTO": {
         "required": [
           "devices",
           "enabled",
           "name",
+          "schemaLoadingVersion",
           "topicNameTemplate",
           "trigger"
         ],
@@ -8808,7 +10358,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -8845,8 +10394,8 @@
             "type": "string",
             "description": "Filters raw value; depending on filter type will only send if there is a change or every trigger",
             "example": "ON_CHANGE",
-            "default": "ON_CHANGE",
-            "enum": ["ALWAYS_SEND", "ON_CHANGE"]
+            "enum": ["ALWAYS_SEND", "ON_CHANGE"],
+            "default": "ON_CHANGE"
           },
           "selector": {
             "type": "string",
@@ -8878,6 +10427,7 @@
           "enabled",
           "name",
           "readTimeOut",
+          "schemaLoadingVersion",
           "serialConfig",
           "topicNameTemplate"
         ],
@@ -8889,7 +10439,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -8926,8 +10475,8 @@
             "type": "string",
             "description": "Filters raw value; depending on filter type will only send if there is a change or every trigger",
             "example": "ON_CHANGE",
-            "default": "ON_CHANGE",
-            "enum": ["ALWAYS_SEND", "ON_CHANGE"]
+            "enum": ["ALWAYS_SEND", "ON_CHANGE"],
+            "default": "ON_CHANGE"
           },
           "selector": {
             "type": "string",
@@ -8962,7 +10511,7 @@
         "description": "Serial Bus Configuration DTO"
       },
       "SerialConfigDTO": {
-        "required": ["serialDevice", "type"],
+        "required": ["schemaLoadingVersion", "serialDevice", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -8971,7 +10520,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -9029,11 +10577,11 @@
             "description": "Proxy Protocol support mode. 'ENABLED' allows but doesn't require it, 'REQUIRED' enforces it, 'DISABLED' will NOT check for incoming PROXY requests.",
             "nullable": true,
             "example": "REQUIRED",
-            "default": "DISABLED",
-            "enum": ["ENABLED", "DISABLED", "REQUIRED"]
+            "enum": ["ENABLED", "DISABLED", "REQUIRED"],
+            "default": "DISABLED"
           },
           "allowedProxyHosts": {
-            "pattern": "^\\s*[^,\\s][^,]*\\s*(?:,\\s*[^,\\s][^,]*\\s*)*$",
+            "pattern": "^(?:\\s*[^,\\s][^,]*\\s*(?:,\\s*[^,\\s][^,]*\\s*)*)?$",
             "type": "string",
             "description": "Comma-separated list of allowed proxy source addresses. Supports hostnames, IPv4/IPv6 addresses, and CIDR blocks (e.g., 192.168.0.0/24, ::1, example.com).",
             "nullable": true,
@@ -9059,6 +10607,7 @@
           "parity",
           "port",
           "readTimeOut",
+          "schemaLoadingVersion",
           "stopBits"
         ],
         "type": "object",
@@ -9069,7 +10618,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -9152,7 +10700,7 @@
       },
       "SimpleRepositoryConfigDTO": {
         "title": "Simple Repository configuration",
-        "required": ["type"],
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -9161,7 +10709,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -9175,7 +10722,7 @@
         "description": "Provides a simple Map<> instance to manage schemas, these do not survive server restarts, only useful for debug"
       },
       "SpiDeviceBusConfigDTO": {
-        "required": ["enabled", "topicNameTemplate"],
+        "required": ["enabled", "schemaLoadingVersion", "topicNameTemplate"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -9184,7 +10731,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -9221,8 +10767,8 @@
             "type": "string",
             "description": "Filters raw value; depending on filter type will only send if there is a change or every trigger",
             "example": "ON_CHANGE",
-            "default": "ON_CHANGE",
-            "enum": ["ALWAYS_SEND", "ON_CHANGE"]
+            "enum": ["ALWAYS_SEND", "ON_CHANGE"],
+            "default": "ON_CHANGE"
           },
           "selector": {
             "type": "string",
@@ -9250,6 +10796,7 @@
         "nullable": true
       },
       "SpiDeviceConfigDTO": {
+        "required": ["schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -9258,7 +10805,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -9317,7 +10863,8 @@
           "clientCertificateRequired",
           "clientCertificateWanted",
           "context",
-          "crlInterval"
+          "crlInterval",
+          "schemaLoadingVersion"
         ],
         "type": "object",
         "properties": {
@@ -9327,7 +10874,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -9372,7 +10918,7 @@
         "description": "SSL/TLS Configuration DTO"
       },
       "StaticConfig": {
-        "required": ["enabled"],
+        "required": ["enabled", "schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -9381,7 +10927,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -9404,6 +10949,7 @@
       },
       "StatisticsConfigDTO": {
         "title": "Analytics",
+        "required": ["schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -9412,7 +10958,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -9464,7 +11009,7 @@
         "nullable": true
       },
       "StoGiConfigDTO": {
-        "required": ["type"],
+        "required": ["proxyProtocol", "schemaLoadingVersion", "type"],
         "type": "object",
         "description": "OrbComm ST and OGi Modem Protocol Configuration DTO",
         "allOf": [
@@ -9475,14 +11020,14 @@
               "incomingMessagePollInterval": {
                 "type": "integer",
                 "description": "Time in seconds to poll the modem for incoming messages",
-                "format": "int64",
+                "format": "int32",
                 "example": 15,
                 "default": 10
               },
               "outgoingMessagePollInterval": {
                 "type": "integer",
                 "description": "Time in seconds to poll for outgoing messages",
-                "format": "int64",
+                "format": "int32",
                 "example": 60,
                 "default": 60
               },
@@ -9498,7 +11043,7 @@
                 "description": "minimum sized buffer that will be compressed",
                 "format": "int32",
                 "example": 512,
-                "default": 256
+                "default": 128
               },
               "messageLifeTimeInMinutes": {
                 "type": "integer",
@@ -9565,7 +11110,7 @@
         ]
       },
       "StompConfigDTO": {
-        "required": ["type"],
+        "required": ["proxyProtocol", "schemaLoadingVersion", "type"],
         "type": "object",
         "description": "STOMP Protocol Configuration DTO",
         "allOf": [
@@ -9601,12 +11146,14 @@
           "fragmentationLimit",
           "readDelayOnFragmentation",
           "receiveBufferSize",
+          "schemaLoadingVersion",
           "sendBufferSize",
           "soLingerDelaySec",
           "timeout",
           "type"
         ],
         "type": "object",
+        "additionalProperties": true,
         "description": "TCP Configuration DTO",
         "allOf": [
           { "$ref": "#/components/schemas/EndPointConfigDTO" },
@@ -9687,7 +11234,7 @@
         ]
       },
       "TenantConfigDTO": {
-        "required": ["name", "namespaceRoot"],
+        "required": ["name", "namespaceRoot", "schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -9696,7 +11243,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -9721,7 +11267,7 @@
         "nullable": true
       },
       "TenantManagementConfigDTO": {
-        "required": ["type"],
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -9730,7 +11276,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -9741,7 +11286,7 @@
             "example": "AuthManagerConfig"
           },
           "tenantConfigList": {
-            "required": ["name", "namespaceRoot"],
+            "required": ["name", "namespaceRoot", "schemaLoadingVersion"],
             "type": "object",
             "properties": {
               "schemaLoadingVersion": {
@@ -9750,7 +11295,6 @@
                 "type": "integer",
                 "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
                 "format": "int32",
-                "nullable": true,
                 "example": 1,
                 "default": 1
               },
@@ -9773,7 +11317,8 @@
             },
             "description": "Tenant Configuration DTO",
             "nullable": true
-          }
+          },
+          "name": { "type": "string" }
         },
         "description": "Tenant Management Configuration DTO"
       },
@@ -9784,6 +11329,7 @@
           "fragmentationLimit",
           "readDelayOnFragmentation",
           "receiveBufferSize",
+          "schemaLoadingVersion",
           "sendBufferSize",
           "soLingerDelaySec",
           "sslConfig",
@@ -9798,7 +11344,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -9856,11 +11401,11 @@
             "description": "Proxy Protocol support mode. 'ENABLED' allows but doesn't require it, 'REQUIRED' enforces it, 'DISABLED' will NOT check for incoming PROXY requests.",
             "nullable": true,
             "example": "REQUIRED",
-            "default": "DISABLED",
-            "enum": ["ENABLED", "DISABLED", "REQUIRED"]
+            "enum": ["ENABLED", "DISABLED", "REQUIRED"],
+            "default": "DISABLED"
           },
           "allowedProxyHosts": {
-            "pattern": "^\\s*[^,\\s][^,]*\\s*(?:,\\s*[^,\\s][^,]*\\s*)*$",
+            "pattern": "^(?:\\s*[^,\\s][^,]*\\s*(?:,\\s*[^,\\s][^,]*\\s*)*)?$",
             "type": "string",
             "description": "Comma-separated list of allowed proxy source addresses. Supports hostnames, IPv4/IPv6 addresses, and CIDR blocks (e.g., 192.168.0.0/24, ::1, example.com).",
             "nullable": true,
@@ -9955,6 +11500,7 @@
           "fragmentationLimit",
           "readDelayOnFragmentation",
           "receiveBufferSize",
+          "schemaLoadingVersion",
           "sendBufferSize",
           "soLingerDelaySec",
           "sslConfig",
@@ -10042,8 +11588,129 @@
           }
         ]
       },
+      "TransformationConfigDTO": {
+        "required": ["schemaLoadingVersion", "type"],
+        "type": "object",
+        "properties": {
+          "schemaLoadingVersion": {
+            "maximum": 10,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
+            "format": "int32",
+            "example": 1,
+            "default": 1
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of transformation configuration. All values are lower-case and hyphen-separated.",
+            "example": "jsontoxml",
+            "enum": [
+              "CLOUD_EVENT_JSON",
+              "CLOUD_EVENT_NATIVE",
+              "CLOUD_EVENT_ENVELOPE",
+              "JSON_TO_XML",
+              "XML_TO_JSON",
+              "JSON_TO_VALUE",
+              "JSON_QUERY",
+              "GEOHASH",
+              "SCHEMA_TO_JSON",
+              "JSON_MUTATE",
+              "JSON_TO_SCHEMA"
+            ]
+          }
+        },
+        "additionalProperties": true,
+        "description": "Abstract base class for all transformation configurations",
+        "nullable": true,
+        "example": [
+          {
+            "name": "JsonQuery",
+            "parameters": {
+              "query": "[\"object\",{\"latitude\":[\"divide\",[\"get\",\"payload\",\"decoded\",\"lat\"],10000000]}]"
+            }
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "jsontoxml": "#/components/schemas/JsonToXmlTransformationDTO",
+            "xmltojson": "#/components/schemas/XmlToJsonTransformationDTO",
+            "jsontoschema": "#/components/schemas/JsonToSchemaTransformationDTO",
+            "jsontovalue": "#/components/schemas/JsonToValueTransformationDTO",
+            "jsonquery": "#/components/schemas/JsonQueryTransformationDTO",
+            "geohash": "#/components/schemas/GeoHashResolverTransformationDTO",
+            "jsonmutate": "#/components/schemas/JsonMutateTransformationDTO",
+            "cloudevent-envelope": "#/components/schemas/CloudEventEnvelopeTransformationDTO",
+            "cloudevent-json": "#/components/schemas/CloudEventJsonTransformationDTO",
+            "cloudevent-native": "#/components/schemas/CloudEventNativeTransformationDTO"
+          }
+        }
+      },
+      "TwinManagerConfigDTO": {
+        "required": ["schemaLoadingVersion", "type"],
+        "type": "object",
+        "properties": {
+          "schemaLoadingVersion": {
+            "maximum": 10,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
+            "format": "int32",
+            "example": 1,
+            "default": 1
+          },
+          "type": {
+            "type": "string",
+            "description": "Discriminator for the concrete configuration manager DTO.",
+            "readOnly": true,
+            "example": "AuthManagerConfig"
+          },
+          "heartbeatTimeoutMillis": {
+            "maximum": 600000,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Time in milliseconds after which a twin is considered disconnected if no updates are received.",
+            "format": "int64",
+            "example": 5000,
+            "default": 5000
+          },
+          "staleTimeoutMillis": {
+            "maximum": 600000,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Time in milliseconds after which a twin is considered stale if no updates are received.",
+            "format": "int64",
+            "example": 10000,
+            "default": 10000
+          },
+          "retentionTimeoutMillis": {
+            "maximum": 86400000,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Time in milliseconds after which a twin is eligible for removal from memory.",
+            "format": "int64",
+            "example": 300000,
+            "default": 300000
+          },
+          "removeExpiredTwins": {
+            "type": "boolean",
+            "description": "If true, twins that exceed the retention timeout will be removed from memory.",
+            "example": false,
+            "default": false
+          },
+          "defaultRootPath": {
+            "type": "string",
+            "description": "Default root path used when constructing twin hierarchical paths.",
+            "example": "/",
+            "default": "/"
+          },
+          "name": { "type": "string" }
+        },
+        "description": "State/Twin Manager Configuration DTO"
+      },
       "UdpConfigDTO": {
-        "required": ["type"],
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
         "description": "UDP Configuration DTO",
         "allOf": [
@@ -10085,10 +11752,16 @@
         ]
       },
       "WebSocketConfigDTO": {
-        "required": ["type"],
+        "required": ["proxyProtocol", "schemaLoadingVersion", "type"],
         "type": "object",
         "description": "WebSocket Protocol Configuration DTO",
         "allOf": [{ "$ref": "#/components/schemas/ProtocolConfigDTO" }]
+      },
+      "XmlToJsonTransformationDTO": {
+        "required": ["schemaLoadingVersion", "type"],
+        "type": "object",
+        "description": "Transformation DTO that converts XML payloads into JSON.",
+        "allOf": [{ "$ref": "#/components/schemas/TransformationConfigDTO" }]
       },
       "EndPointSummaryDTO": {
         "title": "End Point Information",
@@ -10108,98 +11781,151 @@
           "totalBytesWritten",
           "totalOverflow",
           "totalUnderflow",
-          "underFlow",
-          "user"
+          "underFlow"
         ],
         "type": "object",
         "properties": {
           "id": {
+            "maximum": 9223372036854775807,
+            "minimum": 1,
             "type": "integer",
-            "description": "Unique identifier for the endpoint",
-            "format": "int64"
+            "description": "Unique identifier for the endpoint.",
+            "format": "int64",
+            "example": 12345
           },
           "adapter": {
+            "maxLength": 64,
+            "minLength": 1,
             "type": "string",
-            "description": "Adapter name or type associated with this endpoint"
+            "description": "Adapter name or type associated with this endpoint (implementation-specific).",
+            "example": "tcp"
           },
           "name": {
+            "maxLength": 128,
+            "minLength": 1,
             "type": "string",
-            "description": "Name assigned to the endpoint"
+            "description": "Name assigned to the endpoint.",
+            "example": "sensor-gateway-01"
           },
           "user": {
+            "maxLength": 128,
+            "minLength": 1,
             "type": "string",
-            "description": "Username associated with the endpoint"
+            "description": "Username associated with the endpoint, if authenticated.",
+            "nullable": true,
+            "example": "matthew"
           },
           "protocolName": {
+            "maxLength": 32,
+            "minLength": 1,
             "type": "string",
-            "description": "Name of the protocol used by the endpoint"
+            "description": "Name of the protocol used by the endpoint.",
+            "example": "mqtt"
           },
           "protocolVersion": {
+            "maxLength": 32,
+            "minLength": 1,
             "type": "string",
-            "description": "Version of the protocol used by the endpoint"
+            "description": "Version of the protocol used by the endpoint.",
+            "example": "5.0"
           },
           "proxyAddress": {
+            "maxLength": 255,
             "type": "string",
-            "description": "Proxy address used to connect the endpoint, if any",
-            "nullable": true
+            "description": "Proxy address used to connect the endpoint, if any. Typically an IP or hostname, optionally with port.",
+            "nullable": true,
+            "example": "203.0.113.10:3128"
           },
           "connectedTimeMs": {
+            "maximum": 253402300799999,
+            "minimum": 0,
             "type": "integer",
-            "description": "Connection start time in milliseconds since epoch",
-            "format": "int64"
+            "description": "Connection start time in milliseconds since epoch.",
+            "format": "int64",
+            "example": 1738891200000
           },
           "lastRead": {
+            "maximum": 253402300799999,
+            "minimum": 0,
             "type": "integer",
-            "description": "Timestamp of the last read operation in milliseconds since epoch",
-            "format": "int64"
+            "description": "Timestamp of the last read operation in milliseconds since epoch.",
+            "format": "int64",
+            "example": 1738891265123
           },
           "lastWrite": {
+            "maximum": 253402300799999,
+            "minimum": 0,
             "type": "integer",
-            "description": "Timestamp of the last write operation in milliseconds since epoch",
-            "format": "int64"
+            "description": "Timestamp of the last write operation in milliseconds since epoch.",
+            "format": "int64",
+            "example": 1738891268456
           },
           "totalBytesRead": {
+            "maximum": 9223372036854775807,
+            "minimum": 0,
             "type": "integer",
-            "description": "Total bytes read by the endpoint",
-            "format": "int64"
+            "description": "Total bytes read by the endpoint since connection start.",
+            "format": "int64",
+            "example": 987654321
           },
           "totalBytesWritten": {
+            "maximum": 9223372036854775807,
+            "minimum": 0,
             "type": "integer",
-            "description": "Total bytes written by the endpoint",
-            "format": "int64"
+            "description": "Total bytes written by the endpoint since connection start.",
+            "format": "int64",
+            "example": 123456789
           },
           "totalOverflow": {
+            "maximum": 9223372036854775807,
+            "minimum": 0,
             "type": "integer",
-            "description": "Total number of buffer overflows",
-            "format": "int64"
+            "description": "Total number of buffer overflows since connection start.",
+            "format": "int64",
+            "example": 0
           },
           "totalUnderflow": {
+            "maximum": 9223372036854775807,
+            "minimum": 0,
             "type": "integer",
-            "description": "Total number of buffer underflows",
-            "format": "int64"
+            "description": "Total number of buffer underflows since connection start.",
+            "format": "int64",
+            "example": 2
           },
           "bytesRead": {
+            "maximum": 9223372036854775807,
+            "minimum": 0,
             "type": "integer",
-            "description": "Bytes read in the current interval",
-            "format": "int64"
+            "description": "Bytes read in the current statistics interval (interval length is server-defined).",
+            "format": "int64",
+            "example": 4096
           },
           "bytesWritten": {
+            "maximum": 9223372036854775807,
+            "minimum": 0,
             "type": "integer",
-            "description": "Bytes written in the current interval",
-            "format": "int64"
+            "description": "Bytes written in the current statistics interval (interval length is server-defined).",
+            "format": "int64",
+            "example": 1024
           },
           "overFlow": {
+            "maximum": 9223372036854775807,
+            "minimum": 0,
             "type": "integer",
-            "description": "Buffer overflow count in the current interval",
-            "format": "int64"
+            "description": "Buffer overflow count in the current statistics interval.",
+            "format": "int64",
+            "example": 0
           },
           "underFlow": {
+            "maximum": 9223372036854775807,
+            "minimum": 0,
             "type": "integer",
-            "description": "Buffer underflow count in the current interval",
-            "format": "int64"
+            "description": "Buffer underflow count in the current statistics interval.",
+            "format": "int64",
+            "example": 0
           }
         },
-        "description": "Provides overview information about the end point"
+        "description": "Provides overview information about the end point, including identity, protocol details, connection timestamps, and traffic/buffer statistics."
       },
       "AmqpProtocolInformation": {
         "type": "object",
@@ -10315,6 +12041,20 @@
           }
         ]
       },
+      "N2kProtocolInformation": {
+        "type": "object",
+        "allOf": [
+          { "$ref": "#/components/schemas/ProtocolInformationDTO" },
+          {
+            "type": "object",
+            "properties": {
+              "sessionInfo": {
+                "$ref": "#/components/schemas/SessionInformationDTO"
+              }
+            }
+          }
+        ]
+      },
       "NmeaProtocolInformation": {
         "type": "object",
         "allOf": [
@@ -10351,6 +12091,7 @@
               "extension",
               "orbcomm",
               "mavlink",
+              "n2k",
               "satellite"
             ]
           },
@@ -10416,7 +12157,8 @@
             "rest": "#/components/schemas/RestProtocolInformation",
             "extension": "#/components/schemas/ExtensionProtocolInformation",
             "orbcomm": "#/components/schemas/SatelliteProtocolInformation",
-            "satellite": "#/components/schemas/SatelliteDeviceProtocolInformation"
+            "satellite": "#/components/schemas/SatelliteDeviceProtocolInformation",
+            "n2k": "#/components/schemas/N2kProtocolInformation"
           }
         }
       },
@@ -10607,22 +12349,20 @@
         }
       },
       "DestinationEntry": {
+        "required": ["childCount", "fullPath", "name"],
         "type": "object",
         "properties": {
           "name": {
-            "required": true,
             "type": "string",
             "description": "Child name (single segment).",
             "example": "fred"
           },
           "fullPath": {
-            "required": true,
             "type": "string",
             "description": "Fully qualified path for this entry.",
             "example": "/a/b/fred"
           },
           "destinationType": {
-            "required": true,
             "type": "string",
             "description": "Destination type when kind is DESTINATION; null when kind is FOLDER.",
             "nullable": true,
@@ -10639,7 +12379,7 @@
         "description": "A single immediate child under a prefix. Can represent a folder or a destination."
       },
       "DestinationPageResponse": {
-        "required": ["pageNo", "totalEntries", "totalPages"],
+        "required": ["entries", "pageNo", "totalEntries", "totalPages"],
         "type": "object",
         "properties": {
           "totalEntries": {
@@ -11052,30 +12792,9 @@
         "description": "Represents a record of moving average statistics, tracking metrics over a defined timespan with specific units.",
         "example": "{\"latency\": {\"name\": \"latency\", \"unitName\": \"ms\", \"current\": 10, ...}}"
       },
-      "IntegrationListStatus": {
-        "type": "object",
-        "properties": {
-          "list": {
-            "type": "array",
-            "items": { "$ref": "#/components/schemas/IntegrationStatusDTO" }
-          }
-        }
-      },
-      "IntegrationDetailResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": { "$ref": "#/components/schemas/IntegrationInfoDTO" }
-          },
-          "globalConfig": {
-            "type": "object",
-            "additionalProperties": { "type": "object" }
-          }
-        }
-      },
       "InterfaceInfoDTO": {
         "title": "Interface Information",
+        "required": ["schemaLoadingVersion"],
         "type": "object",
         "properties": {
           "schemaLoadingVersion": {
@@ -11084,7 +12803,6 @@
             "type": "integer",
             "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
             "format": "int32",
-            "nullable": true,
             "example": 1,
             "default": 1
           },
@@ -11483,6 +13201,7 @@
             "title": "Content Type",
             "type": "string",
             "description": "The MIME type of the message payload, indicating its format.",
+            "nullable": true,
             "example": "application/json"
           },
           "correlationData": {
@@ -11490,6 +13209,7 @@
             "type": "string",
             "description": "Additional data used for correlating messages, provided as a byte array.",
             "format": "byte",
+            "nullable": true,
             "example": "WzEsMiwzLDRd"
           },
           "expiry": {
@@ -11520,7 +13240,8 @@
             "title": "Creation Date/Time",
             "type": "string",
             "description": "The time the server received this event",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "dataMap": {
             "title": "Message Parameters",
@@ -11529,9 +13250,11 @@
               "title": "Message Parameters",
               "type": "object",
               "description": "A map containing optional key-value pairs associated with the message.",
+              "nullable": true,
               "example": { "key1": "value1", "key2": 42 }
             },
             "description": "A map containing optional key-value pairs associated with the message.",
+            "nullable": true,
             "example": { "key1": "value1", "key2": 42 }
           },
           "metaData": {
@@ -11541,9 +13264,11 @@
               "title": "Event Meta Data",
               "type": "string",
               "description": "A map of string, string values that the server has added to the event as it was processed",
+              "nullable": true,
               "example": "{\"key1\":\"value1\",\"key2\":42}"
             },
             "description": "A map of string, string values that the server has added to the event as it was processed",
+            "nullable": true,
             "example": { "key1": "value1", "key2": 42 }
           }
         },
@@ -11628,6 +13353,7 @@
             "title": "Content Type",
             "type": "string",
             "description": "The MIME type of the message payload, indicating its format.",
+            "nullable": true,
             "example": "application/json"
           },
           "correlationData": {
@@ -11635,6 +13361,7 @@
             "type": "string",
             "description": "Additional data used for correlating messages, provided as a byte array.",
             "format": "byte",
+            "nullable": true,
             "example": "WzEsMiwzLDRd"
           },
           "expiry": {
@@ -11665,7 +13392,8 @@
             "title": "Creation Date/Time",
             "type": "string",
             "description": "The time the server received this event",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "dataMap": {
             "title": "Message Parameters",
@@ -11674,9 +13402,11 @@
               "title": "Message Parameters",
               "type": "object",
               "description": "A map containing optional key-value pairs associated with the message.",
+              "nullable": true,
               "example": { "key1": "value1", "key2": 42 }
             },
             "description": "A map containing optional key-value pairs associated with the message.",
+            "nullable": true,
             "example": { "key1": "value1", "key2": 42 }
           },
           "metaData": {
@@ -11686,9 +13416,11 @@
               "title": "Event Meta Data",
               "type": "string",
               "description": "A map of string, string values that the server has added to the event as it was processed",
+              "nullable": true,
               "example": "{\"key1\":\"value1\",\"key2\":42}"
             },
             "description": "A map of string, string values that the server has added to the event as it was processed",
+            "nullable": true,
             "example": { "key1": "value1", "key2": 42 }
           },
           "destinationName": {
@@ -11752,120 +13484,14 @@
         },
         "description": "Represents a request to create a subscription to a specific destination, with optional filtering and message retention."
       },
-      "JsonArray": {
-        "type": "object",
-        "properties": {
-          "empty": { "type": "boolean" },
-          "asInt": { "type": "integer", "format": "int32" },
-          "asDouble": { "type": "number", "format": "double" },
-          "asLong": { "type": "integer", "format": "int64" },
-          "asBoolean": { "type": "boolean" },
-          "asByte": { "type": "string", "format": "byte" },
-          "asFloat": { "type": "number", "format": "float" },
-          "asShort": { "type": "integer", "format": "int32" },
-          "asNumber": { "type": "number" },
-          "asCharacter": { "type": "string" },
-          "asBigDecimal": { "type": "number" },
-          "asBigInteger": { "type": "integer" },
-          "asString": { "type": "string" },
-          "jsonNull": { "type": "boolean" },
-          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" },
-          "jsonObject": { "type": "boolean" },
-          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
-          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
-          "jsonPrimitive": { "type": "boolean" },
-          "jsonArray": { "type": "boolean" },
-          "asJsonArray": { "$ref": "#/components/schemas/JsonArray" }
-        }
-      },
-      "JsonNull": {
-        "type": "object",
-        "properties": {
-          "asInt": { "type": "integer", "format": "int32" },
-          "asDouble": { "type": "number", "format": "double" },
-          "asLong": { "type": "integer", "format": "int64" },
-          "asBoolean": { "type": "boolean" },
-          "asByte": { "type": "string", "format": "byte" },
-          "asFloat": { "type": "number", "format": "float" },
-          "jsonNull": { "type": "boolean" },
-          "asShort": { "type": "integer", "format": "int32" },
-          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" },
-          "asNumber": { "type": "number" },
-          "asCharacter": { "type": "string" },
-          "jsonObject": { "type": "boolean" },
-          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
-          "asBigDecimal": { "type": "number" },
-          "asBigInteger": { "type": "integer" },
-          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
-          "jsonPrimitive": { "type": "boolean" },
-          "asString": { "type": "string" },
-          "jsonArray": { "type": "boolean" },
-          "asJsonArray": { "$ref": "#/components/schemas/JsonArray" }
-        }
-      },
-      "JsonObject": {
-        "type": "object",
-        "properties": {
-          "empty": { "type": "boolean" },
-          "asInt": { "type": "integer", "format": "int32" },
-          "asDouble": { "type": "number", "format": "double" },
-          "asLong": { "type": "integer", "format": "int64" },
-          "asBoolean": { "type": "boolean" },
-          "asByte": { "type": "string", "format": "byte" },
-          "asFloat": { "type": "number", "format": "float" },
-          "jsonNull": { "type": "boolean" },
-          "asShort": { "type": "integer", "format": "int32" },
-          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" },
-          "asNumber": { "type": "number" },
-          "asCharacter": { "type": "string" },
-          "jsonObject": { "type": "boolean" },
-          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
-          "asBigDecimal": { "type": "number" },
-          "asBigInteger": { "type": "integer" },
-          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
-          "jsonPrimitive": { "type": "boolean" },
-          "asString": { "type": "string" },
-          "jsonArray": { "type": "boolean" },
-          "asJsonArray": { "$ref": "#/components/schemas/JsonArray" }
-        },
-        "description": "Schema definition as JSON. Either schema or schemaBase64 must be provided.",
-        "nullable": true
-      },
-      "JsonPrimitive": {
-        "type": "object",
-        "properties": {
-          "asInt": { "type": "integer", "format": "int32" },
-          "asDouble": { "type": "number", "format": "double" },
-          "asLong": { "type": "integer", "format": "int64" },
-          "asBoolean": { "type": "boolean" },
-          "string": { "type": "boolean" },
-          "asByte": { "type": "string", "format": "byte" },
-          "asFloat": { "type": "number", "format": "float" },
-          "asShort": { "type": "integer", "format": "int32" },
-          "boolean": { "type": "boolean" },
-          "number": { "type": "boolean" },
-          "asNumber": { "type": "number" },
-          "asCharacter": { "type": "string" },
-          "asBigDecimal": { "type": "number" },
-          "asBigInteger": { "type": "integer" },
-          "asString": { "type": "string" },
-          "jsonNull": { "type": "boolean" },
-          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" },
-          "jsonObject": { "type": "boolean" },
-          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
-          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
-          "jsonPrimitive": { "type": "boolean" },
-          "jsonArray": { "type": "boolean" },
-          "asJsonArray": { "$ref": "#/components/schemas/JsonArray" }
-        }
-      },
       "SchemaConfigDTO": {
         "type": "object",
+        "required": ["uniqueId"],
         "properties": {
           "uniqueId": {
             "type": "string",
             "description": "Unique identifier for the schema",
-            "nullable": true,
+            "nullable": false,
             "example": "it_019c21a1-0626-7258-ae03-78fd8247d4f4"
           },
           "versionId": {
@@ -12241,6 +13867,7 @@
             "title": "Comment",
             "type": "string",
             "description": "A comment or additional information about the subsystem's status.",
+            "nullable": true,
             "example": "System is operating normally."
           },
           "status": {

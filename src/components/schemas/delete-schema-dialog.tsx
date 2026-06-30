@@ -25,7 +25,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from "@/components/ui/dialog";
 
 interface DeleteSchemaDialogProps {
@@ -48,7 +48,8 @@ export const DeleteSchemaDialog = ({
         <DialogHeader>
           <DialogTitle>Confirm Deletion</DialogTitle>
           <DialogDescription>
-            Delete the schema "{schema?.name ?? schemaId}"? This can not be undone
+            Delete the schema "{schema?.name ?? schemaId}"? This can not be
+            undone
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex sm:justify-between">

@@ -16,13 +16,14 @@
  */
 
 import { Button } from "@/components/ui/button";
+import type { FileRouteTypes } from "@/routeTree.gen";
 import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
 import type { FunctionComponent, PropsWithChildren } from "react";
 
 interface LinkButtonProps extends PropsWithChildren {
   to: string;
-  from?: string;
+  from?: FileRouteTypes["fullPaths"];
   params?: Record<string, string>;
 }
 

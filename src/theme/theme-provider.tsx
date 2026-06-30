@@ -15,15 +15,11 @@
  *  limitations under the License.
  */
 
-import {
-  createContext,
-  type ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, type ReactNode, useContext, useEffect, useState } from "react";
 
-type Theme = "dark" | "light" | "system";
+const themes = ["light", "dark", "system"] as const;
+
+type Theme = (typeof themes)[number];
 
 type ThemeProviderProps = {
   children: ReactNode;
@@ -33,7 +29,11 @@ type ThemeProviderProps = {
 
 type ThemeProviderState = {
   theme: Theme;
-  setTheme: (theme: Theme) => void;
+  setTheme: (theme: string) => void;
+};
+
+const isTheme = (value: string): value is Theme => {
+  return themes.includes(value as Theme);
 };
 
 const initialState: ThemeProviderState = {
@@ -71,11 +71,13 @@ export const ThemeProvider = ({
     root.classList.add(theme);
   }, [theme]);
 
-  const value = {
+  const value: ThemeProviderState = {
     theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
+    setTheme: (theme) => {
+      if (isTheme(theme)) {
+        localStorage.setItem(storageKey, theme);
+        setTheme(theme);
+      }
     },
   };
 

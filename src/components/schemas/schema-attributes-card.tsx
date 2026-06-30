@@ -45,7 +45,8 @@ export const SchemaAttributesCard: FunctionComponent<
         </p>
         <p className="flex items-center justify-between flex-wrap">
           <strong>Description:</strong> {schema?.description}
-        </p> <p className="flex items-center justify-between flex-wrap">
+        </p>
+        <p className="flex items-center justify-between flex-wrap">
           <strong>Format:</strong> {schema?.format}
         </p>
         <p className="flex items-center justify-between flex-wrap">

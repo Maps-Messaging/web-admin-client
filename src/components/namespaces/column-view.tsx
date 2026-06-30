@@ -24,7 +24,7 @@ import { type FunctionComponent, useEffect } from "react";
 
 interface ColumnViewProps {
   prefix?: string;
-  currentPath: string;
+  currentPath?: string;
   includeParent?: boolean;
 }
 
@@ -69,8 +69,8 @@ export const ColumnView: FunctionComponent<ColumnViewProps> = ({
               }
             >
               <LinkButton
-                from={`/namespaces/${prefix ?? ""}`}
-                to={encodeURIComponent(entry.name)}
+                from="/namespaces"
+                to={encodeURIComponent(`${prefix ?? ""}/${entry.name}`)}
               >
                 {entry.destinationType === "FOLDER" ? <Folder /> : <File />}
                 {entry.name}

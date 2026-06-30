@@ -15,10 +15,28 @@
  *  limitations under the License.
  */
 
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
+import { LinkButton } from "@/components/ui/link-button";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/people/")({
-  beforeLoad: () => {
-    throw redirect({ to: "/people/users" });
-  },
+  component: RouteComponent,
 });
+
+function RouteComponent() {
+  return (
+    <div className="px-6 flex flex-col gap-4 w-6xl mx-auto">
+      <h1 className="text-4xl font-extrabold">People</h1>
+      <div className="flex items-center justify-between pb-4">
+        <div className="flex gap-4">
+          <LinkButton to="/people/users">Users</LinkButton>
+          <LinkButton to="/people/groups">Groups</LinkButton>
+        </div>
+        <div className="flex gap-4">
+          <Button variant="outline">Create User</Button>
+          <Button variant="outline">Create Group</Button>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -15,16 +15,19 @@
  *  limitations under the License.
  */
 
-import spec from "@/../resources/openapi.json";
-import { configHandlers } from "@/mocks/config";
-import { schemaHandlers } from "@/mocks/schema";
-import { fromOpenApi } from "@msw/source/open-api";
-import { setupWorker } from "msw/browser";
+import { faker } from "@faker-js/faker";
+import { http, HttpResponse } from "msw";
 
-const handlers = await fromOpenApi(spec as never);
-
-export const worker = setupWorker(
-  ...schemaHandlers,
-  ...configHandlers,
-  ...handlers,
+const getAllConfigHandler = http.get("/api/v1/server/config", () =>
+  HttpResponse.json([
+    ...Array.from({ length: faker.number.int({ min: 5, max: 50 }) }).map(
+      () => ({
+        id: faker.string.uuid(),
+        name: faker.lorem.words(),
+      }),
+    ),
+    { id: "MessageDaemonConfig", name: "Message Daemon Config" },
+  ]),
 );
+
+export const configHandlers = [getAllConfigHandler];

@@ -19,7 +19,6 @@ import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/connections/")({
   component: RouteComponent,
-  staticData: { breadcrumb: "Connections" },
 });
 
 function RouteComponent() {

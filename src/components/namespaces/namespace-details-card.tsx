@@ -94,35 +94,35 @@ export const NamespaceDetailsCard: FunctionComponent<
         <Separator />
         <h3>Message Counts</h3>
         <p className="flex items-center justify-between">
-          <strong>Stored:</strong> {storedMessages}
-        </p>
-        <p className="flex items-center justify-between">
-          <strong>Delayed:</strong>
-          {delayedMessages}
-        </p>
-        <p className="flex items-center justify-between">
-          <strong>Pending:</strong>
-          {pendingMessages}
-        </p>
-        <p className="flex items-center justify-between">
-          <strong>No Interest:</strong>
-          {noInterestMessages}
-        </p>
-        <p className="flex items-center justify-between">
           <strong>Published:</strong>
           {publishedMessages}
+        </p>
+        <p className="flex items-center justify-between">
+          <strong>Delivered:</strong>
+          {deliveredMessages}
+        </p>
+        <p className="flex items-center justify-between">
+          <strong>Stored:</strong> {storedMessages}
         </p>
         <p className="flex items-center justify-between">
           <strong>Retrieved:</strong>
           {retrievedMessages}
         </p>
         <p className="flex items-center justify-between">
-          <strong>Expired:</strong>
-          {expiredMessages}
+          <strong>No Interest:</strong>
+          {noInterestMessages}
         </p>
         <p className="flex items-center justify-between">
-          <strong>Delivered:</strong>
-          {deliveredMessages}
+          <strong>Pending:</strong>
+          {pendingMessages}
+        </p>
+        <p className="flex items-center justify-between">
+          <strong>Delayed:</strong>
+          {delayedMessages}
+        </p>
+        <p className="flex items-center justify-between">
+          <strong>Expired:</strong>
+          {expiredMessages}
         </p>
       </CardContent>
     </Card>
