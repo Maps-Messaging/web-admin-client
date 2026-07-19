@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedSchemasRouteRouteImport } from './routes/_authenticated/schemas/route'
+import { Route as AuthenticatedPermissionsRouteRouteImport } from './routes/_authenticated/permissions/route'
 import { Route as AuthenticatedPeopleRouteRouteImport } from './routes/_authenticated/people/route'
 import { Route as AuthenticatedNamespacesRouteRouteImport } from './routes/_authenticated/namespaces/route'
 import { Route as AuthenticatedLoggingRouteRouteImport } from './routes/_authenticated/logging/route'
@@ -22,6 +23,7 @@ import { Route as AuthenticatedDevicesRouteRouteImport } from './routes/_authent
 import { Route as AuthenticatedConnectionsRouteRouteImport } from './routes/_authenticated/connections/route'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedSchemasIndexRouteImport } from './routes/_authenticated/schemas/index'
+import { Route as AuthenticatedPermissionsIndexRouteImport } from './routes/_authenticated/permissions/index'
 import { Route as AuthenticatedPeopleIndexRouteImport } from './routes/_authenticated/people/index'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 import { Route as AuthenticatedConnectionsIndexRouteImport } from './routes/_authenticated/connections/index'
@@ -29,10 +31,14 @@ import { Route as AuthenticatedSettingsConfigNameRouteImport } from './routes/_a
 import { Route as AuthenticatedSchemasSchemaIdRouteImport } from './routes/_authenticated/schemas/$schemaId'
 import { Route as AuthenticatedNamespacesSplatRouteImport } from './routes/_authenticated/namespaces/$'
 import { Route as AuthenticatedConnectionsConnectionIdRouteImport } from './routes/_authenticated/connections/$connectionId'
+import { Route as AuthenticatedPermissionsServerRouteRouteImport } from './routes/_authenticated/permissions/server/route'
+import { Route as AuthenticatedPermissionsNamespaceRouteRouteImport } from './routes/_authenticated/permissions/namespace/route'
 import { Route as AuthenticatedPeopleUsersRouteRouteImport } from './routes/_authenticated/people/users/route'
 import { Route as AuthenticatedPeopleGroupsRouteRouteImport } from './routes/_authenticated/people/groups/route'
+import { Route as AuthenticatedPermissionsServerIndexRouteImport } from './routes/_authenticated/permissions/server/index'
 import { Route as AuthenticatedPeopleUsersIndexRouteImport } from './routes/_authenticated/people/users/index'
 import { Route as AuthenticatedPeopleGroupsIndexRouteImport } from './routes/_authenticated/people/groups/index'
+import { Route as AuthenticatedPermissionsNamespaceSplatRouteImport } from './routes/_authenticated/permissions/namespace/$'
 import { Route as AuthenticatedPeopleUsersUserIdRouteImport } from './routes/_authenticated/people/users/$userId'
 import { Route as AuthenticatedPeopleGroupsGroupIdRouteImport } from './routes/_authenticated/people/groups/$groupId'
 
@@ -60,6 +66,12 @@ const AuthenticatedSchemasRouteRoute =
   AuthenticatedSchemasRouteRouteImport.update({
     id: '/schemas',
     path: '/schemas',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPermissionsRouteRoute =
+  AuthenticatedPermissionsRouteRouteImport.update({
+    id: '/permissions',
+    path: '/permissions',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedPeopleRouteRoute =
@@ -110,6 +122,12 @@ const AuthenticatedSchemasIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedSchemasRouteRoute,
   } as any)
+const AuthenticatedPermissionsIndexRoute =
+  AuthenticatedPermissionsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedPermissionsRouteRoute,
+  } as any)
 const AuthenticatedPeopleIndexRoute =
   AuthenticatedPeopleIndexRouteImport.update({
     id: '/',
@@ -152,6 +170,18 @@ const AuthenticatedConnectionsConnectionIdRoute =
     path: '/$connectionId',
     getParentRoute: () => AuthenticatedConnectionsRouteRoute,
   } as any)
+const AuthenticatedPermissionsServerRouteRoute =
+  AuthenticatedPermissionsServerRouteRouteImport.update({
+    id: '/server',
+    path: '/server',
+    getParentRoute: () => AuthenticatedPermissionsRouteRoute,
+  } as any)
+const AuthenticatedPermissionsNamespaceRouteRoute =
+  AuthenticatedPermissionsNamespaceRouteRouteImport.update({
+    id: '/namespace',
+    path: '/namespace',
+    getParentRoute: () => AuthenticatedPermissionsRouteRoute,
+  } as any)
 const AuthenticatedPeopleUsersRouteRoute =
   AuthenticatedPeopleUsersRouteRouteImport.update({
     id: '/users',
@@ -164,6 +194,12 @@ const AuthenticatedPeopleGroupsRouteRoute =
     path: '/groups',
     getParentRoute: () => AuthenticatedPeopleRouteRoute,
   } as any)
+const AuthenticatedPermissionsServerIndexRoute =
+  AuthenticatedPermissionsServerIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedPermissionsServerRouteRoute,
+  } as any)
 const AuthenticatedPeopleUsersIndexRoute =
   AuthenticatedPeopleUsersIndexRouteImport.update({
     id: '/',
@@ -175,6 +211,12 @@ const AuthenticatedPeopleGroupsIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedPeopleGroupsRouteRoute,
+  } as any)
+const AuthenticatedPermissionsNamespaceSplatRoute =
+  AuthenticatedPermissionsNamespaceSplatRouteImport.update({
+    id: '/$',
+    path: '/$',
+    getParentRoute: () => AuthenticatedPermissionsNamespaceRouteRoute,
   } as any)
 const AuthenticatedPeopleUsersUserIdRoute =
   AuthenticatedPeopleUsersUserIdRouteImport.update({
@@ -198,10 +240,13 @@ export interface FileRoutesByFullPath {
   '/logging': typeof AuthenticatedLoggingRouteRoute
   '/namespaces': typeof AuthenticatedNamespacesRouteRouteWithChildren
   '/people': typeof AuthenticatedPeopleRouteRouteWithChildren
+  '/permissions': typeof AuthenticatedPermissionsRouteRouteWithChildren
   '/schemas': typeof AuthenticatedSchemasRouteRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/people/groups': typeof AuthenticatedPeopleGroupsRouteRouteWithChildren
   '/people/users': typeof AuthenticatedPeopleUsersRouteRouteWithChildren
+  '/permissions/namespace': typeof AuthenticatedPermissionsNamespaceRouteRouteWithChildren
+  '/permissions/server': typeof AuthenticatedPermissionsServerRouteRouteWithChildren
   '/connections/$connectionId': typeof AuthenticatedConnectionsConnectionIdRoute
   '/namespaces/$': typeof AuthenticatedNamespacesSplatRoute
   '/schemas/$schemaId': typeof AuthenticatedSchemasSchemaIdRoute
@@ -209,12 +254,15 @@ export interface FileRoutesByFullPath {
   '/connections/': typeof AuthenticatedConnectionsIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/people/': typeof AuthenticatedPeopleIndexRoute
+  '/permissions/': typeof AuthenticatedPermissionsIndexRoute
   '/schemas/': typeof AuthenticatedSchemasIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/people/groups/$groupId': typeof AuthenticatedPeopleGroupsGroupIdRoute
   '/people/users/$userId': typeof AuthenticatedPeopleUsersUserIdRoute
+  '/permissions/namespace/$': typeof AuthenticatedPermissionsNamespaceSplatRoute
   '/people/groups/': typeof AuthenticatedPeopleGroupsIndexRoute
   '/people/users/': typeof AuthenticatedPeopleUsersIndexRoute
+  '/permissions/server/': typeof AuthenticatedPermissionsServerIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -223,6 +271,7 @@ export interface FileRoutesByTo {
   '/interfaces': typeof AuthenticatedInterfacesRouteRoute
   '/logging': typeof AuthenticatedLoggingRouteRoute
   '/namespaces': typeof AuthenticatedNamespacesRouteRouteWithChildren
+  '/permissions/namespace': typeof AuthenticatedPermissionsNamespaceRouteRouteWithChildren
   '/connections/$connectionId': typeof AuthenticatedConnectionsConnectionIdRoute
   '/namespaces/$': typeof AuthenticatedNamespacesSplatRoute
   '/schemas/$schemaId': typeof AuthenticatedSchemasSchemaIdRoute
@@ -230,12 +279,15 @@ export interface FileRoutesByTo {
   '/connections': typeof AuthenticatedConnectionsIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/people': typeof AuthenticatedPeopleIndexRoute
+  '/permissions': typeof AuthenticatedPermissionsIndexRoute
   '/schemas': typeof AuthenticatedSchemasIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/people/groups/$groupId': typeof AuthenticatedPeopleGroupsGroupIdRoute
   '/people/users/$userId': typeof AuthenticatedPeopleUsersUserIdRoute
+  '/permissions/namespace/$': typeof AuthenticatedPermissionsNamespaceSplatRoute
   '/people/groups': typeof AuthenticatedPeopleGroupsIndexRoute
   '/people/users': typeof AuthenticatedPeopleUsersIndexRoute
+  '/permissions/server': typeof AuthenticatedPermissionsServerIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -248,10 +300,13 @@ export interface FileRoutesById {
   '/_authenticated/logging': typeof AuthenticatedLoggingRouteRoute
   '/_authenticated/namespaces': typeof AuthenticatedNamespacesRouteRouteWithChildren
   '/_authenticated/people': typeof AuthenticatedPeopleRouteRouteWithChildren
+  '/_authenticated/permissions': typeof AuthenticatedPermissionsRouteRouteWithChildren
   '/_authenticated/schemas': typeof AuthenticatedSchemasRouteRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/_authenticated/people/groups': typeof AuthenticatedPeopleGroupsRouteRouteWithChildren
   '/_authenticated/people/users': typeof AuthenticatedPeopleUsersRouteRouteWithChildren
+  '/_authenticated/permissions/namespace': typeof AuthenticatedPermissionsNamespaceRouteRouteWithChildren
+  '/_authenticated/permissions/server': typeof AuthenticatedPermissionsServerRouteRouteWithChildren
   '/_authenticated/connections/$connectionId': typeof AuthenticatedConnectionsConnectionIdRoute
   '/_authenticated/namespaces/$': typeof AuthenticatedNamespacesSplatRoute
   '/_authenticated/schemas/$schemaId': typeof AuthenticatedSchemasSchemaIdRoute
@@ -259,12 +314,15 @@ export interface FileRoutesById {
   '/_authenticated/connections/': typeof AuthenticatedConnectionsIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/people/': typeof AuthenticatedPeopleIndexRoute
+  '/_authenticated/permissions/': typeof AuthenticatedPermissionsIndexRoute
   '/_authenticated/schemas/': typeof AuthenticatedSchemasIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/people/groups/$groupId': typeof AuthenticatedPeopleGroupsGroupIdRoute
   '/_authenticated/people/users/$userId': typeof AuthenticatedPeopleUsersUserIdRoute
+  '/_authenticated/permissions/namespace/$': typeof AuthenticatedPermissionsNamespaceSplatRoute
   '/_authenticated/people/groups/': typeof AuthenticatedPeopleGroupsIndexRoute
   '/_authenticated/people/users/': typeof AuthenticatedPeopleUsersIndexRoute
+  '/_authenticated/permissions/server/': typeof AuthenticatedPermissionsServerIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -277,10 +335,13 @@ export interface FileRouteTypes {
     | '/logging'
     | '/namespaces'
     | '/people'
+    | '/permissions'
     | '/schemas'
     | '/settings'
     | '/people/groups'
     | '/people/users'
+    | '/permissions/namespace'
+    | '/permissions/server'
     | '/connections/$connectionId'
     | '/namespaces/$'
     | '/schemas/$schemaId'
@@ -288,12 +349,15 @@ export interface FileRouteTypes {
     | '/connections/'
     | '/dashboard/'
     | '/people/'
+    | '/permissions/'
     | '/schemas/'
     | '/settings/'
     | '/people/groups/$groupId'
     | '/people/users/$userId'
+    | '/permissions/namespace/$'
     | '/people/groups/'
     | '/people/users/'
+    | '/permissions/server/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -302,6 +366,7 @@ export interface FileRouteTypes {
     | '/interfaces'
     | '/logging'
     | '/namespaces'
+    | '/permissions/namespace'
     | '/connections/$connectionId'
     | '/namespaces/$'
     | '/schemas/$schemaId'
@@ -309,12 +374,15 @@ export interface FileRouteTypes {
     | '/connections'
     | '/dashboard'
     | '/people'
+    | '/permissions'
     | '/schemas'
     | '/settings'
     | '/people/groups/$groupId'
     | '/people/users/$userId'
+    | '/permissions/namespace/$'
     | '/people/groups'
     | '/people/users'
+    | '/permissions/server'
   id:
     | '__root__'
     | '/'
@@ -326,10 +394,13 @@ export interface FileRouteTypes {
     | '/_authenticated/logging'
     | '/_authenticated/namespaces'
     | '/_authenticated/people'
+    | '/_authenticated/permissions'
     | '/_authenticated/schemas'
     | '/_authenticated/settings'
     | '/_authenticated/people/groups'
     | '/_authenticated/people/users'
+    | '/_authenticated/permissions/namespace'
+    | '/_authenticated/permissions/server'
     | '/_authenticated/connections/$connectionId'
     | '/_authenticated/namespaces/$'
     | '/_authenticated/schemas/$schemaId'
@@ -337,12 +408,15 @@ export interface FileRouteTypes {
     | '/_authenticated/connections/'
     | '/_authenticated/dashboard/'
     | '/_authenticated/people/'
+    | '/_authenticated/permissions/'
     | '/_authenticated/schemas/'
     | '/_authenticated/settings/'
     | '/_authenticated/people/groups/$groupId'
     | '/_authenticated/people/users/$userId'
+    | '/_authenticated/permissions/namespace/$'
     | '/_authenticated/people/groups/'
     | '/_authenticated/people/users/'
+    | '/_authenticated/permissions/server/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -386,6 +460,13 @@ declare module '@tanstack/react-router' {
       path: '/schemas'
       fullPath: '/schemas'
       preLoaderRoute: typeof AuthenticatedSchemasRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/permissions': {
+      id: '/_authenticated/permissions'
+      path: '/permissions'
+      fullPath: '/permissions'
+      preLoaderRoute: typeof AuthenticatedPermissionsRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/people': {
@@ -444,6 +525,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSchemasIndexRouteImport
       parentRoute: typeof AuthenticatedSchemasRouteRoute
     }
+    '/_authenticated/permissions/': {
+      id: '/_authenticated/permissions/'
+      path: '/'
+      fullPath: '/permissions/'
+      preLoaderRoute: typeof AuthenticatedPermissionsIndexRouteImport
+      parentRoute: typeof AuthenticatedPermissionsRouteRoute
+    }
     '/_authenticated/people/': {
       id: '/_authenticated/people/'
       path: '/'
@@ -493,6 +581,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedConnectionsConnectionIdRouteImport
       parentRoute: typeof AuthenticatedConnectionsRouteRoute
     }
+    '/_authenticated/permissions/server': {
+      id: '/_authenticated/permissions/server'
+      path: '/server'
+      fullPath: '/permissions/server'
+      preLoaderRoute: typeof AuthenticatedPermissionsServerRouteRouteImport
+      parentRoute: typeof AuthenticatedPermissionsRouteRoute
+    }
+    '/_authenticated/permissions/namespace': {
+      id: '/_authenticated/permissions/namespace'
+      path: '/namespace'
+      fullPath: '/permissions/namespace'
+      preLoaderRoute: typeof AuthenticatedPermissionsNamespaceRouteRouteImport
+      parentRoute: typeof AuthenticatedPermissionsRouteRoute
+    }
     '/_authenticated/people/users': {
       id: '/_authenticated/people/users'
       path: '/users'
@@ -507,6 +609,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPeopleGroupsRouteRouteImport
       parentRoute: typeof AuthenticatedPeopleRouteRoute
     }
+    '/_authenticated/permissions/server/': {
+      id: '/_authenticated/permissions/server/'
+      path: '/'
+      fullPath: '/permissions/server/'
+      preLoaderRoute: typeof AuthenticatedPermissionsServerIndexRouteImport
+      parentRoute: typeof AuthenticatedPermissionsServerRouteRoute
+    }
     '/_authenticated/people/users/': {
       id: '/_authenticated/people/users/'
       path: '/'
@@ -520,6 +629,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/people/groups/'
       preLoaderRoute: typeof AuthenticatedPeopleGroupsIndexRouteImport
       parentRoute: typeof AuthenticatedPeopleGroupsRouteRoute
+    }
+    '/_authenticated/permissions/namespace/$': {
+      id: '/_authenticated/permissions/namespace/$'
+      path: '/$'
+      fullPath: '/permissions/namespace/$'
+      preLoaderRoute: typeof AuthenticatedPermissionsNamespaceSplatRouteImport
+      parentRoute: typeof AuthenticatedPermissionsNamespaceRouteRoute
     }
     '/_authenticated/people/users/$userId': {
       id: '/_authenticated/people/users/$userId'
@@ -622,6 +738,56 @@ const AuthenticatedPeopleRouteRouteWithChildren =
     AuthenticatedPeopleRouteRouteChildren,
   )
 
+interface AuthenticatedPermissionsNamespaceRouteRouteChildren {
+  AuthenticatedPermissionsNamespaceSplatRoute: typeof AuthenticatedPermissionsNamespaceSplatRoute
+}
+
+const AuthenticatedPermissionsNamespaceRouteRouteChildren: AuthenticatedPermissionsNamespaceRouteRouteChildren =
+  {
+    AuthenticatedPermissionsNamespaceSplatRoute:
+      AuthenticatedPermissionsNamespaceSplatRoute,
+  }
+
+const AuthenticatedPermissionsNamespaceRouteRouteWithChildren =
+  AuthenticatedPermissionsNamespaceRouteRoute._addFileChildren(
+    AuthenticatedPermissionsNamespaceRouteRouteChildren,
+  )
+
+interface AuthenticatedPermissionsServerRouteRouteChildren {
+  AuthenticatedPermissionsServerIndexRoute: typeof AuthenticatedPermissionsServerIndexRoute
+}
+
+const AuthenticatedPermissionsServerRouteRouteChildren: AuthenticatedPermissionsServerRouteRouteChildren =
+  {
+    AuthenticatedPermissionsServerIndexRoute:
+      AuthenticatedPermissionsServerIndexRoute,
+  }
+
+const AuthenticatedPermissionsServerRouteRouteWithChildren =
+  AuthenticatedPermissionsServerRouteRoute._addFileChildren(
+    AuthenticatedPermissionsServerRouteRouteChildren,
+  )
+
+interface AuthenticatedPermissionsRouteRouteChildren {
+  AuthenticatedPermissionsNamespaceRouteRoute: typeof AuthenticatedPermissionsNamespaceRouteRouteWithChildren
+  AuthenticatedPermissionsServerRouteRoute: typeof AuthenticatedPermissionsServerRouteRouteWithChildren
+  AuthenticatedPermissionsIndexRoute: typeof AuthenticatedPermissionsIndexRoute
+}
+
+const AuthenticatedPermissionsRouteRouteChildren: AuthenticatedPermissionsRouteRouteChildren =
+  {
+    AuthenticatedPermissionsNamespaceRouteRoute:
+      AuthenticatedPermissionsNamespaceRouteRouteWithChildren,
+    AuthenticatedPermissionsServerRouteRoute:
+      AuthenticatedPermissionsServerRouteRouteWithChildren,
+    AuthenticatedPermissionsIndexRoute: AuthenticatedPermissionsIndexRoute,
+  }
+
+const AuthenticatedPermissionsRouteRouteWithChildren =
+  AuthenticatedPermissionsRouteRoute._addFileChildren(
+    AuthenticatedPermissionsRouteRouteChildren,
+  )
+
 interface AuthenticatedSchemasRouteRouteChildren {
   AuthenticatedSchemasSchemaIdRoute: typeof AuthenticatedSchemasSchemaIdRoute
   AuthenticatedSchemasIndexRoute: typeof AuthenticatedSchemasIndexRoute
@@ -661,6 +827,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedLoggingRouteRoute: typeof AuthenticatedLoggingRouteRoute
   AuthenticatedNamespacesRouteRoute: typeof AuthenticatedNamespacesRouteRouteWithChildren
   AuthenticatedPeopleRouteRoute: typeof AuthenticatedPeopleRouteRouteWithChildren
+  AuthenticatedPermissionsRouteRoute: typeof AuthenticatedPermissionsRouteRouteWithChildren
   AuthenticatedSchemasRouteRoute: typeof AuthenticatedSchemasRouteRouteWithChildren
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
@@ -675,6 +842,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedNamespacesRouteRoute:
     AuthenticatedNamespacesRouteRouteWithChildren,
   AuthenticatedPeopleRouteRoute: AuthenticatedPeopleRouteRouteWithChildren,
+  AuthenticatedPermissionsRouteRoute:
+    AuthenticatedPermissionsRouteRouteWithChildren,
   AuthenticatedSchemasRouteRoute: AuthenticatedSchemasRouteRouteWithChildren,
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,

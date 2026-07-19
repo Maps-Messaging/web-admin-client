@@ -18,6 +18,7 @@
 import { NamespaceDetailsCard } from "@/components/namespaces/namespace-details-card";
 import { NamespaceNavigationCard } from "@/components/namespaces/namespace-navigation-card";
 import { createFileRoute } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 
 export const Route = createFileRoute("/_authenticated/namespaces/$")({
   component: RouteComponent,
@@ -25,12 +26,24 @@ export const Route = createFileRoute("/_authenticated/namespaces/$")({
 
 function RouteComponent() {
   const { _splat } = Route.useParams();
+  const [activePath, setActivePath] = useState<string>(_splat ?? "");
+
+  useEffect(() => {
+    if (activePath !== _splat) {
+      setActivePath(_splat ?? "");
+    }
+  }, [_splat]);
   return (
     <div className="px-6 flex flex-col gap-4">
       <h1 className="text-4xl font-extrabold">Namespaces</h1>
       <div className="flex gap-4">
-        <NamespaceNavigationCard path={_splat} className="grow max-w-2xl" />
-        <NamespaceDetailsCard path={_splat} className="grow max-w-2xl" />
+        <NamespaceNavigationCard
+          baseUrl="/namespaces"
+          path={_splat}
+          selectPath={setActivePath}
+          className="flex-1"
+        />
+        <NamespaceDetailsCard path={activePath} className="flex-1" />
       </div>
     </div>
   );

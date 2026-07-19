@@ -17,6 +17,7 @@
 
 import spec from "@/../resources/openapi.json";
 import { configHandlers } from "@/mocks/config";
+import { namespaceHandlers } from "@/mocks/namespace";
 import { schemaHandlers } from "@/mocks/schema";
 import { fromOpenApi } from "@msw/source/open-api";
 import { setupWorker } from "msw/browser";
@@ -24,7 +25,8 @@ import { setupWorker } from "msw/browser";
 const handlers = await fromOpenApi(spec as never);
 
 export const worker = setupWorker(
-  ...schemaHandlers,
   ...configHandlers,
+  ...namespaceHandlers,
+  ...schemaHandlers,
   ...handlers,
 );
