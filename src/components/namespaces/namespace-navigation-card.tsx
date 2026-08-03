@@ -22,7 +22,7 @@ import { LinkButton } from "@/components/ui/link-button";
 import { getNamespaceHierarchy } from "@/lib/namespace";
 import type { FileRouteTypes } from "@/routeTree.gen";
 import { Link } from "@tanstack/react-router";
-import { File, Folder, FolderUp, FolderDown } from "lucide-react";
+import { File, Folder, FolderDown, FolderUp } from "lucide-react";
 import { type FunctionComponent, useEffect } from "react";
 
 interface NamespaceNavigationCardProps {
@@ -64,7 +64,7 @@ export const NamespaceNavigationCard: FunctionComponent<
                     from={baseUrl}
                     to={
                       pathParts.length > 1
-                        ? `${baseUrl}/${pathParts[1]}`
+                        ? (`${baseUrl}/${pathParts[1]}` as any)
                         : baseUrl
                     }
                   />

@@ -102,9 +102,7 @@ export const CreateUserDialog = () => {
           form.handleSubmit();
         }}
       >
-        <DialogTrigger asChild>
-          <Button>Create User</Button>
-        </DialogTrigger>
+        <DialogTrigger render={<Button />}>Create User</DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Create User</DialogTitle>
@@ -196,10 +194,10 @@ export const CreateUserDialog = () => {
             />
           </FieldGroup>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline" onClick={() => form.reset()}>
-                Cancel
-              </Button>
+            <DialogClose
+              render={<Button variant="outline" onClick={() => form.reset()} />}
+            >
+              Cancel
             </DialogClose>
             <Button type="submit" form="create-user-form">
               Submit

@@ -88,9 +88,7 @@ export const AddGroupDialog: FunctionComponent<AddGroupDialogProps> = ({
           form.handleSubmit();
         }}
       >
-        <DialogTrigger asChild>
-          <Button>Add to Group</Button>
-        </DialogTrigger>
+        <DialogTrigger render={<Button />}>Add to Group</DialogTrigger>
         <DialogContent showCloseButton={false} className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Add Users to Group</DialogTitle>
@@ -120,10 +118,10 @@ export const AddGroupDialog: FunctionComponent<AddGroupDialogProps> = ({
             />
           </FieldGroup>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline" onClick={() => form.reset()}>
-                Cancel
-              </Button>
+            <DialogClose
+              render={<Button variant="outline" onClick={() => form.reset()} />}
+            >
+              Cancel
             </DialogClose>
             <Button type="submit" form="add-users-group-form">
               Submit

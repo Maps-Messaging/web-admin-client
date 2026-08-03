@@ -172,10 +172,10 @@ export const ResetUserPasswordDialog: FunctionComponent<
             />
           </FieldGroup>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline" onClick={() => form.reset()}>
-                Cancel
-              </Button>
+            <DialogClose
+              render={<Button variant="outline" onClick={() => form.reset()} />}
+            >
+              Cancel
             </DialogClose>
             <Button type="submit" form={`reset-user-password-form-${userId}`}>
               Save

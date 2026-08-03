@@ -83,9 +83,7 @@ export const CreateGroupDialog = () => {
           form.handleSubmit();
         }}
       >
-        <DialogTrigger asChild>
-          <Button>Create Group</Button>
-        </DialogTrigger>
+        <DialogTrigger render={<Button />}>Create Group</DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Create Group</DialogTitle>
@@ -120,10 +118,10 @@ export const CreateGroupDialog = () => {
             />
           </FieldGroup>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline" onClick={() => form.reset()}>
-                Cancel
-              </Button>
+            <DialogClose
+              render={<Button variant="outline" onClick={() => form.reset()} />}
+            >
+              Cancel
             </DialogClose>
             <Button type="submit" form="create-group-form">
               Submit

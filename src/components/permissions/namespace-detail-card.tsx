@@ -38,7 +38,7 @@ export const NamespaceDetailCard: FunctionComponent<
   NamespaceDetailsCardProps
 > = ({ namespace, className }) => {
   const { data } = useDestinationDetail(namespace);
-  const { type } = data?.destination ?? {};
+  const type = data?.destination?.type ?? "";
   const { explicitPermissions, inheritedPermissions } = useNamespacePermissions(
     namespace,
     type,
@@ -64,7 +64,11 @@ export const NamespaceDetailCard: FunctionComponent<
         {namespaceHierarchy.length > 1 ? (
           <>
             Inherited Permissions
-            <NamespaceAclTable acls={inheritedPermissions} />
+            <NamespaceAclTable
+              namespace={namespace}
+              type={type}
+              acls={inheritedPermissions}
+            />
           </>
         ) : null}
       </CardContent>

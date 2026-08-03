@@ -40,26 +40,19 @@ import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
+  type Row,
   useReactTable,
 } from "@tanstack/react-table";
 import { LockKeyholeOpen } from "lucide-react";
 import type { FunctionComponent } from "react";
+import { useMemo } from "react";
 
-interface ExplictAclTable {
-  acls: NamespaceAclItem[];
-  isEditable: boolean;
+interface NamespaceAclTableProps {
+  acls: NamespaceAclItem[] | InheritedPermissions[];
+  isEditable?: boolean;
   namespace: string;
   type: string;
 }
-
-interface InheritedAclTable {
-  acls: InheritedPermissions[];
-  isEditable: never;
-  namespace: never;
-  type: never;
-}
-
-type NamespaceAclTableProps = ExplictAclTable | InheritedAclTable;
 
 export const NamespaceAclTable: FunctionComponent<NamespaceAclTableProps> = ({
   acls,
@@ -67,53 +60,56 @@ export const NamespaceAclTable: FunctionComponent<NamespaceAclTableProps> = ({
   namespace,
   type,
 }) => {
-  const columns: ColumnDef<NamespaceAclItem>[] = [
-    ...(acls.some((acl) => isInheritedPermission(acl))
-      ? [
-          {
-            id: "source",
-            header: "Source",
-            cell: ({ row }) => row.original.source,
-          },
-        ]
-      : []),
-    {
-      id: "principal",
-      header: "Principal",
-      cell: ({ row }) => row.original.principalId,
-    },
-    {
-      id: "principalType",
-      header: "Principal Type",
-      cell: ({ row }) => row.original.principalType,
-    },
-    {
-      id: "effect",
-      header: "Effect",
-      cell: ({ row }) => row.original.effect,
-    },
-    {
-      id: "permissions",
-      header: "Permissions",
-      cell: ({ row }) => (row.original?.permissions ?? []).join(", "),
-    },
+  const columns = useMemo<ColumnDef<NamespaceAclItem | InheritedPermissions>[]>(
+    () => [
+      ...(acls.some((acl) => isInheritedPermission(acl))
+        ? [
+            {
+              id: "source",
+              header: "Source",
+              cell: ({ row }) => (row.original as InheritedPermissions).source,
+            } as ColumnDef<NamespaceAclItem | InheritedPermissions>,
+          ]
+        : []),
+      {
+        id: "principal",
+        header: "Principal",
+        cell: ({ row }) => row.original.principalId,
+      },
+      {
+        id: "principalType",
+        header: "Principal Type",
+        cell: ({ row }) => row.original.principalType,
+      },
+      {
+        id: "effect",
+        header: "Effect",
+        cell: ({ row }) => row.original.effect,
+      },
+      {
+        id: "permissions",
+        header: "Permissions",
+        cell: ({ row }) => (row.original?.permissions ?? []).join(", "),
+      },
 
-    ...(isEditable
-      ? [
-          {
-            id: "actions",
-            cell: ({ row }) => (
-              <NamespaceAclTableRowActions
-                namespace={namespace}
-                type={type}
-                acl={row.original}
-              />
-            ),
-            size: 30,
-          },
-        ]
-      : []),
-  ];
+      ...(isEditable
+        ? [
+            {
+              id: "actions",
+              cell: ({ row }: { row: Row<NamespaceAclItem> }) => (
+                <NamespaceAclTableRowActions
+                  namespace={namespace}
+                  type={type}
+                  acl={row.original}
+                />
+              ),
+              size: 30,
+            },
+          ]
+        : []),
+    ],
+    [acls, isEditable, namespace, type],
+  );
 
   const table = useReactTable({
     data: acls,

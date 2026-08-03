@@ -20,6 +20,23 @@ export default defineConfig({
       ? (monacoEditorPlugin as any).default({})
       : monacoEditorPlugin({}),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            {
+              name: "large-libs",
+              test: /node_modules/,
+              minSize: 100000, // 100KB
+              maxSize: 250000, // 250KB
+              priority: 10,
+            },
+          ],
+        },
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
