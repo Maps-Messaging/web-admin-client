@@ -45,14 +45,27 @@ import {
 import { LockKeyholeOpen } from "lucide-react";
 import type { FunctionComponent } from "react";
 
-interface NamespaceAclTableProps {
-  acls: NamespaceAclItem[] | InheritedPermissions[];
-  isEditable?: boolean;
+interface ExplictAclTable {
+  acls: NamespaceAclItem[];
+  isEditable: boolean;
+  namespace: string;
+  type: string;
 }
+
+interface InheritedAclTable {
+  acls: InheritedPermissions[];
+  isEditable: never;
+  namespace: never;
+  type: never;
+}
+
+type NamespaceAclTableProps = ExplictAclTable | InheritedAclTable;
 
 export const NamespaceAclTable: FunctionComponent<NamespaceAclTableProps> = ({
   acls,
   isEditable = false,
+  namespace,
+  type,
 }) => {
   const columns: ColumnDef<NamespaceAclItem>[] = [
     ...(acls.some((acl) => isInheritedPermission(acl))
@@ -89,7 +102,13 @@ export const NamespaceAclTable: FunctionComponent<NamespaceAclTableProps> = ({
       ? [
           {
             id: "actions",
-            cell: () => <NamespaceAclTableRowActions />,
+            cell: ({ row }) => (
+              <NamespaceAclTableRowActions
+                namespace={namespace}
+                type={type}
+                acl={row.original}
+              />
+            ),
             size: 30,
           },
         ]

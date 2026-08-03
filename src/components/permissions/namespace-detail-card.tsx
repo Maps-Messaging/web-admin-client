@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 
-import { AddPermissionDialog } from "@/components/permissions/add-permission-dialog";
+import { useDestinationDetail } from "@/components/namespaces/hooks";
+import { AddPermissionDialog } from "@/components/permissions/add-permission-dialog/add-permission-dialog";
 import { useNamespacePermissions } from "@/components/permissions/hooks";
 import { NamespaceAclTable } from "@/components/permissions/namespace-acl-table";
 import {
@@ -36,8 +37,12 @@ interface NamespaceDetailsCardProps {
 export const NamespaceDetailCard: FunctionComponent<
   NamespaceDetailsCardProps
 > = ({ namespace, className }) => {
-  const { explicitPermissions, inheritedPermissions } =
-    useNamespacePermissions(namespace);
+  const { data } = useDestinationDetail(namespace);
+  const { type } = data?.destination ?? {};
+  const { explicitPermissions, inheritedPermissions } = useNamespacePermissions(
+    namespace,
+    type,
+  );
 
   const namespaceHierarchy = getNamespaceHierarchy(namespace);
 
@@ -46,11 +51,16 @@ export const NamespaceDetailCard: FunctionComponent<
       <CardHeader>
         <CardTitle>{namespace ? namespace : "<root>"}</CardTitle>
         <CardAction>
-          <AddPermissionDialog />
+          <AddPermissionDialog namespace={namespace} type={type} />
         </CardAction>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        <NamespaceAclTable acls={explicitPermissions} isEditable />
+        <NamespaceAclTable
+          namespace={namespace}
+          type={type}
+          acls={explicitPermissions}
+          isEditable
+        />
         {namespaceHierarchy.length > 1 ? (
           <>
             Inherited Permissions

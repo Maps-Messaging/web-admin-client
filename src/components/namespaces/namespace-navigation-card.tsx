@@ -53,31 +53,37 @@ export const NamespaceNavigationCard: FunctionComponent<
       </CardHeader>
       <CardContent className="overflow-x-auto">
         <div className="flex-col">
-          {path ? (
-            <Button
-              variant="link"
-              className="px-0 grow justify-start group"
-              asChild
-            >
-              <Link
-                from={baseUrl}
-                to={
-                  pathParts.length > 1 ? `${baseUrl}/${pathParts[1]}` : baseUrl
+          <div className="flex">
+            {path ? (
+              <Button
+                variant="link"
+                className="px-0 grow justify-start group"
+                nativeButton={false}
+                render={
+                  <Link
+                    from={baseUrl}
+                    to={
+                      pathParts.length > 1
+                        ? `${baseUrl}/${pathParts[1]}`
+                        : baseUrl
+                    }
+                  />
                 }
               >
                 <FolderUp />
                 Parent
-              </Link>
+              </Button>
+            ) : null}
+            <Button
+              variant="link"
+              onClick={() => selectPath(path)}
+              className="px-0 grow justify-start group cursor-pointer"
+            >
+              <FolderDown />
+              Current namespace
             </Button>
-          ) : null}
-          <Button
-            variant="link"
-            onClick={() => selectPath(path)}
-            className="px-0 grow justify-start group cursor-pointer"
-          >
-            <FolderDown />
-            Current namespace
-          </Button>
+          </div>
+          <hr />
           {data?.pages.map((page, i) => (
             <div key={`${path}${i}`}>
               {(page.entries ?? []).map((entry) => (

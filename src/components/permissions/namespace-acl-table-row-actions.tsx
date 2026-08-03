@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 
+import { DeletePermissionDialog } from "@/components/permissions/delete-permission-dialog";
+import { EditPermissionDialog } from "@/components/permissions/edit-permission-dialog/edit-permission-dialog";
+import type { NamespaceAclItem } from "@/components/permissions/models";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -26,11 +29,15 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import { type FunctionComponent, useState } from "react";
 
-interface NamespaceAclTableRowActionsProps {}
+interface NamespaceAclTableRowActionsProps {
+  namespace: string;
+  type: string;
+  acl: NamespaceAclItem;
+}
 
 export const NamespaceAclTableRowActions: FunctionComponent<
   NamespaceAclTableRowActionsProps
-> = () => {
+> = ({ namespace, type, acl }) => {
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
@@ -57,6 +64,20 @@ export const NamespaceAclTableRowActions: FunctionComponent<
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
+      <EditPermissionDialog
+        namespace={namespace}
+        type={type}
+        acl={acl}
+        open={showUpdateDialog}
+        setOpen={setShowUpdateDialog}
+      />
+      <DeletePermissionDialog
+        open={showDeleteDialog}
+        setOpen={setShowDeleteDialog}
+        namespace={namespace}
+        type={type}
+        acl={acl}
+      />
     </>
   );
 };

@@ -16,20 +16,26 @@
  */
 
 import { apiClient } from "@/api/api-client";
-import type { AggregatedPermissions } from "@/components/permissions/models";
+import { queryClient } from "@/api/query-client";
+import type {
+  AggregatedPermissions,
+  NamespaceAcl,
+  NamespaceAclItem,
+} from "@/components/permissions/models";
 import { getNamespaceHierarchy } from "@/lib/namespace";
 import { useQueries } from "@tanstack/react-query";
 
 export function useNamespacePermissions(
   namespace: string,
+  type: string,
 ): AggregatedPermissions {
   const paths = getNamespaceHierarchy(namespace);
   return useQueries({
-    queries: paths.map((path) =>
+    queries: paths.map((path, index) =>
       apiClient.queryOptions("get", "/api/v1/auth/resources/acl", {
         params: {
           query: {
-            resourceType: path,
+            resourceType: index === 0 ? type : "FOLDER",
             resourceKey: path,
           },
         },
@@ -57,3 +63,176 @@ export function useNamespacePermissions(
     },
   });
 }
+
+export function usePermissionList() {
+  return apiClient.useQuery("get", "/api/v1/auth/permissions");
+}
+
+const updateNamespacePermissions = (namespace: string, type: string) => {
+  return apiClient.useMutation("put", "/api/v1/auth/resources/acl", {
+    onSettled: () => {
+      const paths = getNamespaceHierarchy(namespace);
+      paths.forEach((path, index) => {
+        console.log(
+          `Invalidating ${JSON.stringify({
+            resourceType: index === 0 ? type : "FOLDER",
+            resourceKey: path,
+          })}`,
+        );
+        queryClient.invalidateQueries(
+          apiClient.queryOptions("get", "/api/v1/auth/resources/acl", {
+            params: {
+              query: {
+                resourceType: index === 0 ? type : "FOLDER",
+                resourceKey: path,
+              },
+            },
+          }),
+        );
+      });
+    },
+  });
+};
+
+export const useAddNamespacePermission = (namespace: string, type: string) => {
+  const { mutate, ...restMutation } = updateNamespacePermissions(
+    namespace,
+    type,
+  );
+
+  const addMutation = (
+    permission: NamespaceAclItem,
+    options?: Parameters<
+      ReturnType<typeof updateNamespacePermissions>["mutate"]
+    >[1],
+  ) => {
+    const data = queryClient.getQueryData<NamespaceAcl>(
+      apiClient.queryOptions("get", "/api/v1/auth/resources/acl", {
+        params: {
+          query: {
+            resourceType: type,
+            resourceKey: namespace,
+          },
+        },
+      }).queryKey,
+    );
+
+    const entries = [...(data?.entries ?? []), permission];
+
+    mutate(
+      {
+        body: {
+          resourceKey: namespace,
+          resourceType: type,
+          entries,
+        },
+      },
+      options,
+    );
+  };
+
+  return {
+    ...restMutation,
+    mutate: addMutation,
+  };
+};
+
+export const useEditNamespacePermission = (namespace: string, type: string) => {
+  const { mutate, ...restMutation } = updateNamespacePermissions(
+    namespace,
+    type,
+  );
+
+  const editMutation = (
+    permission: NamespaceAclItem,
+    options?: Parameters<
+      ReturnType<typeof updateNamespacePermissions>["mutate"]
+    >[1],
+  ) => {
+    const data = queryClient.getQueryData<NamespaceAcl>(
+      apiClient.queryOptions("get", "/api/v1/auth/resources/acl", {
+        params: {
+          query: {
+            resourceType: type,
+            resourceKey: namespace,
+          },
+        },
+      }).queryKey,
+    );
+
+    const entries = (data?.entries ?? []).map((acl) => {
+      if (
+        acl.principalId === permission.principalId &&
+        acl.principalType === permission.principalType
+      ) {
+        return permission;
+      }
+      return acl;
+    });
+
+    mutate(
+      {
+        body: {
+          resourceKey: namespace,
+          resourceType: type,
+          entries,
+        },
+      },
+      options,
+    );
+  };
+
+  return {
+    ...restMutation,
+    mutate: editMutation,
+  };
+};
+export const useDeleteNamespacePermission = (
+  namespace: string,
+  type: string,
+) => {
+  const { mutate, ...restMutation } = updateNamespacePermissions(
+    namespace,
+    type,
+  );
+
+  const deleteMutation = (
+    permission: NamespaceAclItem,
+    options?: Parameters<
+      ReturnType<typeof updateNamespacePermissions>["mutate"]
+    >[1],
+  ) => {
+    const data = queryClient.getQueryData<NamespaceAcl>(
+      apiClient.queryOptions("get", "/api/v1/auth/resources/acl", {
+        params: {
+          query: {
+            resourceType: type,
+            resourceKey: namespace,
+          },
+        },
+      }).queryKey,
+    );
+
+    const entries = (data?.entries ?? []).filter(
+      (acl) =>
+        acl.principalId === permission.principalId &&
+        acl.principalType === permission.principalType,
+    );
+
+    mutate(
+      {
+        body: {
+          resourceKey: namespace,
+          resourceType: type,
+          entries,
+        },
+      },
+      options,
+    );
+  };
+
+  return {
+    ...restMutation,
+    mutate: deleteMutation,
+  };
+};
