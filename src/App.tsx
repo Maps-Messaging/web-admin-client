@@ -16,6 +16,7 @@
  */
 
 import { queryClient } from "@/api/query-client";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { routeTree } from "@/routeTree.gen";
 import { ThemeProvider } from "@/theme/theme-provider";
 
@@ -60,7 +61,9 @@ export const App = () => {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <TooltipProvider>
+          <RouterProvider router={router} />
+        </TooltipProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );

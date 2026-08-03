@@ -33,10 +33,13 @@ export const LinkButton: FunctionComponent<LinkButtonProps> = ({
   from,
   params,
 }) => (
-  <Button variant="link" className="px-0 grow justify-start group" asChild>
-    <Link to={to} from={from} params={params}>
-      {children}
-      <ChevronRight className="opacity-0 group-hover:opacity-80 transition-opacity inline-block size-4" />
-    </Link>
+  <Button
+    variant="link"
+    className="px-0 grow justify-start group"
+    render={<Link to={to} from={from} params={params} />}
+    nativeButton={false}
+  >
+    {children}
+    <ChevronRight className="opacity-0 group-hover:opacity-80 transition-opacity inline-block size-4" />
   </Button>
 );
