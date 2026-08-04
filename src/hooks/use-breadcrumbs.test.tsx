@@ -165,7 +165,7 @@ describe("useBreadcrumbs", () => {
     const dashboardRoute = createRoute({
       getParentRoute: () => rootRoute,
       path: "/dashboard",
-      loaderData: { breadcrumb: "Dashboard (loaded)" },
+      loader: () => ({ breadcrumb: "Dashboard (loaded)" }),
     });
 
     const router = createRouter({

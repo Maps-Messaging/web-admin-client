@@ -9,93 +9,57 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
-import { Route as AuthenticatedSchemasRouteRouteImport } from './routes/_authenticated/schemas/route'
-import { Route as AuthenticatedPermissionsRouteRouteImport } from './routes/_authenticated/permissions/route'
-import { Route as AuthenticatedPeopleRouteRouteImport } from './routes/_authenticated/people/route'
-import { Route as AuthenticatedNamespacesRouteRouteImport } from './routes/_authenticated/namespaces/route'
-import { Route as AuthenticatedLoggingRouteRouteImport } from './routes/_authenticated/logging/route'
-import { Route as AuthenticatedInterfacesRouteRouteImport } from './routes/_authenticated/interfaces/route'
-import { Route as AuthenticatedDevicesRouteRouteImport } from './routes/_authenticated/devices/route'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedConnectionsRouteRouteImport } from './routes/_authenticated/connections/route'
-import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
-import { Route as AuthenticatedSchemasIndexRouteImport } from './routes/_authenticated/schemas/index'
-import { Route as AuthenticatedPermissionsIndexRouteImport } from './routes/_authenticated/permissions/index'
-import { Route as AuthenticatedPeopleIndexRouteImport } from './routes/_authenticated/people/index'
-import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
+import { Route as AuthenticatedDevicesRouteRouteImport } from './routes/_authenticated/devices/route'
+import { Route as AuthenticatedInterfacesRouteRouteImport } from './routes/_authenticated/interfaces/route'
+import { Route as AuthenticatedLoggingRouteRouteImport } from './routes/_authenticated/logging/route'
+import { Route as AuthenticatedNamespacesRouteRouteImport } from './routes/_authenticated/namespaces/route'
+import { Route as AuthenticatedPeopleRouteRouteImport } from './routes/_authenticated/people/route'
+import { Route as AuthenticatedPermissionsRouteRouteImport } from './routes/_authenticated/permissions/route'
+import { Route as AuthenticatedSchemasRouteRouteImport } from './routes/_authenticated/schemas/route'
+import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedConnectionsIndexRouteImport } from './routes/_authenticated/connections/index'
-import { Route as AuthenticatedSettingsConfigNameRouteImport } from './routes/_authenticated/settings/$configName'
-import { Route as AuthenticatedSchemasSchemaIdRouteImport } from './routes/_authenticated/schemas/$schemaId'
-import { Route as AuthenticatedNamespacesSplatRouteImport } from './routes/_authenticated/namespaces/$'
 import { Route as AuthenticatedConnectionsConnectionIdRouteImport } from './routes/_authenticated/connections/$connectionId'
-import { Route as AuthenticatedPermissionsServerRouteRouteImport } from './routes/_authenticated/permissions/server/route'
-import { Route as AuthenticatedPermissionsNamespaceRouteRouteImport } from './routes/_authenticated/permissions/namespace/route'
-import { Route as AuthenticatedPeopleUsersRouteRouteImport } from './routes/_authenticated/people/users/route'
+import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
+import { Route as AuthenticatedNamespacesSplatRouteImport } from './routes/_authenticated/namespaces/$'
+import { Route as AuthenticatedPeopleIndexRouteImport } from './routes/_authenticated/people/index'
 import { Route as AuthenticatedPeopleGroupsRouteRouteImport } from './routes/_authenticated/people/groups/route'
-import { Route as AuthenticatedPermissionsServerIndexRouteImport } from './routes/_authenticated/permissions/server/index'
-import { Route as AuthenticatedPeopleUsersIndexRouteImport } from './routes/_authenticated/people/users/index'
+import { Route as AuthenticatedPeopleUsersRouteRouteImport } from './routes/_authenticated/people/users/route'
+import { Route as AuthenticatedPermissionsIndexRouteImport } from './routes/_authenticated/permissions/index'
+import { Route as AuthenticatedPermissionsNamespaceRouteRouteImport } from './routes/_authenticated/permissions/namespace/route'
+import { Route as AuthenticatedPermissionsServerRouteRouteImport } from './routes/_authenticated/permissions/server/route'
+import { Route as AuthenticatedSchemasIndexRouteImport } from './routes/_authenticated/schemas/index'
+import { Route as AuthenticatedSchemasSchemaIdRouteImport } from './routes/_authenticated/schemas/$schemaId'
+import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedSettingsConfigNameRouteImport } from './routes/_authenticated/settings/$configName'
 import { Route as AuthenticatedPeopleGroupsIndexRouteImport } from './routes/_authenticated/people/groups/index'
-import { Route as AuthenticatedPermissionsNamespaceSplatRouteImport } from './routes/_authenticated/permissions/namespace/$'
-import { Route as AuthenticatedPeopleUsersUserIdRouteImport } from './routes/_authenticated/people/users/$userId'
 import { Route as AuthenticatedPeopleGroupsGroupIdRouteImport } from './routes/_authenticated/people/groups/$groupId'
+import { Route as AuthenticatedPeopleUsersIndexRouteImport } from './routes/_authenticated/people/users/index'
+import { Route as AuthenticatedPeopleUsersUserIdRouteImport } from './routes/_authenticated/people/users/$userId'
+import { Route as AuthenticatedPermissionsNamespaceSplatRouteImport } from './routes/_authenticated/permissions/namespace/$'
+import { Route as AuthenticatedPermissionsServerIndexRouteImport } from './routes/_authenticated/permissions/server/index'
 
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedSettingsRouteRoute =
-  AuthenticatedSettingsRouteRouteImport.update({
-    id: '/settings',
-    path: '/settings',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedSchemasRouteRoute =
-  AuthenticatedSchemasRouteRouteImport.update({
-    id: '/schemas',
-    path: '/schemas',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedPermissionsRouteRoute =
-  AuthenticatedPermissionsRouteRouteImport.update({
-    id: '/permissions',
-    path: '/permissions',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedPeopleRouteRoute =
-  AuthenticatedPeopleRouteRouteImport.update({
-    id: '/people',
-    path: '/people',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedNamespacesRouteRoute =
-  AuthenticatedNamespacesRouteRouteImport.update({
-    id: '/namespaces',
-    path: '/namespaces',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedLoggingRouteRoute =
-  AuthenticatedLoggingRouteRouteImport.update({
-    id: '/logging',
-    path: '/logging',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedInterfacesRouteRoute =
-  AuthenticatedInterfacesRouteRouteImport.update({
-    id: '/interfaces',
-    path: '/interfaces',
+const AuthenticatedConnectionsRouteRoute =
+  AuthenticatedConnectionsRouteRouteImport.update({
+    id: '/connections',
+    path: '/connections',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDevicesRouteRoute =
@@ -104,40 +68,46 @@ const AuthenticatedDevicesRouteRoute =
     path: '/devices',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedConnectionsRouteRoute =
-  AuthenticatedConnectionsRouteRouteImport.update({
-    id: '/connections',
-    path: '/connections',
+const AuthenticatedInterfacesRouteRoute =
+  AuthenticatedInterfacesRouteRouteImport.update({
+    id: '/interfaces',
+    path: '/interfaces',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedSettingsIndexRoute =
-  AuthenticatedSettingsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+const AuthenticatedLoggingRouteRoute =
+  AuthenticatedLoggingRouteRouteImport.update({
+    id: '/logging',
+    path: '/logging',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedSchemasIndexRoute =
-  AuthenticatedSchemasIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedSchemasRouteRoute,
+const AuthenticatedNamespacesRouteRoute =
+  AuthenticatedNamespacesRouteRouteImport.update({
+    id: '/namespaces',
+    path: '/namespaces',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedPermissionsIndexRoute =
-  AuthenticatedPermissionsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedPermissionsRouteRoute,
+const AuthenticatedPeopleRouteRoute =
+  AuthenticatedPeopleRouteRouteImport.update({
+    id: '/people',
+    path: '/people',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedPeopleIndexRoute =
-  AuthenticatedPeopleIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedPeopleRouteRoute,
+const AuthenticatedPermissionsRouteRoute =
+  AuthenticatedPermissionsRouteRouteImport.update({
+    id: '/permissions',
+    path: '/permissions',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedDashboardIndexRoute =
-  AuthenticatedDashboardIndexRouteImport.update({
-    id: '/dashboard/',
-    path: '/dashboard/',
+const AuthenticatedSchemasRouteRoute =
+  AuthenticatedSchemasRouteRouteImport.update({
+    id: '/schemas',
+    path: '/schemas',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSettingsRouteRoute =
+  AuthenticatedSettingsRouteRouteImport.update({
+    id: '/settings',
+    path: '/settings',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedConnectionsIndexRoute =
@@ -146,17 +116,17 @@ const AuthenticatedConnectionsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedConnectionsRouteRoute,
   } as any)
-const AuthenticatedSettingsConfigNameRoute =
-  AuthenticatedSettingsConfigNameRouteImport.update({
-    id: '/$configName',
-    path: '/$configName',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+const AuthenticatedConnectionsConnectionIdRoute =
+  AuthenticatedConnectionsConnectionIdRouteImport.update({
+    id: '/$connectionId',
+    path: '/$connectionId',
+    getParentRoute: () => AuthenticatedConnectionsRouteRoute,
   } as any)
-const AuthenticatedSchemasSchemaIdRoute =
-  AuthenticatedSchemasSchemaIdRouteImport.update({
-    id: '/$schemaId',
-    path: '/$schemaId',
-    getParentRoute: () => AuthenticatedSchemasRouteRoute,
+const AuthenticatedDashboardIndexRoute =
+  AuthenticatedDashboardIndexRouteImport.update({
+    id: '/dashboard/',
+    path: '/dashboard/',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedNamespacesSplatRoute =
   AuthenticatedNamespacesSplatRouteImport.update({
@@ -164,28 +134,10 @@ const AuthenticatedNamespacesSplatRoute =
     path: '/$',
     getParentRoute: () => AuthenticatedNamespacesRouteRoute,
   } as any)
-const AuthenticatedConnectionsConnectionIdRoute =
-  AuthenticatedConnectionsConnectionIdRouteImport.update({
-    id: '/$connectionId',
-    path: '/$connectionId',
-    getParentRoute: () => AuthenticatedConnectionsRouteRoute,
-  } as any)
-const AuthenticatedPermissionsServerRouteRoute =
-  AuthenticatedPermissionsServerRouteRouteImport.update({
-    id: '/server',
-    path: '/server',
-    getParentRoute: () => AuthenticatedPermissionsRouteRoute,
-  } as any)
-const AuthenticatedPermissionsNamespaceRouteRoute =
-  AuthenticatedPermissionsNamespaceRouteRouteImport.update({
-    id: '/namespace',
-    path: '/namespace',
-    getParentRoute: () => AuthenticatedPermissionsRouteRoute,
-  } as any)
-const AuthenticatedPeopleUsersRouteRoute =
-  AuthenticatedPeopleUsersRouteRouteImport.update({
-    id: '/users',
-    path: '/users',
+const AuthenticatedPeopleIndexRoute =
+  AuthenticatedPeopleIndexRouteImport.update({
+    id: '/',
+    path: '/',
     getParentRoute: () => AuthenticatedPeopleRouteRoute,
   } as any)
 const AuthenticatedPeopleGroupsRouteRoute =
@@ -194,17 +146,53 @@ const AuthenticatedPeopleGroupsRouteRoute =
     path: '/groups',
     getParentRoute: () => AuthenticatedPeopleRouteRoute,
   } as any)
-const AuthenticatedPermissionsServerIndexRoute =
-  AuthenticatedPermissionsServerIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedPermissionsServerRouteRoute,
+const AuthenticatedPeopleUsersRouteRoute =
+  AuthenticatedPeopleUsersRouteRouteImport.update({
+    id: '/users',
+    path: '/users',
+    getParentRoute: () => AuthenticatedPeopleRouteRoute,
   } as any)
-const AuthenticatedPeopleUsersIndexRoute =
-  AuthenticatedPeopleUsersIndexRouteImport.update({
+const AuthenticatedPermissionsIndexRoute =
+  AuthenticatedPermissionsIndexRouteImport.update({
     id: '/',
     path: '/',
-    getParentRoute: () => AuthenticatedPeopleUsersRouteRoute,
+    getParentRoute: () => AuthenticatedPermissionsRouteRoute,
+  } as any)
+const AuthenticatedPermissionsNamespaceRouteRoute =
+  AuthenticatedPermissionsNamespaceRouteRouteImport.update({
+    id: '/namespace',
+    path: '/namespace',
+    getParentRoute: () => AuthenticatedPermissionsRouteRoute,
+  } as any)
+const AuthenticatedPermissionsServerRouteRoute =
+  AuthenticatedPermissionsServerRouteRouteImport.update({
+    id: '/server',
+    path: '/server',
+    getParentRoute: () => AuthenticatedPermissionsRouteRoute,
+  } as any)
+const AuthenticatedSchemasIndexRoute =
+  AuthenticatedSchemasIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedSchemasRouteRoute,
+  } as any)
+const AuthenticatedSchemasSchemaIdRoute =
+  AuthenticatedSchemasSchemaIdRouteImport.update({
+    id: '/$schemaId',
+    path: '/$schemaId',
+    getParentRoute: () => AuthenticatedSchemasRouteRoute,
+  } as any)
+const AuthenticatedSettingsIndexRoute =
+  AuthenticatedSettingsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
+const AuthenticatedSettingsConfigNameRoute =
+  AuthenticatedSettingsConfigNameRouteImport.update({
+    id: '/$configName',
+    path: '/$configName',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
 const AuthenticatedPeopleGroupsIndexRoute =
   AuthenticatedPeopleGroupsIndexRouteImport.update({
@@ -212,11 +200,17 @@ const AuthenticatedPeopleGroupsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedPeopleGroupsRouteRoute,
   } as any)
-const AuthenticatedPermissionsNamespaceSplatRoute =
-  AuthenticatedPermissionsNamespaceSplatRouteImport.update({
-    id: '/$',
-    path: '/$',
-    getParentRoute: () => AuthenticatedPermissionsNamespaceRouteRoute,
+const AuthenticatedPeopleGroupsGroupIdRoute =
+  AuthenticatedPeopleGroupsGroupIdRouteImport.update({
+    id: '/$groupId',
+    path: '/$groupId',
+    getParentRoute: () => AuthenticatedPeopleGroupsRouteRoute,
+  } as any)
+const AuthenticatedPeopleUsersIndexRoute =
+  AuthenticatedPeopleUsersIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedPeopleUsersRouteRoute,
   } as any)
 const AuthenticatedPeopleUsersUserIdRoute =
   AuthenticatedPeopleUsersUserIdRouteImport.update({
@@ -224,11 +218,17 @@ const AuthenticatedPeopleUsersUserIdRoute =
     path: '/$userId',
     getParentRoute: () => AuthenticatedPeopleUsersRouteRoute,
   } as any)
-const AuthenticatedPeopleGroupsGroupIdRoute =
-  AuthenticatedPeopleGroupsGroupIdRouteImport.update({
-    id: '/$groupId',
-    path: '/$groupId',
-    getParentRoute: () => AuthenticatedPeopleGroupsRouteRoute,
+const AuthenticatedPermissionsNamespaceSplatRoute =
+  AuthenticatedPermissionsNamespaceSplatRouteImport.update({
+    id: '/$',
+    path: '/$',
+    getParentRoute: () => AuthenticatedPermissionsNamespaceRouteRoute,
+  } as any)
+const AuthenticatedPermissionsServerIndexRoute =
+  AuthenticatedPermissionsServerIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedPermissionsServerRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -427,11 +427,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -441,60 +441,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/settings': {
-      id: '/_authenticated/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/schemas': {
-      id: '/_authenticated/schemas'
-      path: '/schemas'
-      fullPath: '/schemas'
-      preLoaderRoute: typeof AuthenticatedSchemasRouteRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/permissions': {
-      id: '/_authenticated/permissions'
-      path: '/permissions'
-      fullPath: '/permissions'
-      preLoaderRoute: typeof AuthenticatedPermissionsRouteRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/people': {
-      id: '/_authenticated/people'
-      path: '/people'
-      fullPath: '/people'
-      preLoaderRoute: typeof AuthenticatedPeopleRouteRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/namespaces': {
-      id: '/_authenticated/namespaces'
-      path: '/namespaces'
-      fullPath: '/namespaces'
-      preLoaderRoute: typeof AuthenticatedNamespacesRouteRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/logging': {
-      id: '/_authenticated/logging'
-      path: '/logging'
-      fullPath: '/logging'
-      preLoaderRoute: typeof AuthenticatedLoggingRouteRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/interfaces': {
-      id: '/_authenticated/interfaces'
-      path: '/interfaces'
-      fullPath: '/interfaces'
-      preLoaderRoute: typeof AuthenticatedInterfacesRouteRouteImport
+    '/_authenticated/connections': {
+      id: '/_authenticated/connections'
+      path: '/connections'
+      fullPath: '/connections'
+      preLoaderRoute: typeof AuthenticatedConnectionsRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/devices': {
@@ -504,46 +462,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDevicesRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/connections': {
-      id: '/_authenticated/connections'
-      path: '/connections'
-      fullPath: '/connections'
-      preLoaderRoute: typeof AuthenticatedConnectionsRouteRouteImport
+    '/_authenticated/interfaces': {
+      id: '/_authenticated/interfaces'
+      path: '/interfaces'
+      fullPath: '/interfaces'
+      preLoaderRoute: typeof AuthenticatedInterfacesRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/settings/': {
-      id: '/_authenticated/settings/'
-      path: '/'
-      fullPath: '/settings/'
-      preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    '/_authenticated/logging': {
+      id: '/_authenticated/logging'
+      path: '/logging'
+      fullPath: '/logging'
+      preLoaderRoute: typeof AuthenticatedLoggingRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/schemas/': {
-      id: '/_authenticated/schemas/'
-      path: '/'
-      fullPath: '/schemas/'
-      preLoaderRoute: typeof AuthenticatedSchemasIndexRouteImport
-      parentRoute: typeof AuthenticatedSchemasRouteRoute
+    '/_authenticated/namespaces': {
+      id: '/_authenticated/namespaces'
+      path: '/namespaces'
+      fullPath: '/namespaces'
+      preLoaderRoute: typeof AuthenticatedNamespacesRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/permissions/': {
-      id: '/_authenticated/permissions/'
-      path: '/'
-      fullPath: '/permissions/'
-      preLoaderRoute: typeof AuthenticatedPermissionsIndexRouteImport
-      parentRoute: typeof AuthenticatedPermissionsRouteRoute
+    '/_authenticated/people': {
+      id: '/_authenticated/people'
+      path: '/people'
+      fullPath: '/people'
+      preLoaderRoute: typeof AuthenticatedPeopleRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/people/': {
-      id: '/_authenticated/people/'
-      path: '/'
-      fullPath: '/people/'
-      preLoaderRoute: typeof AuthenticatedPeopleIndexRouteImport
-      parentRoute: typeof AuthenticatedPeopleRouteRoute
+    '/_authenticated/permissions': {
+      id: '/_authenticated/permissions'
+      path: '/permissions'
+      fullPath: '/permissions'
+      preLoaderRoute: typeof AuthenticatedPermissionsRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/dashboard/': {
-      id: '/_authenticated/dashboard/'
-      path: '/dashboard'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
+    '/_authenticated/schemas': {
+      id: '/_authenticated/schemas'
+      path: '/schemas'
+      fullPath: '/schemas'
+      preLoaderRoute: typeof AuthenticatedSchemasRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/connections/': {
@@ -553,19 +518,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedConnectionsIndexRouteImport
       parentRoute: typeof AuthenticatedConnectionsRouteRoute
     }
-    '/_authenticated/settings/$configName': {
-      id: '/_authenticated/settings/$configName'
-      path: '/$configName'
-      fullPath: '/settings/$configName'
-      preLoaderRoute: typeof AuthenticatedSettingsConfigNameRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    '/_authenticated/connections/$connectionId': {
+      id: '/_authenticated/connections/$connectionId'
+      path: '/$connectionId'
+      fullPath: '/connections/$connectionId'
+      preLoaderRoute: typeof AuthenticatedConnectionsConnectionIdRouteImport
+      parentRoute: typeof AuthenticatedConnectionsRouteRoute
     }
-    '/_authenticated/schemas/$schemaId': {
-      id: '/_authenticated/schemas/$schemaId'
-      path: '/$schemaId'
-      fullPath: '/schemas/$schemaId'
-      preLoaderRoute: typeof AuthenticatedSchemasSchemaIdRouteImport
-      parentRoute: typeof AuthenticatedSchemasRouteRoute
+    '/_authenticated/dashboard/': {
+      id: '/_authenticated/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/namespaces/$': {
       id: '/_authenticated/namespaces/$'
@@ -574,32 +539,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNamespacesSplatRouteImport
       parentRoute: typeof AuthenticatedNamespacesRouteRoute
     }
-    '/_authenticated/connections/$connectionId': {
-      id: '/_authenticated/connections/$connectionId'
-      path: '/$connectionId'
-      fullPath: '/connections/$connectionId'
-      preLoaderRoute: typeof AuthenticatedConnectionsConnectionIdRouteImport
-      parentRoute: typeof AuthenticatedConnectionsRouteRoute
-    }
-    '/_authenticated/permissions/server': {
-      id: '/_authenticated/permissions/server'
-      path: '/server'
-      fullPath: '/permissions/server'
-      preLoaderRoute: typeof AuthenticatedPermissionsServerRouteRouteImport
-      parentRoute: typeof AuthenticatedPermissionsRouteRoute
-    }
-    '/_authenticated/permissions/namespace': {
-      id: '/_authenticated/permissions/namespace'
-      path: '/namespace'
-      fullPath: '/permissions/namespace'
-      preLoaderRoute: typeof AuthenticatedPermissionsNamespaceRouteRouteImport
-      parentRoute: typeof AuthenticatedPermissionsRouteRoute
-    }
-    '/_authenticated/people/users': {
-      id: '/_authenticated/people/users'
-      path: '/users'
-      fullPath: '/people/users'
-      preLoaderRoute: typeof AuthenticatedPeopleUsersRouteRouteImport
+    '/_authenticated/people/': {
+      id: '/_authenticated/people/'
+      path: '/'
+      fullPath: '/people/'
+      preLoaderRoute: typeof AuthenticatedPeopleIndexRouteImport
       parentRoute: typeof AuthenticatedPeopleRouteRoute
     }
     '/_authenticated/people/groups': {
@@ -609,19 +553,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPeopleGroupsRouteRouteImport
       parentRoute: typeof AuthenticatedPeopleRouteRoute
     }
-    '/_authenticated/permissions/server/': {
-      id: '/_authenticated/permissions/server/'
-      path: '/'
-      fullPath: '/permissions/server/'
-      preLoaderRoute: typeof AuthenticatedPermissionsServerIndexRouteImport
-      parentRoute: typeof AuthenticatedPermissionsServerRouteRoute
+    '/_authenticated/people/users': {
+      id: '/_authenticated/people/users'
+      path: '/users'
+      fullPath: '/people/users'
+      preLoaderRoute: typeof AuthenticatedPeopleUsersRouteRouteImport
+      parentRoute: typeof AuthenticatedPeopleRouteRoute
     }
-    '/_authenticated/people/users/': {
-      id: '/_authenticated/people/users/'
+    '/_authenticated/permissions/': {
+      id: '/_authenticated/permissions/'
       path: '/'
-      fullPath: '/people/users/'
-      preLoaderRoute: typeof AuthenticatedPeopleUsersIndexRouteImport
-      parentRoute: typeof AuthenticatedPeopleUsersRouteRoute
+      fullPath: '/permissions/'
+      preLoaderRoute: typeof AuthenticatedPermissionsIndexRouteImport
+      parentRoute: typeof AuthenticatedPermissionsRouteRoute
+    }
+    '/_authenticated/permissions/namespace': {
+      id: '/_authenticated/permissions/namespace'
+      path: '/namespace'
+      fullPath: '/permissions/namespace'
+      preLoaderRoute: typeof AuthenticatedPermissionsNamespaceRouteRouteImport
+      parentRoute: typeof AuthenticatedPermissionsRouteRoute
+    }
+    '/_authenticated/permissions/server': {
+      id: '/_authenticated/permissions/server'
+      path: '/server'
+      fullPath: '/permissions/server'
+      preLoaderRoute: typeof AuthenticatedPermissionsServerRouteRouteImport
+      parentRoute: typeof AuthenticatedPermissionsRouteRoute
+    }
+    '/_authenticated/schemas/': {
+      id: '/_authenticated/schemas/'
+      path: '/'
+      fullPath: '/schemas/'
+      preLoaderRoute: typeof AuthenticatedSchemasIndexRouteImport
+      parentRoute: typeof AuthenticatedSchemasRouteRoute
+    }
+    '/_authenticated/schemas/$schemaId': {
+      id: '/_authenticated/schemas/$schemaId'
+      path: '/$schemaId'
+      fullPath: '/schemas/$schemaId'
+      preLoaderRoute: typeof AuthenticatedSchemasSchemaIdRouteImport
+      parentRoute: typeof AuthenticatedSchemasRouteRoute
+    }
+    '/_authenticated/settings/': {
+      id: '/_authenticated/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
+    '/_authenticated/settings/$configName': {
+      id: '/_authenticated/settings/$configName'
+      path: '/$configName'
+      fullPath: '/settings/$configName'
+      preLoaderRoute: typeof AuthenticatedSettingsConfigNameRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
     '/_authenticated/people/groups/': {
       id: '/_authenticated/people/groups/'
@@ -630,12 +616,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPeopleGroupsIndexRouteImport
       parentRoute: typeof AuthenticatedPeopleGroupsRouteRoute
     }
-    '/_authenticated/permissions/namespace/$': {
-      id: '/_authenticated/permissions/namespace/$'
-      path: '/$'
-      fullPath: '/permissions/namespace/$'
-      preLoaderRoute: typeof AuthenticatedPermissionsNamespaceSplatRouteImport
-      parentRoute: typeof AuthenticatedPermissionsNamespaceRouteRoute
+    '/_authenticated/people/groups/$groupId': {
+      id: '/_authenticated/people/groups/$groupId'
+      path: '/$groupId'
+      fullPath: '/people/groups/$groupId'
+      preLoaderRoute: typeof AuthenticatedPeopleGroupsGroupIdRouteImport
+      parentRoute: typeof AuthenticatedPeopleGroupsRouteRoute
+    }
+    '/_authenticated/people/users/': {
+      id: '/_authenticated/people/users/'
+      path: '/'
+      fullPath: '/people/users/'
+      preLoaderRoute: typeof AuthenticatedPeopleUsersIndexRouteImport
+      parentRoute: typeof AuthenticatedPeopleUsersRouteRoute
     }
     '/_authenticated/people/users/$userId': {
       id: '/_authenticated/people/users/$userId'
@@ -644,12 +637,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPeopleUsersUserIdRouteImport
       parentRoute: typeof AuthenticatedPeopleUsersRouteRoute
     }
-    '/_authenticated/people/groups/$groupId': {
-      id: '/_authenticated/people/groups/$groupId'
-      path: '/$groupId'
-      fullPath: '/people/groups/$groupId'
-      preLoaderRoute: typeof AuthenticatedPeopleGroupsGroupIdRouteImport
-      parentRoute: typeof AuthenticatedPeopleGroupsRouteRoute
+    '/_authenticated/permissions/namespace/$': {
+      id: '/_authenticated/permissions/namespace/$'
+      path: '/$'
+      fullPath: '/permissions/namespace/$'
+      preLoaderRoute: typeof AuthenticatedPermissionsNamespaceSplatRouteImport
+      parentRoute: typeof AuthenticatedPermissionsNamespaceRouteRoute
+    }
+    '/_authenticated/permissions/server/': {
+      id: '/_authenticated/permissions/server/'
+      path: '/'
+      fullPath: '/permissions/server/'
+      preLoaderRoute: typeof AuthenticatedPermissionsServerIndexRouteImport
+      parentRoute: typeof AuthenticatedPermissionsServerRouteRoute
     }
   }
 }
