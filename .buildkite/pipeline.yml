@@ -11,6 +11,7 @@ steps:
       - docker-compose#v5.13.0:
           config: docker-compose.yaml
           run: node
+          propagate-uid-gid: true
   - key: "test"
     label: ":npm: test web client"
     command: "./.buildkite/test.sh"
@@ -18,6 +19,7 @@ steps:
       - docker-compose#v5.13.0:
           config: docker-compose.yaml
           run: node
+          propagate-uid-gid: true
 
   - key: "publish"
     label: ":github: Publish release"
