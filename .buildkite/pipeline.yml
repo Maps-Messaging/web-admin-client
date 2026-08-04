@@ -1,0 +1,14 @@
+agents:
+  queue: "java_build_queue"
+
+steps:
+  - label: ":npm: Build and package web client"
+    command:
+      - "./.buildkite/build.sh"
+      - "./.buildkite/scan.sh"
+    artifact_paths:
+      - "webAdminClient.tgz"
+
+  - label: ":github: Publish release"
+    command: "./.buildkite/publish.sh"
+    if: build.branch == "main" || build.branch == "development"

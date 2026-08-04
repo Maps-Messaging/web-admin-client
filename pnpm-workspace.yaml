@@ -1,6 +1,10 @@
 minimumReleaseAge: 20160
 minimumReleaseAgeIgnoreMissingTime: false
 minimumReleaseAgeStrict: true
+blockExoticSubdeps: true
 
 onlyBuiltDependencies:
   - msw
+
+allowBuilds:
+  msw: true

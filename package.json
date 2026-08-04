@@ -5,12 +5,13 @@
   "licence": "MIT",
   "homepage": "/admin",
   "private": false,
+  "type": "module",
   "scripts": {
     "dev": "vite --port 3000",
-    "build": "tsc && vite build",
+    "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "gen-api": "openapi-typescript ./resources/openapi.json -o ./src/api/spec.d.ts",
+    "gen-api": "openapi-typescript ./resources/openapi.json -o ./src/api/spec.d.ts & prettier --write ./src/api/spec.d.ts",
     "format": "prettier --write ."
   },
   "dependencies": {
