@@ -20,17 +20,17 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { routeTree } from "@/routeTree.gen";
 import { ThemeProvider } from "@/theme/theme-provider";
 
-import { loader } from "@monaco-editor/react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import "./styles.css";
 import "./theme/tokens.css";
-import * as monaco from "monaco-editor";
+import "monaco-editor/esm/vs/language/json/monaco.contribution.js";
+import "monaco-editor/esm/vs/language/json/jsonMode.js";
 
 import JsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
 import EditorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
 
-window.MonacoEnvironment = {
+self.MonacoEnvironment = {
   getWorker(_: string, label: string) {
     if (label === "json") {
       return new JsonWorker();
@@ -38,8 +38,6 @@ window.MonacoEnvironment = {
     return new EditorWorker();
   },
 };
-
-loader.config({ monaco });
 
 const router = createRouter({
   routeTree,

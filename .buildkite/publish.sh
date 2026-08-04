@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # Copyright [ 2020 - 2024 ] [Matthew Buckton]
 # Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]

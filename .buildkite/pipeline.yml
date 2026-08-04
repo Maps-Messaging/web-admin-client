@@ -2,13 +2,26 @@ agents:
   queue: "java_build_queue"
 
 steps:
-  - label: ":npm: Build and package web client"
-    command:
-      - "./.buildkite/build.sh"
-      - "./.buildkite/scan.sh"
+  - key: "build"
+    label: ":npm: Build and package web client"
+    command: "./.buildkite/build.sh"
     artifact_paths:
       - "webAdminClient.tgz"
+    plugins:
+      - docker-compose#v5.13.0:
+          config: docker-compose.yaml
+          run: node
+  - key: "test"
+    label: ":npm: test web client"
+    command: "./.buildkite/test.sh"
+    plugins:
+      - docker-compose#v5.13.0:
+          config: docker-compose.yaml
+          run: node
 
-  - label: ":github: Publish release"
+  - key: "publish"
+    label: ":github: Publish release"
     command: "./.buildkite/publish.sh"
+    depends_on:
+      - "build"
     if: build.branch == "main" || build.branch == "development"

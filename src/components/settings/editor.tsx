@@ -22,7 +22,7 @@ import Editor, {
   type OnChange,
   type OnMount,
 } from "@monaco-editor/react";
-import * as monacoEditor from "monaco-editor";
+import type * as monacoEditor from "monaco-editor";
 import { type FunctionComponent, type RefObject } from "react";
 
 interface ConfigEditorProps {

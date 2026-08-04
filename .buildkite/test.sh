@@ -15,6 +15,13 @@
 # limitations under the License.
 #
 
+
+corepack enable
+
+pnpm install
+
+pnpm run test
+
 sonar-scanner \
         -Dsonar.projectKey=web-admin-client \
         -Dsonar.organization=maps-messaging \
