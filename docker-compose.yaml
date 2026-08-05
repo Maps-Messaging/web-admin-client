@@ -5,4 +5,6 @@ services:
     volumes:
       - .:/app
     environment:
-      - CI=true
+      CI: "true"
+      HOME: /tmp
+      COREPACK_HOME: /tmp/corepack
