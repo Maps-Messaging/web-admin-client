@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # Copyright [ 2020 - 2024 ] [Matthew Buckton]
 # Copyright [ 2024 - 2026 ] [Maps Messaging B.V.]
@@ -15,17 +16,15 @@
 # limitations under the License.
 #
 
+set -euo pipefail
 
-corepack enable
+corepack pnpm install --frozen-lockfile
+corepack pnpm run test
 
-pnpm install
-
-pnpm run test
-
-sonar-scanner \
-        -Dsonar.projectKey=web-admin-client \
-        -Dsonar.organization=maps-messaging \
-        -Dsonar.sources=src \
-        -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info \
-        -Dsonar.host.url=https://sonarcloud.io \
-        -Dsonar.login="$(buildkite-agent secret get SONAR_TOKEN)"
+corepack pnpm exec sonar-scanner-npm \
+  -Dsonar.projectKey=web-admin-client \
+  -Dsonar.organization=maps-messaging \
+  -Dsonar.sources=src \
+  -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info \
+  -Dsonar.host.url=https://sonarcloud.io \
+  -Dsonar.token="${SONAR_TOKEN}"

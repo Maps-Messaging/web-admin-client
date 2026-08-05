@@ -12,14 +12,19 @@ steps:
           config: docker-compose.yaml
           run: node
           propagate-uid-gid: true
+
   - key: "test"
     label: ":npm: test web client"
     command: "./.buildkite/test.sh"
+    secrets:
+      - SONAR_TOKEN
     plugins:
       - docker-compose#v5.13.0:
           config: docker-compose.yaml
           run: node
           propagate-uid-gid: true
+          environment:
+            - SONAR_TOKEN
 
   - key: "publish"
     label: ":github: Publish release"
