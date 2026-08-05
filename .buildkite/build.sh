@@ -17,15 +17,14 @@
 #
 set -euo pipefail
 
-corepack enable
-
-pnpm install
+corepack pnpm install
 # TODO - Fetch latest api spec
-pnpm run gen-api
-pnpm run build
+corepack pnpm run gen-api
+corepack pnpm run build
 
 if [ ! -d dist ]; then
   echo "Build failed: 'dist' directory not found."
   exit 1
 fi
+
 tar --create --verbose --gzip --file=webAdminClient.tgz dist/*
