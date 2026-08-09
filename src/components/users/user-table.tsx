@@ -9,135 +9,233 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
-'use client';
-
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Checkbox from '@mui/material/Checkbox';
-import Divider from '@mui/material/Divider';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
-
-import {useSelection} from '@/hooks/use-selection';
-import {GroupInfoDTO, UserDTO} from "@/generated/model";
-import Link from "next/link";
-
-function noop(): void {
-  // do nothing
-}
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import { Input } from "@/components/ui/input";
+import { LinkButton } from "@/components/ui/link-button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { AddGroupDialog } from "@/components/users/add-group-dialog/add-group-dialog";
+import { CreateUserDialog } from "@/components/users/create-user-dialog";
+import { useDeleteUser } from "@/components/users/hooks";
+import type { UserWithLock } from "@/components/users/models";
+import { UserTableRowActions } from "@/components/users/user-table-row-actions";
+import {
+  type ColumnDef,
+  type ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Lock, UserX } from "lucide-react";
+import { type FunctionComponent, useState } from "react";
 
 interface UserTableProps {
-  count?: number;
-  page?: number;
-  rows?: UserDTO[];
-  rowsPerPage?: number;
+  users: UserWithLock[];
 }
 
-export function UserTable({
-                                 count = 0,
-                                 rows = [],
-                                 page = 0,
-                                 rowsPerPage = 0,
-                               }: UserTableProps): React.JSX.Element {
-  const rowIds = React.useMemo(() => {
-    return rows.map((user) => user.uniqueId);
-  }, [rows]);
+const columns: ColumnDef<UserWithLock>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+  },
+  {
+    id: "username",
+    header: "Username",
+    cell: ({ row }) => (
+      <LinkButton
+        to="/people/users/$userId"
+        params={{ userId: row.original.uniqueId }}
+      >
+        {row.original.username}
+      </LinkButton>
+    ),
+  },
+  {
+    header: "Groups",
+    cell: ({ row }) =>
+      (row.original.groupList ?? []).map((group) => group?.name).join(", "),
+  },
+  {
+    accessorKey: "locked",
+    header: "Locked",
+    cell: ({ row }) =>
+      row.original.locked ? <Lock className="size-4" /> : null,
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <UserTableRowActions userId={row.original.uniqueId} />,
+  },
+];
 
-  const { selectAll, deselectAll, selectOne, deselectOne, selected } = useSelection(rowIds);
+export const UserTable: FunctionComponent<UserTableProps> = ({ users }) => {
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [rowSelection, setRowSelection] = useState({});
 
-  const selectedSome = (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
-  const selectedAll = rows.length > 0 && selected?.size === rows.length;
+  const { mutate: deleteUser } = useDeleteUser();
 
-  function getGroups(arr: (GroupInfoDTO | null)[]) {
-    return arr
-      .filter((group): group is NonNullable<GroupInfoDTO> => group !== null)
-      .map(group => group.name)
-      .join(",");
+  const table = useReactTable({
+    data: users,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    onRowSelectionChange: setRowSelection,
+    state: {
+      columnFilters,
+      rowSelection,
+    },
+  });
+
+  const deleteUsers = () => {
+    table
+      .getFilteredSelectedRowModel()
+      .rows.forEach((row) =>
+        deleteUser({ params: { path: { userUuid: row.original.uniqueId } } }),
+      );
+    table.setRowSelection({});
+  };
+
+  if ((users ?? []).length === 0) {
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <UserX />
+          </EmptyMedia>
+          <EmptyTitle>No Users Yet</EmptyTitle>
+          <EmptyDescription>
+            You haven&apos;t created any users yet. Get started by creating your
+            first user.
+          </EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <CreateUserDialog />
+        </EmptyContent>
+      </Empty>
+    );
   }
-
-
   return (
-    <Card>
-      <Box sx={{ overflowX: 'auto' }}>
-        <Table sx={{ minWidth: '800px' }}>
-          <TableHead>
-            <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  checked={selectedAll}
-                  indeterminate={selectedSome}
-                  onChange={(event) => {
-                    if (event.target.checked) {
-                      selectAll();
-                    } else {
-                      deselectAll();
-                    }
-                  }}
-                />
-              </TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Unique Id</TableCell>
-              <TableCell>Groups</TableCell>
-            </TableRow>
-          </TableHead>
+    <div className="w-full">
+      <div className="flex items-center justify-between pb-4">
+        <Input
+          placeholder="Search by username..."
+          value={
+            (table.getColumn("username")?.getFilterValue() as string) ?? ""
+          }
+          onChange={(event) =>
+            table.getColumn("username")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+        {table.getFilteredSelectedRowModel().rows.length > 0 ? (
+          <div className="flex items-center gap-4">
+            <div className="text-muted-foreground text-sm">
+              {table.getFilteredSelectedRowModel().rows.length > 1
+                ? `${table.getFilteredSelectedRowModel().rows.length} users selected.`
+                : "1 user selected."}
+            </div>
+            <AddGroupDialog
+              users={table.getSelectedRowModel().rows.map((row) => ({
+                uniqueId: row.original.uniqueId,
+                username: row.original.username,
+              }))}
+            />
+            <Button variant="destructive" onClick={deleteUsers}>
+              Delete Users
+            </Button>
+          </div>
+        ) : (
+          <CreateUserDialog />
+        )}
+      </div>
+      <div className="overflow-hidden rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
           <TableBody>
-            {rows.map((row) => {
-              const isSelected = selected?.has(row.uniqueId);
-
-              return (
-                <TableRow hover key={row.uniqueId} selected={isSelected}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={isSelected}
-                      onChange={(event) => {
-                        if (event.target.checked) {
-                          selectOne(row.uniqueId);
-                        } else {
-                          deselectOne(row.uniqueId);
-                        }
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Link href={`/dashboard/authentication/user?username=${encodeURIComponent(row.username||'')}`} passHref>
-                      <Typography variant="subtitle2">{row.username}</Typography>
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="subtitle2">{row.uniqueId}</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="subtitle2">{getGroups(row.groupList || [])}</Typography>
-                  </TableCell>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
                 </TableRow>
-              );
-            })}
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
-      </Box>
-      <Divider />
-      <TablePagination
-        component="div"
-        count={count}
-        onPageChange={noop}
-        onRowsPerPageChange={noop}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
-      />
-    </Card>
+      </div>
+    </div>
   );
-}
+};
