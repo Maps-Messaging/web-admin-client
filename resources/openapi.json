@@ -5504,7 +5504,7 @@
             "description": "Human-readable name for this configuration mapping.",
             "example": "Networks"
           },
-          "id": {
+          "configName": {
             "type": "string",
             "description": "Internal configuration name this mapping is bound to.",
             "example": "NetworkManagerConfig"

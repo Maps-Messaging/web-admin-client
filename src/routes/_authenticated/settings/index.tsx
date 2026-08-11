@@ -29,8 +29,8 @@ function RouteComponent() {
     <div className="w-6xl mx-auto">
       <h1 className="text-4xl font-extrabold">Settings</h1>
       <div className="flex flex-col">
-        {(data ?? []).map(({ id, name }) => (
-          <LinkButton key={id} to={`/settings/${id}`}>
+        {(data ?? []).map(({ configName, name }) => (
+          <LinkButton key={configName} to={`/settings/${configName}`}>
             {name}
           </LinkButton>
         ))}
