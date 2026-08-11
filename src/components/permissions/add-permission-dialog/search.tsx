@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-import { apiClient } from "@/api/api-client";
+import { useGroups } from "@/components/groups/hooks";
 import {
   Combobox,
   ComboboxContent,
@@ -23,8 +23,8 @@ import {
   ComboboxItem,
   ComboboxList,
 } from "@/components/ui/combobox";
+import { useUsers } from "@/components/users/hooks";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
-import { useQuery } from "@tanstack/react-query";
 import { type FunctionComponent, useState } from "react";
 
 interface SearchValue {
@@ -65,33 +65,19 @@ export const Search: FunctionComponent<SearchProps> = ({
   const debouncedSearch = useDebouncedValue(searchValue, 300);
 
   const {
-    data: users = [],
+    data: users,
     isPending: fetchingUsers,
     isError: userError,
-  } = useQuery({
-    ...apiClient.queryOptions("get", "/api/v1/auth/users", {
-      params: {
-        query: {
-          filter: debouncedSearch,
-        },
-      },
-    }),
-    enabled: mode === "IDENTITY" && debouncedSearch.length > 0,
+  } = useUsers(debouncedSearch, {
+    enabled: mode === "IDENTITY",
   });
 
   const {
     data: groups = [],
     isPending: fetchingGroups,
     isError: groupError,
-  } = useQuery({
-    ...apiClient.queryOptions("get", "/api/v1/auth/groups", {
-      params: {
-        query: {
-          filter: debouncedSearch,
-        },
-      },
-    }),
-    enabled: mode === "GROUP" && debouncedSearch.length > 0,
+  } = useGroups(debouncedSearch, {
+    enabled: mode === "GROUP",
   });
 
   const isPending = mode === "IDENTITY" ? fetchingUsers : fetchingGroups;

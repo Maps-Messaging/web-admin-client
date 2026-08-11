@@ -19,14 +19,26 @@ import { apiClient } from "@/api/api-client";
 import { queryClient } from "@/api/query-client";
 import type { operations } from "@/api/spec";
 import type { UserLock } from "@/components/users/models";
+import { search } from "@/lib/filter";
 import { useMemo } from "react";
 
-export function useUsers(filter?: string) {
-  return apiClient.useQuery("get", "/api/v1/auth/users", {
-    query: {
-      filter,
-    },
-  });
+export function useUsers(filter?: string, options?: {}) {
+  const { data, ...restQuery } = apiClient.useQuery(
+    "get",
+    "/api/v1/auth/users",
+    options,
+  );
+
+  const filteredData = search(
+    data ?? [],
+    filter ?? "",
+    (user) => user.username,
+  );
+
+  return {
+    data: filteredData,
+    ...restQuery,
+  };
 }
 
 export function useUsersWithLock({
