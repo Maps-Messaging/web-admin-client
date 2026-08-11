@@ -18,13 +18,21 @@
 import { apiClient } from "@/api/api-client";
 import { queryClient } from "@/api/query-client";
 import type { operations } from "@/api/spec";
+import { search } from "@/lib/filter";
 
-export function useGroups({ nameFilter }: { nameFilter?: string } = {}) {
-  return apiClient.useQuery("get", "/api/v1/auth/groups", {
-    query: {
-      filter: nameFilter,
-    },
-  });
+export function useGroups(filter?: string, options?: {}) {
+  const { data, ...restQuery } = apiClient.useQuery(
+    "get",
+    "/api/v1/auth/groups",
+    options,
+  );
+
+  const filteredData = search(data ?? [], filter ?? "", (group) => group.name);
+
+  return {
+    data: filteredData,
+    ...restQuery,
+  };
 }
 
 export const useGroup = (
@@ -46,10 +54,14 @@ export const useCreateGroup = () => {
 
 export const useDeleteGroup = () => {
   return apiClient.useMutation("delete", "/api/v1/auth/groups/{groupUuid}", {
-    onSettled: () =>
+    onSettled: () => {
       queryClient.invalidateQueries(
         apiClient.queryOptions("get", "/api/v1/auth/groups"),
-      ),
+      );
+      queryClient.invalidateQueries(
+        apiClient.queryOptions("get", "/api/v1/auth/users"),
+      );
+    },
   });
 };
 
@@ -69,6 +81,9 @@ export const useAddUserToGroup = () => {
           apiClient.queryOptions("get", "/api/v1/auth/users/{userUuid}", {
             params: { path: { userUuid } },
           }),
+        );
+        queryClient.invalidateQueries(
+          apiClient.queryOptions("get", "/api/v1/auth/users"),
         );
       },
     },
@@ -91,6 +106,9 @@ export const useRemoveUserFromGroup = () => {
           apiClient.queryOptions("get", "/api/v1/auth/users/{userUuid}", {
             params: { path: { userUuid } },
           }),
+        );
+        queryClient.invalidateQueries(
+          apiClient.queryOptions("get", "/api/v1/auth/users"),
         );
       },
     },

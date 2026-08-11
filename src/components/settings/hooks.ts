@@ -29,7 +29,8 @@ export function useListConfigs() {
       if (!data) return undefined;
 
       const serverConfigIndex =
-        data?.findIndex(({ id }) => id === SERVER_CONFIG_ID) ?? -1;
+        data?.findIndex(({ configName }) => configName === SERVER_CONFIG_ID) ??
+        -1;
       return data[serverConfigIndex]
         ? [
             data[serverConfigIndex],

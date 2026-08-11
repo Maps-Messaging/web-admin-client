@@ -127,9 +127,9 @@ export function NavSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: "Settings",
         url: "/settings",
         icon: Settings2,
-        items: (configList ?? []).map(({ name, id }) => ({
+        items: (configList ?? []).map(({ name, configName }) => ({
           title: name,
-          url: `/settings/${id}`,
+          url: `/settings/${configName}`,
         })),
       },
     ],

@@ -61,6 +61,10 @@ export const CreateGroupDialog = () => {
       mutate(
         {
           body: value.name,
+          headers: {
+            "Content-Type": "text/plain",
+          },
+          bodySerializer: (body) => body,
         },
         {
           onSuccess: () => {

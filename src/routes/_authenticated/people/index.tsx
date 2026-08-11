@@ -15,8 +15,9 @@
  *  limitations under the License.
  */
 
-import { Button } from "@/components/ui/button";
+import { CreateGroupDialog } from "@/components/groups/create-group-dialog";
 import { LinkButton } from "@/components/ui/link-button";
+import { CreateUserDialog } from "@/components/users/create-user-dialog";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/people/")({
@@ -33,8 +34,8 @@ function RouteComponent() {
           <LinkButton to="/people/groups">Groups</LinkButton>
         </div>
         <div className="flex gap-4">
-          <Button variant="outline">Create User</Button>
-          <Button variant="outline">Create Group</Button>
+          <CreateUserDialog />
+          <CreateGroupDialog />
         </div>
       </div>
     </div>

@@ -12,7 +12,7 @@
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0"
     },
-    "version": "00.00.00-SNAPSHOT"
+    "version": "4.5.0-SNAPSHOT"
   },
   "externalDocs": {
     "description": "Maps Messaging",
@@ -90,6 +90,10 @@
     {
       "name": "ML Model Store",
       "description": "Endpoints for managing ML models in the system."
+    },
+    {
+      "name": "Server Twin Configuration",
+      "description": "Configuration endpoints for digital twin integrations. Changes are persisted to TwinManager configuration and do not reload running state services."
     }
   ],
   "paths": {
@@ -182,18 +186,6 @@
             }
           },
           "401": { "description": "Invalid credentials or unauthorized access" }
-        }
-      }
-    },
-    "/health": {
-      "get": {
-        "tags": ["Server Health"],
-        "summary": "Check server health",
-        "description": "Checks the health of all subsystems and returns their overall status. Possible values are 'Ok', 'Warning', or 'Error'.",
-        "operationId": "getHealth",
-        "responses": {
-          "200": { "description": "Health status returned" },
-          "400": { "description": "Bad request" }
         }
       }
     },
@@ -1844,6 +1836,7 @@
             "schema": {
               "type": "string",
               "example": "Published",
+              "default": "Published",
               "enum": [
                 "Name",
                 "Published",
@@ -1852,8 +1845,7 @@
                 "Pending",
                 "Delayed",
                 "Expired"
-              ],
-              "default": "Published"
+              ]
             }
           }
         ],
@@ -3120,6 +3112,31 @@
           },
           "500": {
             "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/license": {
+      "get": {
+        "summary": "Get license",
+        "description": "Returns the current license details.",
+        "operationId": "getLicense",
+        "responses": {
+          "200": {
+            "description": "License retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FeatureDetails" }
+              }
+            }
+          },
+          "404": {
+            "description": "License not found",
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/StatusResponse" }
@@ -4998,6 +5015,1648 @@
         }
       }
     },
+    "/api/v1/server/twin/config/adapters/{name}": {
+      "get": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Get state adapter configuration",
+        "description": "Returns one persisted state adapter configuration block by adapter name.",
+        "operationId": "getAdapterConfig",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "State adapter configuration returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigurationProperties"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "State adapter configuration not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server twin configuration error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Update state adapter configuration",
+        "description": "Replaces one persisted adapter-specific configuration block. Runtime state adapter instances are not reloaded.",
+        "operationId": "updateAdapterConfig",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "description": "Adapter-specific configuration block to persist",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigurationProperties"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "State adapter configuration updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigurationProperties"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid adapter configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "State adapter configuration not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to save twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Create state adapter configuration",
+        "description": "Adds a persisted adapter-specific configuration block. Runtime state adapter instances are not reloaded.",
+        "operationId": "createAdapterConfig",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "description": "Adapter-specific configuration block to add",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigurationProperties"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "State adapter configuration created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigurationProperties"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid adapter configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "409": {
+            "description": "State adapter configuration already exists",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to save twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Delete state adapter configuration",
+        "description": "Removes one persisted state adapter configuration block. Runtime state adapter instances are not stopped.",
+        "operationId": "deleteAdapterConfig",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "State adapter configuration deleted" },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "State adapter configuration not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to save twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/server/twin/config/drone-info": {
+      "get": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "List known drone configurations",
+        "description": "Returns persisted drone metadata used when MAVLink sources create or update drone twins. Runtime drone metadata registries are not reloaded.",
+        "operationId": "listDrones",
+        "responses": {
+          "200": {
+            "description": "Drone configurations returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/DroneInfoDTO" }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server twin configuration error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Create known drone configuration",
+        "description": "Adds persisted drone metadata. Existing runtime drone metadata registries are not reloaded.",
+        "operationId": "createDrone",
+        "requestBody": {
+          "description": "Drone metadata configuration to add",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DroneInfoDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Drone configuration created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DroneInfoDTO" }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid drone configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "409": {
+            "description": "Drone configuration already exists",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to save twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/server/twin/config/mavlink": {
+      "get": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "List MAVLink twin source configurations",
+        "description": "Returns persisted MAVLink topic sources that are processed into twin state. Runtime MAVLink subscribers are not reloaded by this endpoint.",
+        "operationId": "listMavlinkSources",
+        "responses": {
+          "200": {
+            "description": "MAVLink twin sources returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MavlinkTwinConfigDTO"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server twin configuration error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Create MAVLink twin source configuration",
+        "description": "Adds a persisted MAVLink topic source. The running MavlinkTwinManager is not reloaded.",
+        "operationId": "createMavlinkSource",
+        "requestBody": {
+          "description": "MAVLink twin source configuration to add",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MavlinkTwinConfigDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "MAVLink twin source created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MavlinkTwinConfigDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid MAVLink twin source configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "409": {
+            "description": "MAVLink twin source already exists",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to save twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/server/twin/config/drone-info/{name}": {
+      "get": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Get known drone configuration",
+        "description": "Returns one persisted drone metadata entry by name.",
+        "operationId": "getDrone",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Drone configuration returned",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DroneInfoDTO" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Drone configuration not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server twin configuration error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Update known drone configuration",
+        "description": "Replaces persisted drone metadata. The path name must match the body name. Runtime drone metadata registries are not reloaded.",
+        "operationId": "updateDrone",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "description": "Drone metadata configuration to persist",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DroneInfoDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Drone configuration updated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DroneInfoDTO" }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid drone configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Drone configuration not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to save twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Delete known drone configuration",
+        "description": "Removes persisted drone metadata. Runtime drone metadata registries are not reloaded.",
+        "operationId": "deleteDrone",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Drone configuration deleted" },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Drone configuration not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to save twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/server/twin/config/mavlink/{name}": {
+      "get": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Get MAVLink twin source configuration",
+        "description": "Returns one persisted MAVLink twin source configuration by name.",
+        "operationId": "getMavlinkSource",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "MAVLink twin source returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MavlinkTwinConfigDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "MAVLink twin source not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server twin configuration error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Update MAVLink twin source configuration",
+        "description": "Replaces a persisted MAVLink topic source. The path name must match the body name. Runtime subscribers are not reloaded.",
+        "operationId": "updateMavlinkSource",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "description": "MAVLink twin source configuration to persist",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MavlinkTwinConfigDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "MAVLink twin source updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MavlinkTwinConfigDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid MAVLink twin source configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "MAVLink twin source not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to save twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Delete MAVLink twin source configuration",
+        "description": "Removes a persisted MAVLink topic source. Runtime subscribers are not stopped.",
+        "operationId": "deleteMavlinkSource",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "MAVLink twin source deleted" },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "MAVLink twin source not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to save twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/server/twin/config/n2k": {
+      "get": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Get N2K twin configuration",
+        "description": "Returns persisted NMEA 2000 twin integration configuration. Runtime N2K subscriptions and AIS projection are not reloaded by this endpoint.",
+        "operationId": "getN2kConfig",
+        "responses": {
+          "200": {
+            "description": "N2K configuration returned",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/N2KTwinConfig" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "N2K configuration is not configured",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server twin configuration error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Create or update N2K twin configuration",
+        "description": "Persists NMEA 2000 twin integration configuration. The running N2K session and AIS manager are not restarted.",
+        "operationId": "putN2kConfig",
+        "requestBody": {
+          "description": "N2K twin integration configuration to persist",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/N2KTwinConfig" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "N2K configuration persisted",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/N2KTwinConfig" }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid N2K configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to save twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Disable N2K twin configuration",
+        "description": "Persists N2K as disabled. Existing runtime N2K subscriptions and AIS monitors are not stopped.",
+        "operationId": "deleteN2kConfig",
+        "responses": {
+          "204": { "description": "N2K configuration disabled" },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "N2K configuration is not configured",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to save twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/server/twin/config/publish": {
+      "get": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Get twin publish configuration",
+        "description": "Returns persisted configuration for publishing twin updates to messaging topics. Runtime publishers are not reloaded by this endpoint.",
+        "operationId": "getPublishConfig",
+        "responses": {
+          "200": {
+            "description": "Publish configuration returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwinPublishConfigDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Publish configuration is not configured",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server twin configuration error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Create or update twin publish configuration",
+        "description": "Persists publishing configuration for twin updates. The running TwinPublisherManager is not restarted.",
+        "operationId": "putPublishConfig",
+        "requestBody": {
+          "description": "Twin publish configuration to persist",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TwinPublishConfigDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Publish configuration persisted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwinPublishConfigDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid publish configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to save twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Delete twin publish configuration",
+        "description": "Removes the persisted publish configuration. Existing runtime publishers are not stopped.",
+        "operationId": "deletePublishConfig",
+        "responses": {
+          "204": { "description": "Publish configuration removed" },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Publish configuration is not configured",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to save twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/server/twin/config/tak": {
+      "get": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Get TAK twin configuration",
+        "description": "Returns the persisted TAK publishing configuration used by twin state integration. Runtime TAK connections are not reloaded by this endpoint.",
+        "operationId": "getTakConfig",
+        "responses": {
+          "200": {
+            "description": "TAK configuration returned",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TakProtocolDTO" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "TAK configuration is not configured",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server twin configuration error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Create or update TAK twin configuration",
+        "description": "Persists TAK configuration for the twin manager. Existing runtime TAK observers are not restarted.",
+        "operationId": "putTakConfig",
+        "requestBody": {
+          "description": "TAK protocol configuration to persist",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TakProtocolDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "TAK configuration persisted",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TakProtocolDTO" }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid TAK configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to save twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Delete TAK twin configuration",
+        "description": "Removes the persisted TAK configuration. Existing runtime TAK observers are not stopped.",
+        "operationId": "deleteTakConfig",
+        "responses": {
+          "204": { "description": "TAK configuration removed" },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "TAK configuration is not configured",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to save twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/server/twin/config/core": {
+      "get": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Get core twin manager configuration",
+        "description": "Returns persisted lifecycle timing and root path settings. Runtime twin manager timing is not reloaded by this endpoint.",
+        "operationId": "getCoreConfig",
+        "responses": {
+          "200": {
+            "description": "Core twin configuration returned",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TwinCoreConfigDTO" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server twin configuration error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Update core twin manager configuration",
+        "description": "Persists core twin lifecycle timing and root path settings. The running StateManagerAgent is not reloaded.",
+        "operationId": "updateCoreConfig",
+        "requestBody": {
+          "description": "Core twin manager timing and lifecycle configuration to persist",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TwinCoreConfigDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Core twin configuration persisted",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TwinCoreConfigDTO" }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid core twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to save twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/server/twin/config": {
+      "get": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Get twin configuration",
+        "description": "Returns the current persisted twin manager configuration, including core timing, publishing, TAK, N2K, MAVLink, drone metadata and state adapter sections.",
+        "operationId": "getTwinConfiguration",
+        "responses": {
+          "200": {
+            "description": "Twin configuration returned",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TwinManagerConfig" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server twin configuration error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/server/twin/config/adapters": {
+      "get": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "List state adapter configurations",
+        "description": "Returns persisted state adapter configuration blocks keyed by adapter name. Runtime state adapter instances are not reloaded.",
+        "operationId": "listAdapterConfigs",
+        "responses": {
+          "200": {
+            "description": "State adapter configurations returned",
+            "content": {
+              "application/json": { "schema": { "type": "string" } }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server twin configuration error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Server Twin Configuration"],
+        "summary": "Replace all state adapter configurations",
+        "description": "Replaces the persisted state adapter configuration map. Runtime adapter instances are not reloaded.",
+        "operationId": "replaceAdapterConfigs",
+        "requestBody": {
+          "description": "Map of adapter names to adapter-specific configuration blocks",
+          "content": { "application/json": { "schema": { "type": "string" } } },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "State adapter configuration map persisted",
+            "content": {
+              "application/json": { "schema": { "type": "string" } }
+            }
+          },
+          "400": {
+            "description": "Invalid adapter configuration map",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to save twin configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/server/twin/{twinId}": {
+      "get": {
+        "tags": ["Server Twin Management"],
+        "summary": "Get twin",
+        "description": "Returns the twin for the specified twinId.",
+        "operationId": "getTwin",
+        "parameters": [
+          {
+            "name": "twinId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Twin returned",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/EntityTwin" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Twin not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server twin error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/server/twin": {
+      "get": {
+        "tags": ["Server Twin Management"],
+        "summary": "List twins",
+        "description": "Returns the list of currently known twins.",
+        "operationId": "listTwins",
+        "responses": {
+          "200": {
+            "description": "List of twins returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/EntityTwin" }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authorised to access the resource",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server twin error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
     "/application.wadl/{path}": {
       "get": {
         "operationId": "getExternalGrammar",
@@ -5496,7 +7155,7 @@
         }
       },
       "ConfigNamingDTO": {
-        "required": ["id", "name"],
+        "required": ["configName", "name"],
         "type": "object",
         "properties": {
           "name": {
@@ -5504,10 +7163,10 @@
             "description": "Human-readable name for this configuration mapping.",
             "example": "Networks"
           },
-          "id": {
+          "configName": {
             "type": "string",
             "description": "Internal configuration name this mapping is bound to.",
-            "example": "NetworkManagerConfig"
+            "example": "NetworkManageronfig"
           }
         },
         "description": "Represents a named configuration mapping."
@@ -5567,8 +7226,8 @@
             "type": "string",
             "description": "Defines how an aggregation window is closed.",
             "example": "ALL_INPUTS_OR_TIMEOUT",
-            "enum": ["ALL_INPUTS", "TIMEOUT_ONLY", "ALL_INPUTS_OR_TIMEOUT"],
-            "default": "ALL_INPUTS_OR_TIMEOUT"
+            "default": "ALL_INPUTS_OR_TIMEOUT",
+            "enum": ["ALL_INPUTS", "TIMEOUT_ONLY", "ALL_INPUTS_OR_TIMEOUT"]
           },
           "windowDurationMs": {
             "maximum": 3600000,
@@ -5596,56 +7255,17 @@
             "example": 1,
             "default": 1
           },
+          "emitFirstEventImmediately": {
+            "type": "boolean",
+            "description": "If true, the first event seen for each input topic is emitted immediately before normal aggregation rules are applied. Useful for discovery so consumers receive an initial state without waiting for the first aggregation window.",
+            "example": true,
+            "default": false
+          },
           "outputTransformers": {
-            "required": ["schemaLoadingVersion", "type"],
-            "type": "object",
-            "properties": {
-              "schemaLoadingVersion": {
-                "maximum": 10,
-                "minimum": 0,
-                "type": "integer",
-                "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
-                "format": "int32",
-                "example": 1,
-                "default": 1
-              },
-              "type": {
-                "type": "string",
-                "description": "Type of transformation configuration. All values are lower-case and hyphen-separated.",
-                "example": "jsontoxml",
-                "enum": [
-                  "CLOUD_EVENT_JSON",
-                  "CLOUD_EVENT_NATIVE",
-                  "CLOUD_EVENT_ENVELOPE",
-                  "JSON_TO_XML",
-                  "XML_TO_JSON",
-                  "JSON_TO_VALUE",
-                  "JSON_QUERY",
-                  "GEOHASH",
-                  "SCHEMA_TO_JSON",
-                  "JSON_MUTATE",
-                  "JSON_TO_SCHEMA"
-                ]
-              }
-            },
-            "additionalProperties": true,
-            "description": "Abstract base class for all transformation configurations",
+            "type": "array",
+            "description": "Transformer chain configuration. Each entry defines a transformation applied in order.",
             "nullable": true,
-            "discriminator": {
-              "propertyName": "type",
-              "mapping": {
-                "jsontoxml": "#/components/schemas/JsonToXmlTransformationDTO",
-                "xmltojson": "#/components/schemas/XmlToJsonTransformationDTO",
-                "jsontoschema": "#/components/schemas/JsonToSchemaTransformationDTO",
-                "jsontovalue": "#/components/schemas/JsonToValueTransformationDTO",
-                "jsonquery": "#/components/schemas/JsonQueryTransformationDTO",
-                "geohash": "#/components/schemas/GeoHashResolverTransformationDTO",
-                "jsonmutate": "#/components/schemas/JsonMutateTransformationDTO",
-                "cloudevent-envelope": "#/components/schemas/CloudEventEnvelopeTransformationDTO",
-                "cloudevent-json": "#/components/schemas/CloudEventJsonTransformationDTO",
-                "cloudevent-native": "#/components/schemas/CloudEventNativeTransformationDTO"
-              }
-            }
+            "items": { "$ref": "#/components/schemas/TransformationConfigDTO" }
           }
         },
         "description": "Stage 1 Aggregator configuration. Fan-in time-bucket aggregation only: no correlation, no DLQ, no policies, no persistence."
@@ -5674,7 +7294,6 @@
           },
           "selector": {
             "maxLength": 8192,
-            "minLength": 1,
             "type": "string",
             "description": "Optional JMS selector applied to events from this input topic",
             "nullable": true,
@@ -5699,8 +7318,8 @@
             "description": "Contribution policy for a single input within a window",
             "nullable": true,
             "example": "FIRST",
-            "enum": ["FIRST", "LAST", "FIRST", "LAST"],
-            "default": "LAST"
+            "default": "LAST",
+            "enum": ["FIRST", "LAST"]
           }
         },
         "description": "Per-input configuration for an Aggregator. Supports optional selector and transformer chain."
@@ -5774,8 +7393,7 @@
             "type": "array",
             "description": "List of aggregator instance configurations",
             "items": { "$ref": "#/components/schemas/AggregatorConfigDTO" }
-          },
-          "name": { "type": "string" }
+          }
         },
         "description": "Aggregator Manager Configuration DTO (Stage 1)"
       },
@@ -6080,10 +7698,16 @@
             "nullable": true,
             "example": 2000,
             "default": 2000
-          },
-          "name": { "type": "string" }
+          }
         },
         "description": "Auth Manager Configuration DTO"
+      },
+      "Authorities": {
+        "type": "object",
+        "properties": {
+          "discriminator": { "type": "string" },
+          "guid": { "type": "string", "format": "uuid" }
+        }
       },
       "AutoRefreshConfigDTO": {
         "required": ["schemaLoadingVersion"],
@@ -6135,8 +7759,7 @@
             "description": "Discriminator for the concrete configuration manager DTO.",
             "readOnly": true,
             "example": "AuthManagerConfig"
-          },
-          "name": { "type": "string" }
+          }
         },
         "description": "Base configuration DTO for configuration managers.",
         "discriminator": { "propertyName": "type" },
@@ -6213,6 +7836,21 @@
           {
             "type": "object",
             "properties": {
+              "qualityOfService": {
+                "maximum": 2,
+                "minimum": 0,
+                "type": "integer",
+                "description": "Quality of Service used when publishing telemetry events into the messaging layer. 0 means at most once, 1 means at least once, and 2 means exactly once where supported.",
+                "format": "int32",
+                "example": 0,
+                "default": 0
+              },
+              "storeOffline": {
+                "type": "boolean",
+                "description": "If true, published telemetry events are marked for offline storage so disconnected subscribers may receive them later. For high-rate streams this can significantly increase retained storage and replay load.",
+                "example": false,
+                "default": false
+              },
               "yamlPath": {
                 "minLength": 1,
                 "type": "string",
@@ -6248,9 +7886,10 @@
           }
         ]
       },
-      "CanbusConfigDTO": {
-        "required": ["deviceName", "schemaLoadingVersion", "type"],
+      "CanbusConfig": {
+        "required": ["schemaLoadingVersion", "type"],
         "type": "object",
+        "description": "Configuration for a CAN bus endpoint. Supports native SocketCAN interfaces and serial CAN adapters.",
         "allOf": [
           { "$ref": "#/components/schemas/EndPointConfigDTO" },
           {
@@ -6258,26 +7897,72 @@
             "properties": {
               "deviceName": {
                 "type": "string",
-                "description": "Canbus device name"
+                "description": "CAN bus device name. For SocketCAN this is usually the Linux interface name, such as can0. For serial adapters this is a logical device name.",
+                "nullable": true,
+                "example": "can0"
+              },
+              "serialConfig": {
+                "$ref": "#/components/schemas/SerialConfigDTO"
+              },
+              "queuedWritesEnabled": {
+                "type": "boolean",
+                "description": "Enables asynchronous queued writes for the CAN bus device. When enabled, writes are queued as logical messages so multi-frame CAN/N2K messages are accepted, dropped, or rejected as a unit.",
+                "example": true,
+                "default": true
+              },
+              "queueDepth": {
+                "type": "integer",
+                "description": "Maximum number of logical CAN messages held in the outbound queue. A logical message may contain one CAN frame or multiple frames, such as an N2K fast-packet message.",
+                "format": "int32",
+                "example": 128,
+                "default": 128
+              },
+              "bitrateBitsPerSecond": {
+                "type": "integer",
+                "description": "CAN bus bitrate in bits per second. Used by the queued writer to estimate outbound bandwidth usage.",
+                "format": "int32",
+                "example": 250000,
+                "default": 250000
+              },
+              "maxBusUsagePercent": {
+                "type": "number",
+                "description": "Maximum percentage of the CAN bus bandwidth that queued writes should consume during normal operation.",
+                "format": "double",
+                "example": 20.0,
+                "default": 20.0
+              },
+              "queueFullPolicy": {
+                "type": "string",
+                "description": "Policy used when the outbound CAN queue is full. DROP_OLDEST removes the oldest queued logical message. REJECT_NEW rejects the new logical message.",
+                "example": "DROP_OLDEST",
+                "default": "DROP_OLDEST",
+                "enum": ["DROP_OLDEST", "REJECT_NEW"]
+              },
+              "writeFailureBackoffMilliseconds": {
+                "type": "integer",
+                "description": "Backoff delay in milliseconds after a failed CAN write before the writer thread attempts the next queued logical message.",
+                "format": "int64",
+                "example": 100,
+                "default": 100
               }
             }
           }
         ]
       },
       "CloudEventEnvelopeTransformationDTO": {
-        "required": ["schemaLoadingVersion", "type"],
+        "required": ["type"],
         "type": "object",
         "description": "Transformation DTO that converts JSON payloads into XML.",
         "allOf": [{ "$ref": "#/components/schemas/TransformationConfigDTO" }]
       },
       "CloudEventJsonTransformationDTO": {
-        "required": ["schemaLoadingVersion", "type"],
+        "required": ["type"],
         "type": "object",
         "description": "Transformation DTO that converts the message payload to JSON (when possible) and wraps it in a CloudEvents JSON structured event.",
         "allOf": [{ "$ref": "#/components/schemas/TransformationConfigDTO" }]
       },
       "CloudEventNativeTransformationDTO": {
-        "required": ["schemaLoadingVersion", "type"],
+        "required": ["type"],
         "type": "object",
         "description": "Transformation DTO that encodes the message payload as Base64 and wraps it in a CloudEvents native format event.",
         "allOf": [{ "$ref": "#/components/schemas/TransformationConfigDTO" }]
@@ -6306,6 +7991,18 @@
             }
           }
         ]
+      },
+      "ConfigurationProperties": {
+        "type": "object",
+        "properties": {
+          "map": {
+            "type": "object",
+            "additionalProperties": { "type": "object" }
+          },
+          "source": { "type": "string" },
+          "global": { "$ref": "#/components/schemas/ConfigurationProperties" },
+          "empty": { "type": "boolean" }
+        }
       },
       "ConfigurationSchema": {
         "required": ["config", "schema"],
@@ -6392,6 +8089,41 @@
           }
         ]
       },
+      "DataProductConfig": {
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "description": "Optional stable identifier. A deterministic UUID is generated when omitted."
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable product description."
+          },
+          "uri": {
+            "type": "string",
+            "description": "External data product URI.",
+            "example": "rtsp://drone01/videofeed01"
+          },
+          "productType": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "description": "Flexible enumeration describing the product type."
+            },
+            "description": "Flexible enumeration describing the product type."
+          },
+          "conformsTo": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "description": "Flexible enumeration describing the standard to which the product conforms."
+            },
+            "description": "Flexible enumeration describing the standard to which the product conforms."
+          }
+        },
+        "description": "Optional external data products exposed by this drone."
+      },
       "DestinationConfigDTO": {
         "minimum": 1,
         "required": [
@@ -6438,8 +8170,8 @@
             "type": "string",
             "description": "Type of destination",
             "example": "Partition",
-            "enum": ["Partition", "Memory", "MemoryTier"],
-            "default": "Partition"
+            "default": "Partition",
+            "enum": ["Partition", "Memory", "MemoryTier"]
           },
           "format": {
             "type": "object",
@@ -6500,8 +8232,7 @@
             "type": "array",
             "description": "List of destination configurations",
             "items": { "$ref": "#/components/schemas/DestinationConfigDTO" }
-          },
-          "name": { "type": "string" }
+          }
         },
         "description": "Destination Manager Configuration DTO"
       },
@@ -6554,8 +8285,7 @@
           "oneWireBus": { "$ref": "#/components/schemas/OneWireBusConfigDTO" },
           "serialDeviceBusConfig": {
             "$ref": "#/components/schemas/SerialBusConfigDTO"
-          },
-          "name": { "type": "string" }
+          }
         },
         "description": "Device Manager Configuration DTO"
       },
@@ -6606,10 +8336,91 @@
             "type": "string",
             "description": "mDNS domain to advertise under. Commonly \"local\" (with or without leading/trailing dot).",
             "example": "local"
-          },
-          "name": { "type": "string" }
+          }
         },
         "description": "Discovery Manager (mDNS) configuration"
+      },
+      "DroneInfoDTO": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "description": "Unique drone id" },
+          "uuid": {
+            "type": "string",
+            "description": "UUID of drone",
+            "format": "uuid"
+          },
+          "modelName": {
+            "type": "string",
+            "description": "Configured UxV model name used to resolve the command model implementation."
+          },
+          "geospatialArea": {
+            "type": "string",
+            "description": "Named geospatial operating area assigned to this drone."
+          },
+          "messageEncoding": {
+            "type": "string",
+            "description": "Message encoding used when communicating with the drone.",
+            "enum": ["JSON", "PROTOBUF"]
+          },
+          "batteryCapacityAh": {
+            "type": "number",
+            "description": "Total battery capacity in amp-hours.",
+            "format": "double"
+          },
+          "batteryCapacityHours": {
+            "type": "number",
+            "description": "Total battery capacity in hours.",
+            "format": "double"
+          },
+          "rangeMeters": {
+            "minimum": 0.0,
+            "type": "number",
+            "description": "Maximum route range in metres when the battery is at 100%. When omitted, battery-adjusted task range validation is disabled.",
+            "format": "double",
+            "nullable": true,
+            "example": 25000.0
+          },
+          "surveyRadiusMeters": {
+            "type": "number",
+            "description": "Survey coverage radius in metres measured from the vehicle centreline. The effective survey width is twice this value.",
+            "format": "double",
+            "nullable": true,
+            "example": 200.0
+          },
+          "description": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "description": "Drone description"
+            },
+            "description": "Drone description"
+          },
+          "dataProducts": {
+            "type": "array",
+            "description": "Optional external data products exposed by this drone.",
+            "items": { "$ref": "#/components/schemas/DataProductConfig" }
+          },
+          "capabilities": { "$ref": "#/components/schemas/TaskCapabilities" },
+          "cancelAction": {
+            "type": "string",
+            "description": "Action performed when the current task is cancelled.",
+            "enum": ["HOLD_POSITION", "RETURN_TO_HOME", "STOP", "ORBIT"]
+          },
+          "missionEndAction": {
+            "type": "string",
+            "description": "Action performed when a mission completes normally.",
+            "enum": ["HOLD_POSITION", "RETURN_TO_HOME", "STOP", "ORBIT"]
+          },
+          "missionTimeoutAction": {
+            "type": "string",
+            "description": "Action performed when a mission exceeds its configured duration.",
+            "enum": ["HOLD_POSITION", "RETURN_TO_HOME", "STOP", "ORBIT"]
+          },
+          "stopAction": {
+            "type": "string",
+            "enum": ["HOLD_POSITION", "RETURN_TO_HOME", "STOP", "ORBIT"]
+          }
+        }
       },
       "DtlsConfigDTO": {
         "required": ["schemaLoadingVersion", "type"],
@@ -6721,8 +8532,8 @@
             "description": "Proxy Protocol support mode. 'ENABLED' allows but doesn't require it, 'REQUIRED' enforces it, 'DISABLED' will NOT check for incoming PROXY requests.",
             "nullable": true,
             "example": "REQUIRED",
-            "enum": ["ENABLED", "DISABLED", "REQUIRED"],
-            "default": "DISABLED"
+            "default": "DISABLED",
+            "enum": ["ENABLED", "DISABLED", "REQUIRED"]
           },
           "allowedProxyHosts": {
             "pattern": "^(?:\\s*[^,\\s][^,]*\\s*(?:,\\s*[^,\\s][^,]*\\s*)*)?$",
@@ -6753,7 +8564,7 @@
             "ssl": "#/components/schemas/TlsConfigDTO",
             "udp": "#/components/schemas/UdpConfigDTO",
             "satellite": "#/components/schemas/SatelliteEndPointDTO",
-            "canbus": "#/components/schemas/CanbusConfigDTO"
+            "canbus": "#/components/schemas/CanbusConfig"
           }
         }
       },
@@ -7028,14 +8839,7 @@
         "description": "Configuration details for the file-based schema repository. Used when repositoryType is set to 'File'."
       },
       "GeoHashResolverTransformationDTO": {
-        "required": [
-          "layout",
-          "onMissing",
-          "precision",
-          "schemaLoadingVersion",
-          "type",
-          "units"
-        ],
+        "required": ["layout", "onMissing", "precision", "type", "units"],
         "type": "object",
         "description": "Transformation DTO that resolves destination topics based on geo-hash computed from message latitude/longitude.",
         "allOf": [
@@ -7144,6 +8948,53 @@
           }
         ]
       },
+      "GeoSpatialAreaConfigDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name referenced by drone configuration"
+          },
+          "boundaries": {
+            "type": "array",
+            "description": "GeoJSON boundaries that make up this operating area",
+            "items": {
+              "$ref": "#/components/schemas/GeoSpatialBoundaryConfigDTO"
+            }
+          }
+        },
+        "description": "Named geospatial operating area"
+      },
+      "GeoSpatialBoundaryConfigDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name used to identify the boundary within its geospatial area"
+          },
+          "path": {
+            "type": "string",
+            "description": "Filesystem path to the GeoJSON boundary file"
+          },
+          "type": {
+            "type": "string",
+            "description": "Boundary rule applied during route validation",
+            "enum": ["INSIDE", "DO_NOT_ENTER"]
+          }
+        },
+        "description": "GeoJSON boundary configuration"
+      },
+      "GeoSpatialConfigDTO": {
+        "type": "object",
+        "properties": {
+          "areas": {
+            "type": "array",
+            "description": "Named operating areas available for assignment to drones",
+            "items": { "$ref": "#/components/schemas/GeoSpatialAreaConfigDTO" }
+          }
+        },
+        "description": "Geospatial operating-area configuration"
+      },
       "HmacConfigDTO": {
         "required": ["schemaLoadingVersion"],
         "type": "object",
@@ -7245,8 +9096,8 @@
             "type": "string",
             "description": "Filters raw value; depending on filter type will only send if there is a change or every trigger",
             "example": "ON_CHANGE",
-            "enum": ["ALWAYS_SEND", "ON_CHANGE"],
-            "default": "ON_CHANGE"
+            "default": "ON_CHANGE",
+            "enum": ["ALWAYS_SEND", "ON_CHANGE"]
           },
           "selector": {
             "type": "string",
@@ -7377,63 +9228,124 @@
                 }
               ]
             }
-          },
-          "name": { "type": "string" }
+          }
         },
         "description": "Jolokia Configuration DTO"
       },
       "JsonArray": {
         "type": "object",
         "properties": {
-          "asBigDecimal": { "type": "number" },
-          "asBigInteger": { "type": "integer" },
           "asNumber": { "type": "number" },
           "asString": { "type": "string" },
           "asFloat": { "type": "number", "format": "float" },
           "asByte": { "type": "string", "format": "byte" },
           "asCharacter": { "type": "string" },
+          "asBigDecimal": { "type": "number" },
+          "asBigInteger": { "type": "integer" },
           "asShort": { "type": "integer", "format": "int32" },
           "empty": { "type": "boolean" },
           "asDouble": { "type": "number", "format": "double" },
           "asInt": { "type": "integer", "format": "int32" },
           "asLong": { "type": "integer", "format": "int64" },
           "asBoolean": { "type": "boolean" },
-          "jsonPrimitive": { "type": "boolean" },
-          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
-          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
           "jsonObject": { "type": "boolean" },
           "jsonArray": { "type": "boolean" },
+          "jsonPrimitive": { "type": "boolean" },
           "jsonNull": { "type": "boolean" },
-          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" },
-          "asJsonArray": { "$ref": "#/components/schemas/JsonArray" }
+          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
+          "asJsonArray": { "$ref": "#/components/schemas/JsonArray" },
+          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
+          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" }
         }
       },
       "JsonElement": {
         "type": "object",
         "properties": {
-          "jsonPrimitive": { "type": "boolean" },
-          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
-          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
-          "asBigDecimal": { "type": "number" },
-          "asBigInteger": { "type": "integer" },
           "jsonObject": { "type": "boolean" },
           "jsonArray": { "type": "boolean" },
+          "jsonPrimitive": { "type": "boolean" },
           "jsonNull": { "type": "boolean" },
-          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" },
+          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
           "asJsonArray": { "$ref": "#/components/schemas/JsonArray" },
+          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
+          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" },
           "asNumber": { "type": "number" },
           "asString": { "type": "string" },
           "asFloat": { "type": "number", "format": "float" },
           "asByte": { "type": "string", "format": "byte" },
           "asCharacter": { "type": "string" },
+          "asBigDecimal": { "type": "number" },
+          "asBigInteger": { "type": "integer" },
           "asShort": { "type": "integer", "format": "int32" },
           "asDouble": { "type": "number", "format": "double" },
           "asInt": { "type": "integer", "format": "int32" },
           "asLong": { "type": "integer", "format": "int64" },
           "asBoolean": { "type": "boolean" }
         },
-        "description": "Value for set. Stored as JSON element so it can be number/string/object/array.",
-        "nullable": true
+        "description": "Default value used when the source path is missing.",
+        "default": null
+      },
+      "JsonMapOpDTO": {
+        "required": ["to"],
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "description": "Source JSON path.",
+            "nullable": true,
+            "example": "position.latitude"
+          },
+          "to": {
+            "type": "string",
+            "description": "Target JSON path.",
+            "example": "stanag.location.lat"
+          },
+          "function": {
+            "type": "string",
+            "description": "Transform function applied to a mapped JSON value.",
+            "enum": [
+              "NONE",
+              "TO_STRING",
+              "TO_INT",
+              "TO_LONG",
+              "TO_FLOAT",
+              "TO_DOUBLE",
+              "TO_BOOLEAN",
+              "TO_EPOCH_SECONDS",
+              "DATE_TO_EPOCH_SECONDS",
+              "DATE_TO_ISO_8601",
+              "BASE64_ENCODE",
+              "BASE64_DECODE"
+            ]
+          },
+          "defaultValue": { "$ref": "#/components/schemas/JsonElement" },
+          "ignoreMissing": {
+            "type": "boolean",
+            "description": "If true, silently skip the mapping when the source value is missing.",
+            "default": true
+          }
+        },
+        "description": "Maps a value from one JSON path to another, with an optional transformation."
+      },
+      "JsonMapperTransformationDTO": {
+        "title": "JSON Mapper Transformation DTO",
+        "required": ["operations", "type"],
+        "type": "object",
+        "description": "Applies an ordered list of JSON mapping operations.",
+        "allOf": [
+          { "$ref": "#/components/schemas/TransformationConfigDTO" },
+          {
+            "type": "object",
+            "properties": {
+              "operations": {
+                "minItems": 1,
+                "type": "array",
+                "description": "Ordered list of JSON mapping operations",
+                "items": { "$ref": "#/components/schemas/JsonMapOpDTO" }
+              }
+            }
+          }
+        ]
       },
       "JsonMutateOpDTO": {
         "title": "JSON Mutate Operation DTO",
@@ -7463,14 +9375,25 @@
             "nullable": true,
             "example": "payload.temperatureC"
           },
-          "value": { "$ref": "#/components/schemas/JsonElement" }
+          "value": {
+            "type": "object",
+            "description": "Value for set. Stored as JSON element so it can be number/string/object/array.",
+            "nullable": true,
+            "oneOf": [
+              { "type": "object" },
+              { "type": "string" },
+              { "type": "number" },
+              { "type": "boolean" }
+            ]
+          }
         },
         "description": "Single JSON mutation operation."
       },
       "JsonMutateTransformationDTO": {
         "title": "JSON Mutate Transformation DTO",
-        "required": ["operations", "schemaLoadingVersion", "type"],
+        "required": ["operations", "type"],
         "type": "object",
+        "additionalProperties": true,
         "description": "Applies a small set of JSON mutations: set/remove/rename using dot paths.",
         "allOf": [
           { "$ref": "#/components/schemas/TransformationConfigDTO" },
@@ -7490,21 +9413,21 @@
       "JsonNull": {
         "type": "object",
         "properties": {
-          "jsonPrimitive": { "type": "boolean" },
-          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
-          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
-          "asBigDecimal": { "type": "number" },
-          "asBigInteger": { "type": "integer" },
           "jsonObject": { "type": "boolean" },
           "jsonArray": { "type": "boolean" },
+          "jsonPrimitive": { "type": "boolean" },
           "jsonNull": { "type": "boolean" },
-          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" },
+          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
           "asJsonArray": { "$ref": "#/components/schemas/JsonArray" },
+          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
+          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" },
           "asNumber": { "type": "number" },
           "asString": { "type": "string" },
           "asFloat": { "type": "number", "format": "float" },
           "asByte": { "type": "string", "format": "byte" },
           "asCharacter": { "type": "string" },
+          "asBigDecimal": { "type": "number" },
+          "asBigInteger": { "type": "integer" },
           "asShort": { "type": "integer", "format": "int32" },
           "asDouble": { "type": "number", "format": "double" },
           "asInt": { "type": "integer", "format": "int32" },
@@ -7516,21 +9439,21 @@
         "type": "object",
         "properties": {
           "empty": { "type": "boolean" },
-          "jsonPrimitive": { "type": "boolean" },
-          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
-          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
-          "asBigDecimal": { "type": "number" },
-          "asBigInteger": { "type": "integer" },
           "jsonObject": { "type": "boolean" },
           "jsonArray": { "type": "boolean" },
+          "jsonPrimitive": { "type": "boolean" },
           "jsonNull": { "type": "boolean" },
-          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" },
+          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
           "asJsonArray": { "$ref": "#/components/schemas/JsonArray" },
+          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
+          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" },
           "asNumber": { "type": "number" },
           "asString": { "type": "string" },
           "asFloat": { "type": "number", "format": "float" },
           "asByte": { "type": "string", "format": "byte" },
           "asCharacter": { "type": "string" },
+          "asBigDecimal": { "type": "number" },
+          "asBigInteger": { "type": "integer" },
           "asShort": { "type": "integer", "format": "int32" },
           "asDouble": { "type": "number", "format": "double" },
           "asInt": { "type": "integer", "format": "int32" },
@@ -7543,34 +9466,35 @@
       "JsonPrimitive": {
         "type": "object",
         "properties": {
-          "asBigDecimal": { "type": "number" },
-          "asBigInteger": { "type": "integer" },
+          "boolean": { "type": "boolean" },
+          "number": { "type": "boolean" },
+          "string": { "type": "boolean" },
           "asNumber": { "type": "number" },
           "asString": { "type": "string" },
           "asFloat": { "type": "number", "format": "float" },
           "asByte": { "type": "string", "format": "byte" },
           "asCharacter": { "type": "string" },
+          "asBigDecimal": { "type": "number" },
+          "asBigInteger": { "type": "integer" },
           "asShort": { "type": "integer", "format": "int32" },
-          "boolean": { "type": "boolean" },
-          "string": { "type": "boolean" },
-          "number": { "type": "boolean" },
           "asDouble": { "type": "number", "format": "double" },
           "asInt": { "type": "integer", "format": "int32" },
           "asLong": { "type": "integer", "format": "int64" },
           "asBoolean": { "type": "boolean" },
-          "jsonPrimitive": { "type": "boolean" },
-          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
-          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
           "jsonObject": { "type": "boolean" },
           "jsonArray": { "type": "boolean" },
+          "jsonPrimitive": { "type": "boolean" },
           "jsonNull": { "type": "boolean" },
-          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" },
-          "asJsonArray": { "$ref": "#/components/schemas/JsonArray" }
+          "asJsonObject": { "$ref": "#/components/schemas/JsonObject" },
+          "asJsonArray": { "$ref": "#/components/schemas/JsonArray" },
+          "asJsonPrimitive": { "$ref": "#/components/schemas/JsonPrimitive" },
+          "asJsonNull": { "$ref": "#/components/schemas/JsonNull" }
         }
       },
       "JsonQueryTransformationDTO": {
-        "required": ["schemaLoadingVersion", "type"],
+        "required": ["type"],
         "type": "object",
+        "additionalProperties": true,
         "description": "Transformation DTO that runs JsonQuery over incoming messages.",
         "allOf": [
           { "$ref": "#/components/schemas/TransformationConfigDTO" },
@@ -7590,7 +9514,7 @@
         ]
       },
       "JsonToSchemaTransformationDTO": {
-        "required": ["schemaLoadingVersion", "type"],
+        "required": ["type"],
         "type": "object",
         "description": "Transformation DTO allows a schema lookup to use to convert from json to the native schema format",
         "allOf": [
@@ -7627,7 +9551,7 @@
         ]
       },
       "JsonToValueTransformationDTO": {
-        "required": ["schemaLoadingVersion", "type"],
+        "required": ["type"],
         "type": "object",
         "description": "Transformation DTO that extracts a specific value from a JSON payload.",
         "allOf": [
@@ -7648,7 +9572,7 @@
         ]
       },
       "JsonToXmlTransformationDTO": {
-        "required": ["schemaLoadingVersion", "type"],
+        "required": ["type"],
         "type": "object",
         "description": "Transformation DTO that converts JSON payloads into XML.",
         "allOf": [{ "$ref": "#/components/schemas/TransformationConfigDTO" }]
@@ -7676,16 +9600,8 @@
             "type": "string",
             "description": "Type of the key store",
             "example": "PKCS12",
-            "enum": [
-              "JKS",
-              "PKCS11",
-              "PKCS12",
-              "JCEKS",
-              "BKS",
-              "UBER",
-              "BCFKS"
-            ],
-            "default": "PKCS12"
+            "default": "PKCS12",
+            "enum": ["JKS", "PKCS11", "PKCS12", "JCEKS", "BKS", "UBER", "BCFKS"]
           },
           "providerName": {
             "type": "string",
@@ -7758,8 +9674,7 @@
             "description": "MAPS license secret retrived from Maps support",
             "nullable": true,
             "example": "license string"
-          },
-          "name": { "type": "string" }
+          }
         },
         "description": "License Management Configuration DTO"
       },
@@ -8037,8 +9952,7 @@
             "description": "List of LoRa device configurations",
             "nullable": true,
             "items": { "$ref": "#/components/schemas/LoRaDeviceConfigDTO" }
-          },
-          "name": { "type": "string" }
+          }
         },
         "description": "LoRa Device Management Configuration DTO"
       },
@@ -8321,8 +10235,7 @@
             "description": "List of configured model event streams",
             "example": [],
             "items": { "$ref": "#/components/schemas/MLEventStreamDTO" }
-          },
-          "name": { "type": "string" }
+          }
         },
         "description": "Machine Learning Model Manager configuration"
       },
@@ -8410,6 +10323,45 @@
         },
         "description": "Configuration details for the MapsMessaging-based repository. Used when repositoryType is set to 'Maps'."
       },
+      "MavlinkAcceptedSourceDTO": {
+        "required": ["componentId", "systemId"],
+        "type": "object",
+        "properties": {
+          "systemId": {
+            "type": "integer",
+            "description": "MAVLink system ID accepted by this source entry.",
+            "format": "int32",
+            "example": 1
+          },
+          "componentId": {
+            "type": "integer",
+            "description": "MAVLink component ID accepted by this source entry.",
+            "format": "int32",
+            "example": 1
+          },
+          "acceptedMessageIds": {
+            "type": "array",
+            "description": "MAVLink message IDs accepted from this source. Empty means the source uses the protocol-level accepted message ID list.",
+            "example": [0, 1, 30, 33],
+            "items": {
+              "type": "integer",
+              "description": "MAVLink message IDs accepted from this source. Empty means the source uses the protocol-level accepted message ID list.",
+              "format": "int32"
+            }
+          },
+          "rejectedMessageIds": {
+            "type": "array",
+            "description": "MAVLink message IDs rejected from this source. Applied after acceptedMessageIds. Empty means the protocol-level rejectedMessageIds list is used.",
+            "example": [411],
+            "items": {
+              "type": "integer",
+              "description": "MAVLink message IDs rejected from this source. Applied after acceptedMessageIds. Empty means the protocol-level rejectedMessageIds list is used.",
+              "format": "int32"
+            }
+          }
+        },
+        "description": "Defines a MAVLink source accepted by the MAVLink protocol layer."
+      },
       "MavlinkConfigDTO": {
         "required": [
           "proxyProtocol",
@@ -8419,23 +10371,48 @@
           "type"
         ],
         "type": "object",
-        "description": "MAVLink protocol configuration. Controls session handling, topic mapping, JSON conversion, source filtering, message filtering, raw frame forwarding, and rejected frame DLQ publishing.",
+        "description": "MAVLink protocol configuration. Controls session handling, topic mapping, JSON conversion, source filtering, message filtering, frame forwarding, duplicate suppression, and rejected frame publishing.",
         "allOf": [
           { "$ref": "#/components/schemas/ProtocolConfigDTO" },
           {
             "type": "object",
             "properties": {
-              "fullyQualifiedPathToDialectXml": {
-                "type": "string",
-                "description": "Fully qualified path to the MAVLink dialect XML. If not provided, the common dialect is used.",
+              "systemId": {
+                "maximum": 255,
+                "minimum": 1,
+                "type": "integer",
+                "description": "Local MAVLink system id used by this protocol instance when it originates MAVLink frames, such as heartbeats or outbound commands. If null, this MAVLink interface is listen-only and does not originate MAVLink traffic.",
+                "format": "int32",
                 "nullable": true,
-                "example": "C:/path/to/dialects/common.xml"
+                "example": 255
+              },
+              "componentId": {
+                "maximum": 255,
+                "minimum": 0,
+                "type": "integer",
+                "description": "Local MAVLink component id used by this protocol instance when it originates MAVLink frames, such as heartbeats or outbound commands. If null, this MAVLink interface is listen-only and does not originate MAVLink traffic.",
+                "format": "int32",
+                "nullable": true,
+                "example": 190
+              },
+              "heartbeatIntervalSeconds": {
+                "minimum": 0,
+                "type": "integer",
+                "description": "Interval in seconds between MAVLink HEARTBEAT messages sent by this protocol instance. Only used when systemId and componentId are configured. Set to 0 to disable heartbeat emission.",
+                "format": "int32",
+                "example": 30
+              },
+              "dialectName": {
+                "type": "string",
+                "description": "MAVLink dialect name or fully qualified path to a MAVLink dialect XML file. If blank, the default MAVLink dialect is used. If the value resolves to an existing file, it is loaded as a dialect XML path; otherwise it is treated as a dialect name.",
+                "nullable": true,
+                "example": "common"
               },
               "idleSessionTimeout": {
                 "maximum": 86400,
                 "minimum": 1,
                 "type": "integer",
-                "description": "Idle session timeout in seconds. Session is closed if no MAVLink traffic is received within this period.",
+                "description": "Idle session timeout in seconds. The session is closed if no MAVLink traffic is received within this period.",
                 "format": "int64",
                 "nullable": true,
                 "example": 600,
@@ -8465,7 +10442,7 @@
                 "maximum": 1024,
                 "minimum": 1,
                 "type": "integer",
-                "description": "Maximum number of in-flight MAVLink events per session. Limits back-pressure and memory usage.",
+                "description": "Maximum number of in-flight MAVLink events per session. This limits back-pressure and memory usage.",
                 "format": "int32",
                 "nullable": true,
                 "example": 1,
@@ -8473,19 +10450,19 @@
               },
               "topicNameTemplate": {
                 "type": "string",
-                "description": "Topic name template used when publishing decoded MAVLink messages. Supported placeholders: {remoteSocket}, {systemId}, {systemName}, {componentId}, {messageName}.",
+                "description": "Topic name template used when publishing accepted MAVLink messages. Supported placeholders: {remoteSocket}, {systemId}, {systemName}, {componentId}, {messageId}, {messageName}. {systemName} is populated from acceptedSources.name when a matching source entry exists.",
                 "example": "/{remoteSocket}/{systemId}/{componentId}/{messageName}",
                 "default": "/{remoteSocket}/{systemId}/{componentId}/{messageName}"
               },
               "statusTopicNameTemplate": {
                 "type": "string",
-                "description": "Topic name template used when publishing MAVLink session state changes induced when sequence number monitor detects issues. Supported placeholders: {remoteSocket}, {systemId}, {systemName}, {componentId}, {messageName}.",
-                "example": "/{remoteSocket}/{systemId}/{componentId}/{messageName}",
+                "description": "Topic name template used when publishing MAVLink sequence monitor status changes. Supported placeholders: {remoteSocket}, {systemId}, {systemName}, {componentId}, {messageId}, {messageName}. {systemName} is populated from acceptedSources.name when a matching source entry exists.",
+                "example": "/{remoteSocket}/{systemId}/{componentId}/{messageName}/status",
                 "default": "/{remoteSocket}/{systemId}/{componentId}/{messageName}/status"
               },
               "parseToJson": {
                 "type": "boolean",
-                "description": "Convert incoming MAVLink frames into JSON using the registered MAVLink message definitions. If false, raw binary frames are published.",
+                "description": "Convert accepted MAVLink frames into a JSON MAVLink envelope before publishing. If false, the raw MAVLink frame bytes are published.",
                 "nullable": true,
                 "example": true,
                 "default": true
@@ -8497,14 +10474,14 @@
               },
               "forwardRawFrames": {
                 "type": "boolean",
-                "description": "When forwarding is enabled, forward raw MAVLink frames instead of decoded messages.",
+                "description": "When forwarding is enabled, forward raw MAVLink frames rather than transformed or decoded messages.",
                 "nullable": true,
                 "example": true,
                 "default": true
               },
               "forwardRejectedRawFrames": {
                 "type": "boolean",
-                "description": "If true, frames rejected by source or message filtering are forwarded as raw MAVLink frames to the configured forwardUrls. This allows other MAVLink systems to receive frames even when this server chooses not to parse or publish them locally.",
+                "description": "If true, frames rejected by source or message filtering are still forwarded as raw MAVLink frames to the configured forwardUrls. This only affects forwarding; rejected frames are still not published to the normal accepted message topic.",
                 "nullable": true,
                 "example": false,
                 "default": false
@@ -8530,7 +10507,7 @@
                 "type": "array",
                 "items": {
                   "type": "integer",
-                  "description": "Global allow-list of MAVLink message IDs. If empty, all MAVLink message IDs are accepted unless explicitly rejected by rejectedMessageIds. If populated, only message IDs in this list are accepted.",
+                  "description": "Global allow-list of MAVLink message IDs. If empty, all MAVLink message IDs are accepted unless rejected by rejectedMessageIds. Per-source acceptedMessageIds in acceptedSources override this list for that source.",
                   "format": "int32"
                 }
               },
@@ -8538,35 +10515,62 @@
                 "type": "array",
                 "items": {
                   "type": "integer",
-                  "description": "Global reject-list of MAVLink message IDs. Applied after acceptedMessageIds. If empty, no message IDs are explicitly rejected.",
+                  "description": "Global reject-list of MAVLink message IDs. Applied after acceptedMessageIds and per-source filtering. If empty, no message IDs are explicitly rejected.",
                   "format": "int32"
                 }
               },
-              "knownSources": {
+              "acceptedSources": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/MavlinkKnownSourceDTO"
+                  "$ref": "#/components/schemas/MavlinkAcceptedSourceDTO"
                 }
               },
               "rejectUnknownSources": {
                 "type": "boolean",
-                "description": "If true, only MAVLink sources listed in knownSources are accepted. Frames from unknown systemId/componentId pairs are rejected. If false, unknown sources are accepted and knownSources entries are used only for metadata and filtering overrides.",
+                "description": "If true, only MAVLink sources listed in acceptedSources are accepted. Frames from unknown systemId/componentId pairs are rejected. If false, unknown sources are accepted and acceptedSources entries are used only for naming and per-source message filtering.",
                 "nullable": true,
                 "example": false,
                 "default": false
               },
               "rejectedFrameNamespace": {
                 "type": "string",
-                "description": "Namespace used when publishing rejected MAVLink frames. The rejection reason may be appended as a child topic (for example: /protocol/mavlink/dlq/message-id-not-accepted).",
+                "description": "Namespace used when publishing rejected MAVLink frames. Rejected frames are frames that fail source or message filtering. The rejection reason may be appended as a child topic, for example /protocol/mavlink/dlq/message-id-not-accepted.",
                 "example": "/protocol/mavlink/dlq",
                 "default": "/protocol/mavlink/dlq"
               },
               "includeRejectedFrameMetadata": {
                 "type": "boolean",
-                "description": "If true, rejected frame events include metadata such as source address, systemId, componentId, messageId, and rejection reason in addition to the raw MAVLink frame payload.",
+                "description": "If true, rejected frame events include metadata such as systemId, componentId, messageId, sequence, signed flag, and payload. If false, the rejected frame event contains the original raw frame bytes.",
                 "nullable": true,
                 "example": true,
                 "default": true
+              },
+              "outboundTopicName": {
+                "type": "string",
+                "description": "Topic name used for outbound MAVLink requests. Events published to this topic are consumed by the MAVLink protocol implementation, converted into MAVLink frames, and sent onwards via this interface. Supported placeholders: {interfaceName}. The interface name is taken from the configured protocol interface name.",
+                "example": "/protocol/mavlink/{interfaceName}/outbound",
+                "default": "/protocol/mavlink/{interfaceName}/outbound"
+              },
+              "qualityOfService": {
+                "maximum": 2,
+                "minimum": 0,
+                "type": "integer",
+                "description": "Quality of Service used when publishing telemetry events into the messaging layer. 0 means at most once, 1 means at least once, and 2 means exactly once where supported.",
+                "format": "int32",
+                "example": 0,
+                "default": 0
+              },
+              "storeOffline": {
+                "type": "boolean",
+                "description": "If true, published telemetry events are marked for offline storage so disconnected subscribers may receive them later. For high-rate streams this can significantly increase retained storage and replay load.",
+                "example": false,
+                "default": false
+              },
+              "tlogDirectory": {
+                "type": "string",
+                "description": "Directory where MAVLink telemetry log files are written. Each MAVLink endpoint creates a separate TLOG file using the endpoint name as the file name. If null or blank, TLOG recording is disabled.",
+                "nullable": true,
+                "example": "/var/log/mapsmessaging/mavlink"
               }
             }
           }
@@ -8604,26 +10608,37 @@
           "vehicleClass": {
             "type": "string",
             "description": "Vehicle class (UAV=air, USV=surface, UGV=ground, UUV=underwater, GCS=control).",
-            "enum": ["UAV", "USV", "UGV", "UUV", "GCS"]
-          },
-          "acceptedMessageIds": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "description": "Per-source allow-list of message IDs.",
-              "format": "int32"
-            }
-          },
-          "rejectedMessageIds": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "description": "Per-source reject-list of message IDs.",
-              "format": "int32"
-            }
+            "enum": ["UAV", "USV", "UGV", "UUV", "GCS", "UNKNOWN"]
           }
         },
         "description": "Known MAVLink source definition."
+      },
+      "MavlinkTwinConfigDTO": {
+        "required": ["topic"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Logical name for this MAVLink twin state source. Used for identification and diagnostics.",
+            "example": "mavlink-state"
+          },
+          "topic": {
+            "type": "string",
+            "description": "Topic path or namespace subscription used to receive MAVLink state messages.",
+            "example": "/mavlink/>"
+          },
+          "dialectName": {
+            "type": "string",
+            "description": "MAVLink dialect name or dialect file path. If omitted, the default/common dialect is used.",
+            "example": "common"
+          },
+          "knownSources": {
+            "type": "array",
+            "description": "Known MAVLink sources for this topic source. Only listed sources are processed into twins. Unknown sources are ignored.",
+            "items": { "$ref": "#/components/schemas/MavlinkKnownSourceDTO" }
+          }
+        },
+        "description": "Configuration for processing MAVLink state messages from a topic source into the twin manager."
       },
       "MessageDaemonConfigDTO": {
         "required": ["schemaLoadingVersion", "type"],
@@ -8743,6 +10758,12 @@
             "example": false,
             "default": false
           },
+          "enableUniqueCorrelationIds": {
+            "type": "boolean",
+            "description": "Generate a unique correlation identifier for messages that do not already have correlation data",
+            "example": false,
+            "default": false
+          },
           "latitude": {
             "maximum": 90.0,
             "minimum": -90.0,
@@ -8773,8 +10794,7 @@
             "nullable": true,
             "example": true,
             "default": false
-          },
-          "name": { "type": "string" }
+          }
         },
         "description": "Message Daemon Configuration DTO"
       },
@@ -8901,8 +10921,8 @@
             "type": "string",
             "description": "Type of model store",
             "example": "s3",
-            "enum": ["s3", "file", "nexus", "maps"],
-            "default": "file"
+            "default": "file",
+            "enum": ["s3", "file", "nexus", "maps"]
           },
           "config": { "$ref": "#/components/schemas/ModelStoreConfigBlockDTO" }
         },
@@ -8919,57 +10939,95 @@
             "type": "object",
             "properties": {
               "minServerKeepAlive": {
+                "maximum": 65535,
+                "minimum": 0,
                 "type": "integer",
-                "description": "Minimum server keep-alive interval in seconds",
+                "description": "Minimum server keep-alive interval in seconds. A value of 0 disables the lower bound.",
                 "format": "int32",
-                "example": 0
+                "example": 0,
+                "default": 0
               },
               "maxServerKeepAlive": {
+                "maximum": 65535,
+                "minimum": 0,
                 "type": "integer",
-                "description": "Maximum server keep-alive interval in seconds",
+                "description": "Maximum server keep-alive interval in seconds. A value of 0 allows the client supplied keep-alive to be used without a configured upper bound.",
                 "format": "int32",
-                "example": 60
+                "example": 60,
+                "default": 60
               },
               "maximumSessionExpiry": {
+                "maximum": 4294967295,
+                "minimum": 0,
                 "type": "integer",
-                "description": "Maximum session expiry for MQTT",
+                "description": "Maximum MQTT session expiry interval in seconds. Used for MQTT 5 session expiry handling.",
                 "format": "int64",
-                "example": 86400
+                "example": 86400,
+                "default": 86400
               },
               "maximumBufferSize": {
+                "minimum": 1024,
                 "type": "integer",
-                "description": "Maximum buffer size for MQTT",
+                "description": "Maximum MQTT buffer size in bytes used for queued or in-flight MQTT data.",
                 "format": "int64",
-                "example": 10485760
+                "example": 10485760,
+                "default": 10485760
               },
               "serverReceiveMaximum": {
+                "maximum": 65535,
+                "minimum": 1,
                 "type": "integer",
-                "description": "Server receive maximum",
+                "description": "Maximum number of QoS 1 and QoS 2 publications the server allows to be in-flight from a client.",
                 "format": "int32",
-                "example": 10
+                "example": 10,
+                "default": 10
               },
               "clientReceiveMaximum": {
+                "maximum": 65535,
+                "minimum": 1,
                 "type": "integer",
-                "description": "Client receive maximum",
+                "description": "Maximum number of QoS 1 and QoS 2 publications the client allows to be in-flight from the server.",
                 "format": "int32",
-                "example": 65535
+                "example": 65535,
+                "default": 65535
               },
               "clientMaximumTopicAlias": {
+                "maximum": 65535,
+                "minimum": 0,
                 "type": "integer",
-                "description": "Client maximum topic alias",
+                "description": "Maximum topic alias value the client may use when publishing to the server. A value of 0 disables client topic aliases.",
                 "format": "int32",
-                "example": 32767
+                "example": 32767,
+                "default": 32767
               },
               "serverMaximumTopicAlias": {
+                "maximum": 65535,
+                "minimum": 0,
                 "type": "integer",
-                "description": "Server maximum topic alias",
+                "description": "Maximum topic alias value the server may use when publishing to the client. A value of 0 disables server topic aliases.",
                 "format": "int32",
-                "example": 0
+                "example": 0,
+                "default": 0
               },
               "strictClientId": {
                 "type": "boolean",
-                "description": "Indicates if strict client ID enforcement is enabled",
-                "example": false
+                "description": "Indicates if strict client identifier enforcement is enabled. When enabled, invalid or missing client identifiers are rejected instead of being relaxed by server policy.",
+                "example": false,
+                "default": false
+              },
+              "version": {
+                "type": "string",
+                "description": "MQTT protocol version accepted by this listener. AUTO allows the server to detect the MQTT version from the CONNECT packet.",
+                "example": "AUTO",
+                "default": "AUTO",
+                "enum": [
+                  "AUTO",
+                  "MQTT_3_1_1",
+                  "MQTT_5",
+                  "AUTO",
+                  "MQTT_3_1_1",
+                  "MQTT_5"
+                ]
               }
             }
           }
@@ -9092,8 +11150,8 @@
             "type": "string",
             "description": "Payload encoding type (string or base64)",
             "example": "string",
-            "enum": ["string", "base64"],
-            "default": "string"
+            "default": "string",
+            "enum": ["string", "base64"]
           },
           "qos": {
             "maximum": 2,
@@ -9145,6 +11203,16 @@
         "description": "MQTT Last Will and Testament (LWT) configuration",
         "nullable": true
       },
+      "N2KAisConfig": {
+        "type": "object",
+        "properties": {
+          "pgn129039": { "$ref": "#/components/schemas/N2KPgnTransmitConfig" },
+          "pgn129040": { "$ref": "#/components/schemas/N2KPgnTransmitConfig" },
+          "pgn129809": { "$ref": "#/components/schemas/N2KPgnTransmitConfig" },
+          "pgn129810": { "$ref": "#/components/schemas/N2KPgnTransmitConfig" }
+        },
+        "description": "Configuration for publishing AIS-related NMEA 2000 PGNs from tracked entity state."
+      },
       "N2KConfigDTO": {
         "required": [
           "proxyProtocol",
@@ -9154,7 +11222,7 @@
           "unknownPacketTopic"
         ],
         "type": "object",
-        "description": "N2K protocol configuration. Controls session handling, topic mapping, JSON conversion, and optional frame forwarding.",
+        "description": "N2K protocol configuration. Controls session handling, topic mapping, JSON conversion, optional frame forwarding, and AIS publishing.",
         "allOf": [
           { "$ref": "#/components/schemas/ProtocolConfigDTO" },
           {
@@ -9170,8 +11238,17 @@
               "base64EncodedDatabase": {
                 "minLength": 1,
                 "type": "string",
-                "description": "Optional XML definition to use encoded as base64",
+                "description": "Optional XML definition to use encoded as base64.",
                 "nullable": true
+              },
+              "canBusAddress": {
+                "maximum": 255,
+                "minimum": 0,
+                "type": "integer",
+                "description": "CAN bus source address used by the N2K node when transmitting frames and responding to requests.",
+                "format": "int32",
+                "example": 123,
+                "default": 123
               },
               "topicNameTemplate": {
                 "type": "string",
@@ -9181,33 +11258,94 @@
               },
               "unknownPacketTopic": {
                 "type": "string",
-                "description": "Topic to which raw CAN/NMEA 2000 frames are published when the PGN or message type is unknown. ",
+                "description": "Topic to which raw CAN/NMEA 2000 frames are published when the PGN or message type is unknown.",
                 "example": "/{candevice}/unknown",
-                "default": "/{candevice}/"
+                "default": "/{candevice}/unknown"
               },
-              "inboundTopicName": {
+              "outboundTopicName": {
                 "type": "string",
-                "description": "Topic to which raw CAN/NMEA 2000 frames are published when the PGN or message type is unknown. ",
+                "description": "Optional outbound topic name filter used when accepting N2K frames from the messaging layer.",
                 "nullable": true,
                 "example": "/can1/#"
               },
               "parseToJson": {
                 "type": "boolean",
                 "description": "Convert incoming CANBUS frames into JSON using the registered N2K message definitions. If false, raw binary frames are published.",
-                "nullable": true,
                 "example": true,
                 "default": true
               },
-              "publishMavlinkDrones": {
+              "qualityOfService": {
+                "maximum": 2,
+                "minimum": 0,
+                "type": "integer",
+                "description": "Quality of Service used when publishing telemetry events into the messaging layer. 0 means at most once, 1 means at least once, and 2 means exactly once where supported.",
+                "format": "int32",
+                "example": 0,
+                "default": 0
+              },
+              "storeOffline": {
                 "type": "boolean",
-                "description": "Monitors and publishes the mavlink drone position and details as AIS N2K events",
-                "nullable": true,
-                "example": true,
-                "default": true
+                "description": "If true, published telemetry events are marked for offline storage so disconnected subscribers may receive them later. For high-rate streams this can significantly increase retained storage and replay load.",
+                "example": false,
+                "default": false
               }
             }
           }
         ]
+      },
+      "N2KPgnTransmitConfig": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Enables transmission of this PGN.",
+            "example": true,
+            "default": true
+          },
+          "intervalMilliseconds": {
+            "minimum": 1,
+            "type": "integer",
+            "description": "Minimum interval in milliseconds between transmitted instances of this PGN. A value of 0 disables periodic transmission for this PGN.",
+            "format": "int64",
+            "example": 1000,
+            "default": 1000
+          }
+        },
+        "description": "Configuration for periodically transmitting a specific NMEA 2000 PGN."
+      },
+      "N2KTwinConfig": {
+        "type": "object",
+        "properties": {
+          "enable": { "type": "boolean" },
+          "publishMavlinkDrones": {
+            "type": "boolean",
+            "description": "Enables publishing tracked MAVLink drones and other known entities as NMEA 2000 AIS events.",
+            "example": true,
+            "default": true
+          },
+          "topic": {
+            "type": "string",
+            "description": "Messaging topic subscription used to receive decoded NMEA 2000 JSON events for twin monitoring.",
+            "example": "/canbus0/n2k/json/#",
+            "default": "/canbus0/n2k/json/#"
+          },
+          "name": {
+            "type": "string",
+            "description": "Logical name for this NMEA 2000 twin integration. Used for display, logging and source identification.",
+            "nullable": true,
+            "example": "canbus0-n2k-drone-feed"
+          },
+          "vehicleClass": {
+            "type": "string",
+            "description": "Vehicle class associated with this NMEA 2000 feed. Used to describe the monitored platform.",
+            "nullable": true,
+            "example": "USV",
+            "default": "UNKNOWN",
+            "enum": ["UAV", "UGV", "USV", "UUV", "VESSEL", "ROVER", "UNKNOWN"]
+          },
+          "ais": { "$ref": "#/components/schemas/N2KAisConfig" }
+        },
+        "description": "NMEA 2000 twin integration configuration."
       },
       "NamespaceFilterDTO": {
         "title": "Namespace Filter",
@@ -9324,8 +11462,7 @@
             "items": {
               "$ref": "#/components/schemas/EndPointConnectionServerConfigDTO"
             }
-          },
-          "name": { "type": "string" }
+          }
         },
         "description": "Network Connection Manager Configuration DTO"
       },
@@ -9381,8 +11518,7 @@
             "type": "array",
             "description": "List of endpoint server configurations",
             "items": { "$ref": "#/components/schemas/EndPointServerConfigDTO" }
-          },
-          "name": { "type": "string" }
+          }
         },
         "description": "Network Manager Configuration DTO"
       },
@@ -9420,12 +11556,56 @@
       "NmeaConfigDTO": {
         "required": ["proxyProtocol", "schemaLoadingVersion", "type"],
         "type": "object",
-        "description": "NMEA Protocol Configuration DTO",
         "allOf": [
           { "$ref": "#/components/schemas/ProtocolConfigDTO" },
           {
             "type": "object",
             "properties": {
+              "qualityOfService": {
+                "maximum": 2,
+                "minimum": 0,
+                "type": "integer",
+                "description": "Quality of Service used when publishing telemetry events into the messaging layer. 0 means at most once, 1 means at least once, and 2 means exactly once where supported.",
+                "format": "int32",
+                "example": 0,
+                "default": 0
+              },
+              "storeOffline": {
+                "type": "boolean",
+                "description": "If true, published telemetry events are marked for offline storage so disconnected subscribers may receive them later. For high-rate streams this can significantly increase retained storage and replay load.",
+                "example": false,
+                "default": false
+              },
+              "topicNameTemplate": {
+                "type": "string",
+                "description": "Topic name template used when publishing accepted NMEA 0183 sentences. Supported placeholders: {deviceName}, {sentence}. {deviceName} is populated from the configured source/device name. {sentence} is the NMEA sentence identifier, for example GPGGA, GPRMC, or AIVDM.",
+                "example": "/NMEA0183/{deviceName}/{sentence}",
+                "default": "/NMEA0183/{deviceName}/{sentence}"
+              },
+              "publish": {
+                "type": "boolean",
+                "description": "Controls whether parsed NMEA 0183 sentences are published to the configured topic.",
+                "example": true,
+                "default": true
+              },
+              "useForServerLocation": {
+                "type": "boolean",
+                "description": "Controls whether selected NMEA 0183 position sentences are used to update the server location. When enabled, the sentence configured by sentenceForServerLocation is used as the location source.",
+                "example": false,
+                "default": false
+              },
+              "sentenceForServerLocation": {
+                "type": "string",
+                "description": "NMEA 0183 sentence identifier used for updating the server location when useForServerLocation is enabled. Common values include GGA, GLL, RMC, GPGGA, GNGGA, GPRMC, and GNRMC.",
+                "example": "GGA",
+                "default": "GGA"
+              },
+              "format": {
+                "type": "string",
+                "description": "Output format used when publishing parsed NMEA 0183 sentence data. Supported values: json.",
+                "example": "json",
+                "default": "json"
+              },
               "serial": { "$ref": "#/components/schemas/SerialConfigDTO" }
             }
           }
@@ -9477,8 +11657,8 @@
             "type": "string",
             "description": "Filters raw value; depending on filter type will only send if there is a change or every trigger",
             "example": "ON_CHANGE",
-            "enum": ["ALWAYS_SEND", "ON_CHANGE"],
-            "default": "ON_CHANGE"
+            "default": "ON_CHANGE",
+            "enum": ["ALWAYS_SEND", "ON_CHANGE"]
           },
           "selector": {
             "type": "string",
@@ -9876,8 +12056,7 @@
           },
           "tlsConfig": { "$ref": "#/components/schemas/TlsConfig" },
           "staticConfig": { "$ref": "#/components/schemas/StaticConfig" },
-          "corsHeaders": { "$ref": "#/components/schemas/CorsHeaders" },
-          "name": { "type": "string" }
+          "corsHeaders": { "$ref": "#/components/schemas/CorsHeaders" }
         },
         "description": "Rest API Configuration DTO"
       },
@@ -9919,8 +12098,7 @@
             "items": {
               "$ref": "#/components/schemas/PredefinedServerConfigDTO"
             }
-          },
-          "name": { "type": "string" }
+          }
         },
         "description": "Routing Manager Configuration DTO"
       },
@@ -10001,8 +12179,8 @@
           },
           "mechanism": {
             "type": "string",
-            "description": "The SASL mechanism, such as PLAIN or SCRAM-SHA-256",
-            "example": "PLAIN"
+            "description": "The SASL mechanism: SCRAM-SHA-256, or PLAIN on SSL, DTLS, or WSS endpoints",
+            "example": "SCRAM-SHA-256"
           },
           "identityProvider": {
             "type": "string",
@@ -10209,12 +12387,18 @@
             "type": "string",
             "description": "Defines how schema parsing errors are handled. IGNORE keeps current behaviour and suppresses parse errors, STRICT throws an error.",
             "example": "IGNORE",
-            "enum": ["IGNORE", "STRICT"],
-            "default": "IGNORE"
-          },
-          "name": { "type": "string" }
+            "default": "IGNORE",
+            "enum": ["IGNORE", "STRICT"]
+          }
         },
         "description": "Configures the schema manager on where it can find and store schemas"
+      },
+      "SchemaToJsonTransformationDTO": {
+        "title": "Schema To JSON Transformation",
+        "required": ["type"],
+        "type": "object",
+        "description": "Converts the opaque payload into JSON using the message schemaId and the server schema registry. No configuration parameters.",
+        "allOf": [{ "$ref": "#/components/schemas/TransformationConfigDTO" }]
       },
       "SecurityManagerDTO": {
         "title": "Security Manager",
@@ -10245,8 +12429,7 @@
               "default": "PublicAuthConfig",
               "Default": "PublicAuthConfig"
             }
-          },
-          "name": { "type": "string" }
+          }
         },
         "description": "Mapping between auth config names and JAAS configuration names"
       },
@@ -10394,8 +12577,8 @@
             "type": "string",
             "description": "Filters raw value; depending on filter type will only send if there is a change or every trigger",
             "example": "ON_CHANGE",
-            "enum": ["ALWAYS_SEND", "ON_CHANGE"],
-            "default": "ON_CHANGE"
+            "default": "ON_CHANGE",
+            "enum": ["ALWAYS_SEND", "ON_CHANGE"]
           },
           "selector": {
             "type": "string",
@@ -10475,8 +12658,8 @@
             "type": "string",
             "description": "Filters raw value; depending on filter type will only send if there is a change or every trigger",
             "example": "ON_CHANGE",
-            "enum": ["ALWAYS_SEND", "ON_CHANGE"],
-            "default": "ON_CHANGE"
+            "default": "ON_CHANGE",
+            "enum": ["ALWAYS_SEND", "ON_CHANGE"]
           },
           "selector": {
             "type": "string",
@@ -10577,8 +12760,8 @@
             "description": "Proxy Protocol support mode. 'ENABLED' allows but doesn't require it, 'REQUIRED' enforces it, 'DISABLED' will NOT check for incoming PROXY requests.",
             "nullable": true,
             "example": "REQUIRED",
-            "enum": ["ENABLED", "DISABLED", "REQUIRED"],
-            "default": "DISABLED"
+            "default": "DISABLED",
+            "enum": ["ENABLED", "DISABLED", "REQUIRED"]
           },
           "allowedProxyHosts": {
             "pattern": "^(?:\\s*[^,\\s][^,]*\\s*(?:,\\s*[^,\\s][^,]*\\s*)*)?$",
@@ -10767,8 +12950,8 @@
             "type": "string",
             "description": "Filters raw value; depending on filter type will only send if there is a change or every trigger",
             "example": "ON_CHANGE",
-            "enum": ["ALWAYS_SEND", "ON_CHANGE"],
-            "default": "ON_CHANGE"
+            "default": "ON_CHANGE",
+            "enum": ["ALWAYS_SEND", "ON_CHANGE"]
           },
           "selector": {
             "type": "string",
@@ -10864,6 +13047,7 @@
           "clientCertificateWanted",
           "context",
           "crlInterval",
+          "hostnameVerificationEnabled",
           "schemaLoadingVersion"
         ],
         "type": "object",
@@ -10889,6 +13073,12 @@
             "example": false,
             "default": false
           },
+          "hostnameVerificationEnabled": {
+            "type": "boolean",
+            "description": "Whether outbound TLS connections verify the server certificate hostname.",
+            "example": true,
+            "default": true
+          },
           "crlUrl": {
             "type": "string",
             "description": "URL for the Certificate Revocation List (CRL). If not set, CRL checking is disabled.",
@@ -10906,9 +13096,9 @@
             "default": 3600000
           },
           "context": {
-            "pattern": "^TLS(?:v1\\.(?:2|3))?$",
+            "pattern": "^(?:TLS(?:v1\\.(?:2|3))?|DTLS(?:v1\\.(?:0|2))?)$",
             "type": "string",
-            "description": "SSL context identifier or protocol profile to use (for example: TLS, TLSv1.2, TLSv1.3).",
+            "description": "SSL context identifier or protocol profile to use (for example: TLS, TLSv1.3, DTLS, DTLSv1.2).",
             "example": "TLS",
             "default": "TLS"
           },
@@ -11132,12 +13322,157 @@
               },
               "base64EncodeBinary": {
                 "type": "boolean",
-                "description": "Encode the outgoing buffer as bas64 if binary",
+                "description": "Encode outgoing binary buffers as Base64",
                 "example": true
+              },
+              "heartbeatCanSendMillis": {
+                "type": "integer",
+                "description": "Minimum interval at which the server can send STOMP heartbeats, in milliseconds",
+                "format": "int32",
+                "example": 10000
+              },
+              "heartbeatWantsReceiveMillis": {
+                "type": "integer",
+                "description": "Maximum desired interval between client heartbeats, in milliseconds",
+                "format": "int32",
+                "example": 10000
+              },
+              "heartbeatToleranceMillis": {
+                "type": "integer",
+                "description": "Additional tolerance before a missing client heartbeat closes the connection, in milliseconds",
+                "format": "int32",
+                "example": 5000
               }
             }
           }
         ]
+      },
+      "TakProtocolDTO": {
+        "required": ["hostname", "port"],
+        "type": "object",
+        "properties": {
+          "hostname": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Hostname or IP address of the TAK server.",
+            "example": "opentak.syd.mapsmessaging.io"
+          },
+          "port": {
+            "type": "integer",
+            "description": "Port of the TAK server (e.g. 8088 for TCP, 8089 for TLS).",
+            "format": "int32",
+            "example": 8088
+          },
+          "sharedConnection": {
+            "type": "boolean",
+            "description": "If true, all twins share a single TAK socket connection. If false, each twin uses its own socket.",
+            "example": false,
+            "default": false
+          },
+          "topic": {
+            "type": "string",
+            "description": "Topic to publish TAK CoT XML messages to.",
+            "nullable": true,
+            "example": "tak/events"
+          }
+        },
+        "description": "TAK protocol configuration"
+      },
+      "TaskCapabilities": {
+        "type": "object",
+        "properties": {
+          "tasks": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/TaskCapability" }
+          },
+          "taskConditionsMode": {
+            "type": "string",
+            "enum": [
+              "SIMPLE_TASK_STATE",
+              "FOLLOW_TASK_STATE",
+              "COMPLEX",
+              "NOT_SUPPORTED"
+            ]
+          },
+          "taskConditionsTemplate": {
+            "type": "string",
+            "enum": ["NOT_SUPPORTED", "SUPPORTED"]
+          }
+        },
+        "description": "Task capabilities supported by this known MAVLink source."
+      },
+      "TaskCapability": {
+        "type": "object",
+        "properties": {
+          "taskType": {
+            "type": "string",
+            "enum": [
+              "REPOSITION",
+              "NAVIGATE",
+              "ESCORT",
+              "FOLLOW",
+              "IDENTIFY",
+              "TRACK",
+              "SHADOW",
+              "CLASSIFY",
+              "DETECT",
+              "SURVEY",
+              "PATROL",
+              "RECONNAISSANCE",
+              "PICKET",
+              "SCREEN",
+              "STANDBY",
+              "LOITER",
+              "PREPARE",
+              "SYNCHRONIZATION",
+              "HANDOVER",
+              "RESUPPLY",
+              "RECOVER",
+              "LAUNCH",
+              "DETER",
+              "WARN",
+              "COVER",
+              "MARK",
+              "DESTROY",
+              "NEUTRALIZE",
+              "ENGAGE",
+              "DEPLOY",
+              "REMOVE",
+              "JAM",
+              "RELAY",
+              "CLEAR",
+              "AVOID",
+              "BARRIER",
+              "INSPECT"
+            ]
+          },
+          "specialization": {
+            "type": "string",
+            "enum": [
+              "CLEAR_MCM_SWEEP_INFLUENCE",
+              "CLEAR_MCM_SWEEP_MECHANICAL",
+              "ANY",
+              "CLEAR_MCM",
+              "DETECT_ASW",
+              "DETECT_MCM",
+              "DETECT_SAR",
+              "DETECT_SBW",
+              "ENGAGE_ASW",
+              "IDENTIFY_MCM",
+              "IDENTIFY_SBW",
+              "NEUTRALIZE_MCM",
+              "NONE",
+              "SURVEY_AERIAL",
+              "SURVEY_BATHYMETRIC",
+              "SURVEY_OCEANOGRAPHIC",
+              "SURVEY_REA"
+            ]
+          },
+          "authorities": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Authorities" }
+          }
+        }
       },
       "TcpConfigDTO": {
         "required": [
@@ -11317,8 +13652,7 @@
             },
             "description": "Tenant Configuration DTO",
             "nullable": true
-          },
-          "name": { "type": "string" }
+          }
         },
         "description": "Tenant Management Configuration DTO"
       },
@@ -11401,8 +13735,8 @@
             "description": "Proxy Protocol support mode. 'ENABLED' allows but doesn't require it, 'REQUIRED' enforces it, 'DISABLED' will NOT check for incoming PROXY requests.",
             "nullable": true,
             "example": "REQUIRED",
-            "enum": ["ENABLED", "DISABLED", "REQUIRED"],
-            "default": "DISABLED"
+            "default": "DISABLED",
+            "enum": ["ENABLED", "DISABLED", "REQUIRED"]
           },
           "allowedProxyHosts": {
             "pattern": "^(?:\\s*[^,\\s][^,]*\\s*(?:,\\s*[^,\\s][^,]*\\s*)*)?$",
@@ -11589,21 +13923,12 @@
         ]
       },
       "TransformationConfigDTO": {
-        "required": ["schemaLoadingVersion", "type"],
+        "required": ["type"],
         "type": "object",
         "properties": {
-          "schemaLoadingVersion": {
-            "maximum": 10,
-            "minimum": 0,
-            "type": "integer",
-            "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
-            "format": "int32",
-            "example": 1,
-            "default": 1
-          },
           "type": {
             "type": "string",
-            "description": "Type of transformation configuration. All values are lower-case and hyphen-separated.",
+            "description": "Type of transformation configuration.",
             "example": "jsontoxml",
             "enum": [
               "CLOUD_EVENT_JSON",
@@ -11616,7 +13941,20 @@
               "GEOHASH",
               "SCHEMA_TO_JSON",
               "JSON_MUTATE",
-              "JSON_TO_SCHEMA"
+              "JSON_MAPPER",
+              "JSON_TO_SCHEMA",
+              "cloudevent-json",
+              "cloudevent-native",
+              "cloudevent-envelope",
+              "jsontoxml",
+              "xmltojson",
+              "jsontovalue",
+              "jsonquery",
+              "geohash",
+              "schematojson",
+              "jsonmutate",
+              "jsonmapper",
+              "jsontoschema"
             ]
           }
         },
@@ -11637,10 +13975,12 @@
             "jsontoxml": "#/components/schemas/JsonToXmlTransformationDTO",
             "xmltojson": "#/components/schemas/XmlToJsonTransformationDTO",
             "jsontoschema": "#/components/schemas/JsonToSchemaTransformationDTO",
+            "schematojson": "#/components/schemas/SchemaToJsonTransformationDTO",
             "jsontovalue": "#/components/schemas/JsonToValueTransformationDTO",
             "jsonquery": "#/components/schemas/JsonQueryTransformationDTO",
             "geohash": "#/components/schemas/GeoHashResolverTransformationDTO",
             "jsonmutate": "#/components/schemas/JsonMutateTransformationDTO",
+            "jsonmapper": "#/components/schemas/JsonMapperTransformationDTO",
             "cloudevent-envelope": "#/components/schemas/CloudEventEnvelopeTransformationDTO",
             "cloudevent-json": "#/components/schemas/CloudEventJsonTransformationDTO",
             "cloudevent-native": "#/components/schemas/CloudEventNativeTransformationDTO"
@@ -11705,9 +14045,55 @@
             "example": "/",
             "default": "/"
           },
-          "name": { "type": "string" }
+          "tak": { "$ref": "#/components/schemas/TakProtocolDTO" },
+          "geospatial": { "$ref": "#/components/schemas/GeoSpatialConfigDTO" },
+          "publish": { "$ref": "#/components/schemas/TwinPublishConfigDTO" },
+          "mavlink": {
+            "type": "array",
+            "description": "MAVLink topic sources processed into twin state. If no entries are present, no MAVLink twin state subscribers are started.",
+            "items": { "$ref": "#/components/schemas/MavlinkTwinConfigDTO" }
+          },
+          "adapterConfig": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ConfigurationProperties"
+            },
+            "description": "Protocol-specific state message adapter configuration keyed by adapter name"
+          },
+          "droneInfo": {
+            "type": "array",
+            "description": "Configuration on each drone",
+            "items": { "$ref": "#/components/schemas/DroneInfoDTO" }
+          },
+          "n2KTwinConfig": { "$ref": "#/components/schemas/N2KTwinConfig" }
         },
         "description": "State/Twin Manager Configuration DTO"
+      },
+      "TwinPublishConfigDTO": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "If true, twin updates will be published to the configured topic template.",
+            "example": false,
+            "default": false
+          },
+          "topicTemplate": {
+            "type": "string",
+            "description": "Topic template used when publishing twin updates. This may include placeholders such as {rootPath}, {twinId}, {vehicleClass}, or {sourceId}.",
+            "example": "state/twins/{twinId}",
+            "default": "state/twins/{twinId}"
+          },
+          "publishRateMs": {
+            "minimum": 0,
+            "type": "integer",
+            "description": "Minimum interval in milliseconds between published updates for each twin. A value of 0 publishes every update.",
+            "format": "int64",
+            "example": 1000,
+            "default": 0
+          }
+        },
+        "description": "Configuration for publishing twin updates to a topic."
       },
       "UdpConfigDTO": {
         "required": ["schemaLoadingVersion", "type"],
@@ -11758,7 +14144,7 @@
         "allOf": [{ "$ref": "#/components/schemas/ProtocolConfigDTO" }]
       },
       "XmlToJsonTransformationDTO": {
-        "required": ["schemaLoadingVersion", "type"],
+        "required": ["type"],
         "type": "object",
         "description": "Transformation DTO that converts XML payloads into JSON.",
         "allOf": [{ "$ref": "#/components/schemas/TransformationConfigDTO" }]
@@ -12942,6 +15328,423 @@
         },
         "description": "Represents detailed statistics about an interface, including bytes and messages sent/received, connection count, and error counts."
       },
+      "Engine": {
+        "required": [
+          "filteringSupport",
+          "maxQueues",
+          "maxTopics",
+          "namedSubscriptionSupport",
+          "queueSupport",
+          "schemaSupport",
+          "tempQueueSupport",
+          "tempTopicSupport",
+          "topicSupport"
+        ],
+        "type": "object",
+        "properties": {
+          "queueSupport": {
+            "type": "boolean",
+            "description": "Enable queue support.",
+            "example": true
+          },
+          "topicSupport": {
+            "type": "boolean",
+            "description": "Enable topic (pub/sub) support.",
+            "example": true
+          },
+          "tempQueueSupport": {
+            "type": "boolean",
+            "description": "Enable temporary queue support.",
+            "example": true
+          },
+          "tempTopicSupport": {
+            "type": "boolean",
+            "description": "Enable temporary topic support.",
+            "example": true
+          },
+          "namedSubscriptionSupport": {
+            "type": "boolean",
+            "description": "Enable named subscription support.",
+            "example": true
+          },
+          "filteringSupport": {
+            "type": "boolean",
+            "description": "Enable message filtering support.",
+            "example": true
+          },
+          "schemaSupport": {
+            "type": "boolean",
+            "description": "Enable schema-based validation and routing.",
+            "example": true
+          },
+          "maxTopics": {
+            "type": "integer",
+            "description": "Maximum number of topics allowed.",
+            "format": "int32",
+            "example": 1000000
+          },
+          "maxQueues": {
+            "type": "integer",
+            "description": "Maximum number of queues allowed.",
+            "format": "int32",
+            "example": 100000
+          }
+        },
+        "description": "Core messaging engine feature configuration for the license. All fields are required."
+      },
+      "FeatureDetails": {
+        "required": ["expiry", "feature", "info"],
+        "type": "object",
+        "properties": {
+          "feature": { "$ref": "#/components/schemas/Features" },
+          "expiry": {
+            "type": "string",
+            "description": "Expiry date and time for the license.",
+            "format": "date-time"
+          },
+          "info": {
+            "type": "string",
+            "description": "Additional information about the license.",
+            "example": "Enterprise license with full feature set"
+          }
+        },
+        "description": "Detailed license feature definition including expiry and metadata. All fields are required."
+      },
+      "Features": {
+        "required": [
+          "engine",
+          "hardware",
+          "interConnections",
+          "management",
+          "ml",
+          "name",
+          "network",
+          "overrideFeatures",
+          "protocols",
+          "storage"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the licensed feature set.",
+            "example": "Enterprise"
+          },
+          "ml": {
+            "type": "boolean",
+            "description": "Indicates if machine learning features are enabled.",
+            "example": true
+          },
+          "overrideFeatures": {
+            "type": "boolean",
+            "description": "If true, explicitly overrides default feature configuration.",
+            "example": false
+          },
+          "network": { "$ref": "#/components/schemas/Network" },
+          "protocols": { "$ref": "#/components/schemas/Protocols" },
+          "management": { "$ref": "#/components/schemas/Management" },
+          "interConnections": {
+            "$ref": "#/components/schemas/InterConnections"
+          },
+          "storage": { "$ref": "#/components/schemas/Storage" },
+          "hardware": { "$ref": "#/components/schemas/Hardware" },
+          "engine": { "$ref": "#/components/schemas/Engine" }
+        },
+        "description": "License feature configuration. All fields are required."
+      },
+      "Hardware": {
+        "required": ["i2c", "oneWire", "serial", "spi"],
+        "type": "object",
+        "properties": {
+          "i2c": {
+            "type": "boolean",
+            "description": "Enable I2C device support.",
+            "example": true
+          },
+          "spi": {
+            "type": "boolean",
+            "description": "Enable SPI device support.",
+            "example": true
+          },
+          "oneWire": {
+            "type": "boolean",
+            "description": "Enable OneWire device support.",
+            "example": false
+          },
+          "serial": {
+            "type": "boolean",
+            "description": "Enable serial hardware support.",
+            "example": true
+          }
+        },
+        "description": "Hardware feature configuration for the license. All fields are required."
+      },
+      "InterConnections": {
+        "required": ["filteringSupport", "pullSupport", "pushSupport"],
+        "type": "object",
+        "properties": {
+          "pushSupport": {
+            "type": "boolean",
+            "description": "Enable push-based interconnection support.",
+            "example": true
+          },
+          "pullSupport": {
+            "type": "boolean",
+            "description": "Enable pull-based interconnection support.",
+            "example": true
+          },
+          "filteringSupport": {
+            "type": "boolean",
+            "description": "Enable filtering capabilities on interconnections.",
+            "example": true
+          }
+        },
+        "description": "Interconnection feature configuration for the license. All fields are required."
+      },
+      "Management": {
+        "required": ["jmx", "jolokia", "restApi", "sysTopics"],
+        "type": "object",
+        "properties": {
+          "jolokia": {
+            "type": "boolean",
+            "description": "Enable Jolokia (JMX over HTTP) support.",
+            "example": false
+          },
+          "restApi": {
+            "type": "boolean",
+            "description": "Enable REST API management interface.",
+            "example": true
+          },
+          "jmx": {
+            "type": "boolean",
+            "description": "Enable JMX management interface.",
+            "example": true
+          },
+          "sysTopics": {
+            "type": "boolean",
+            "description": "Enable system topics for internal monitoring and control.",
+            "example": true
+          }
+        },
+        "description": "Management feature configuration for the license. All fields are required."
+      },
+      "Network": {
+        "required": [
+          "canbus",
+          "dtls",
+          "hmac",
+          "lora",
+          "maxConnections",
+          "ogws",
+          "satellite",
+          "serial",
+          "ssl",
+          "stogi",
+          "tcp",
+          "udp"
+        ],
+        "type": "object",
+        "properties": {
+          "udp": {
+            "type": "boolean",
+            "description": "Enable UDP transport.",
+            "example": true
+          },
+          "hmac": {
+            "type": "boolean",
+            "description": "Enable HMAC authentication.",
+            "example": true
+          },
+          "tcp": {
+            "type": "boolean",
+            "description": "Enable TCP transport.",
+            "example": true
+          },
+          "ssl": {
+            "type": "boolean",
+            "description": "Enable SSL/TLS transport.",
+            "example": true
+          },
+          "dtls": {
+            "type": "boolean",
+            "description": "Enable DTLS transport.",
+            "example": false
+          },
+          "lora": {
+            "type": "boolean",
+            "description": "Enable LoRa communication.",
+            "example": false
+          },
+          "serial": {
+            "type": "boolean",
+            "description": "Enable serial communication.",
+            "example": false
+          },
+          "canbus": {
+            "type": "boolean",
+            "description": "Enable CAN bus communication.",
+            "example": true
+          },
+          "ogws": {
+            "type": "boolean",
+            "description": "Enable ORBCOMM OGWS integration.",
+            "example": false
+          },
+          "stogi": {
+            "type": "boolean",
+            "description": "Enable ST OGi modem support.",
+            "example": false
+          },
+          "satellite": {
+            "type": "boolean",
+            "description": "Enable satellite communication features.",
+            "example": false
+          },
+          "maxConnections": {
+            "type": "integer",
+            "description": "Maximum number of concurrent network connections allowed.",
+            "format": "int32",
+            "example": 1000
+          }
+        },
+        "description": "Network feature configuration for the license. All fields are required."
+      },
+      "Protocols": {
+        "required": [
+          "amqp",
+          "coap",
+          "extensions",
+          "lora",
+          "mavlink",
+          "mqtt",
+          "mqtt_sn",
+          "n2k",
+          "nats",
+          "nmea_0183",
+          "rest",
+          "semtech",
+          "stogi",
+          "stomp",
+          "ws",
+          "wss"
+        ],
+        "type": "object",
+        "properties": {
+          "mqtt": {
+            "type": "boolean",
+            "description": "Enable MQTT protocol support.",
+            "example": true
+          },
+          "amqp": {
+            "type": "boolean",
+            "description": "Enable AMQP protocol support.",
+            "example": true
+          },
+          "nats": {
+            "type": "boolean",
+            "description": "Enable NATS protocol support.",
+            "example": true
+          },
+          "mqtt_sn": {
+            "type": "boolean",
+            "description": "Enable MQTT-SN protocol support.",
+            "example": false
+          },
+          "coap": {
+            "type": "boolean",
+            "description": "Enable CoAP protocol support.",
+            "example": false
+          },
+          "nmea_0183": {
+            "type": "boolean",
+            "description": "Enable NMEA 0183 protocol support.",
+            "example": false
+          },
+          "semtech": {
+            "type": "boolean",
+            "description": "Enable Semtech LoRa protocol support.",
+            "example": false
+          },
+          "extensions": {
+            "type": "boolean",
+            "description": "Enable custom protocol extensions.",
+            "example": true
+          },
+          "stomp": {
+            "type": "boolean",
+            "description": "Enable STOMP protocol support.",
+            "example": false
+          },
+          "rest": {
+            "type": "boolean",
+            "description": "Enable REST protocol support.",
+            "example": true
+          },
+          "lora": {
+            "type": "boolean",
+            "description": "Enable LoRa protocol support.",
+            "example": false
+          },
+          "ws": {
+            "type": "boolean",
+            "description": "Enable WebSocket (WS) protocol support.",
+            "example": true
+          },
+          "wss": {
+            "type": "boolean",
+            "description": "Enable secure WebSocket (WSS) protocol support.",
+            "example": true
+          },
+          "stogi": {
+            "type": "boolean",
+            "description": "Enable ST OGi protocol support.",
+            "example": false
+          },
+          "mavlink": {
+            "type": "boolean",
+            "description": "Enable MAVLink protocol support.",
+            "example": true
+          },
+          "n2k": {
+            "type": "boolean",
+            "description": "Enable NMEA 2000 (N2K) protocol support.",
+            "example": false
+          }
+        },
+        "description": "Protocol feature configuration for the license. All fields are required."
+      },
+      "Storage": {
+        "required": [
+          "cacheSupport",
+          "compressionArchive",
+          "fileSupport",
+          "s3Archive"
+        ],
+        "type": "object",
+        "properties": {
+          "s3Archive": {
+            "type": "boolean",
+            "description": "Enable S3-based archival storage.",
+            "example": true
+          },
+          "compressionArchive": {
+            "type": "boolean",
+            "description": "Enable compression for archived data.",
+            "example": true
+          },
+          "fileSupport": {
+            "type": "boolean",
+            "description": "Enable local file-based storage support.",
+            "example": true
+          },
+          "cacheSupport": {
+            "type": "boolean",
+            "description": "Enable caching mechanisms for storage.",
+            "example": true
+          }
+        },
+        "description": "Storage feature configuration for the license. All fields are required."
+      },
       "LogEntries": {
         "type": "object",
         "properties": {
@@ -13486,12 +16289,11 @@
       },
       "SchemaConfigDTO": {
         "type": "object",
-        "required": ["uniqueId"],
         "properties": {
           "uniqueId": {
             "type": "string",
             "description": "Unique identifier for the schema",
-            "nullable": false,
+            "nullable": true,
             "example": "it_019c21a1-0626-7258-ae03-78fd8247d4f4"
           },
           "versionId": {
@@ -13883,6 +16685,578 @@
       "ServerActionRequest": {
         "type": "object",
         "properties": { "state": { "type": "string" } }
+      },
+      "TwinCoreConfigDTO": {
+        "required": [
+          "defaultRootPath",
+          "heartbeatTimeoutMillis",
+          "removeExpiredTwins",
+          "retentionTimeoutMillis",
+          "staleTimeoutMillis"
+        ],
+        "type": "object",
+        "properties": {
+          "heartbeatTimeoutMillis": {
+            "maximum": 600000,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Time in milliseconds after which a twin is considered disconnected if no updates are received.",
+            "format": "int64",
+            "example": 5000,
+            "default": 5000
+          },
+          "staleTimeoutMillis": {
+            "maximum": 600000,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Time in milliseconds after which a twin is considered stale if no updates are received.",
+            "format": "int64",
+            "example": 10000,
+            "default": 10000
+          },
+          "retentionTimeoutMillis": {
+            "maximum": 86400000,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Time in milliseconds after which an expired twin may be removed from memory.",
+            "format": "int64",
+            "example": 120000,
+            "default": 120000
+          },
+          "removeExpiredTwins": {
+            "type": "boolean",
+            "description": "If true, twins that exceed the retention timeout are removed from memory.",
+            "example": true,
+            "default": true
+          },
+          "defaultRootPath": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Default root path used when constructing twin hierarchical paths.",
+            "example": "/",
+            "default": "/"
+          }
+        },
+        "description": "Core twin manager timing and lifecycle configuration. Values are persisted to TwinManager configuration and are not applied to the running TwinManager until reload or restart."
+      },
+      "TwinManagerConfig": {
+        "required": ["schemaLoadingVersion", "type"],
+        "type": "object",
+        "properties": {
+          "schemaLoadingVersion": {
+            "maximum": 10,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Configuration schema version. 0 = legacy format, 1 = current format.",
+            "format": "int32",
+            "example": 1,
+            "default": 1
+          },
+          "type": {
+            "type": "string",
+            "description": "Discriminator for the concrete configuration manager DTO.",
+            "readOnly": true,
+            "example": "AuthManagerConfig"
+          },
+          "heartbeatTimeoutMillis": {
+            "maximum": 600000,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Time in milliseconds after which a twin is considered disconnected if no updates are received.",
+            "format": "int64",
+            "example": 5000,
+            "default": 5000
+          },
+          "staleTimeoutMillis": {
+            "maximum": 600000,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Time in milliseconds after which a twin is considered stale if no updates are received.",
+            "format": "int64",
+            "example": 10000,
+            "default": 10000
+          },
+          "retentionTimeoutMillis": {
+            "maximum": 86400000,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Time in milliseconds after which a twin is eligible for removal from memory.",
+            "format": "int64",
+            "example": 300000,
+            "default": 300000
+          },
+          "removeExpiredTwins": {
+            "type": "boolean",
+            "description": "If true, twins that exceed the retention timeout will be removed from memory.",
+            "example": false,
+            "default": false
+          },
+          "defaultRootPath": {
+            "type": "string",
+            "description": "Default root path used when constructing twin hierarchical paths.",
+            "example": "/",
+            "default": "/"
+          },
+          "tak": { "$ref": "#/components/schemas/TakProtocolDTO" },
+          "geospatial": { "$ref": "#/components/schemas/GeoSpatialConfigDTO" },
+          "publish": { "$ref": "#/components/schemas/TwinPublishConfigDTO" },
+          "mavlink": {
+            "type": "array",
+            "description": "MAVLink topic sources processed into twin state. If no entries are present, no MAVLink twin state subscribers are started.",
+            "items": { "$ref": "#/components/schemas/MavlinkTwinConfigDTO" }
+          },
+          "adapterConfig": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ConfigurationProperties"
+            },
+            "description": "Protocol-specific state message adapter configuration keyed by adapter name"
+          },
+          "droneInfo": {
+            "type": "array",
+            "description": "Configuration on each drone",
+            "items": { "$ref": "#/components/schemas/DroneInfoDTO" }
+          },
+          "n2KTwinConfig": { "$ref": "#/components/schemas/N2KTwinConfig" },
+          "name": { "type": "string" }
+        }
+      },
+      "BatteryState": {
+        "type": "object",
+        "properties": {
+          "percentage": {
+            "type": "number",
+            "description": "Remaining battery percentage.",
+            "format": "double",
+            "nullable": true,
+            "example": 78.5
+          },
+          "voltageVolts": {
+            "type": "number",
+            "description": "Battery voltage in volts.",
+            "format": "double",
+            "nullable": true,
+            "example": 22.4
+          },
+          "currentAmps": {
+            "type": "number",
+            "description": "Battery current draw in amps.",
+            "format": "double",
+            "nullable": true,
+            "example": 12.7
+          },
+          "remainingMilliampHours": {
+            "type": "number",
+            "description": "Estimated remaining battery capacity in milliamp-hours.",
+            "format": "double",
+            "nullable": true,
+            "example": 4200
+          },
+          "temperatureCelsius": {
+            "type": "number",
+            "description": "Battery temperature in degrees Celsius.",
+            "format": "double",
+            "nullable": true,
+            "example": 34.2
+          },
+          "charging": {
+            "type": "boolean",
+            "description": "Indicates whether the battery is currently charging.",
+            "nullable": true,
+            "example": false
+          },
+          "duration": {
+            "type": "string",
+            "description": "Estimated remaining battery duration as an ISO 8601 duration.",
+            "nullable": true,
+            "example": "PT19M50S"
+          }
+        },
+        "description": "Battery and power state for the drone or vehicle.",
+        "nullable": true
+      },
+      "EntityTwin": {
+        "type": "object",
+        "properties": {
+          "twinId": {
+            "type": "string",
+            "description": "Unique identifier for the twin.",
+            "nullable": true,
+            "example": "drone-001"
+          },
+          "twinPath": {
+            "type": "string",
+            "description": "Hierarchical path of the twin within the model namespace.",
+            "nullable": true,
+            "example": "/fleet/alpha/drone-001"
+          },
+          "twinType": {
+            "type": "string",
+            "description": "Type of twin (DRONE, GROUND_CONTROL, etc).",
+            "nullable": true,
+            "example": "DRONE",
+            "enum": ["DRONE", "GROUND_CONTROL"]
+          },
+          "uuid": {
+            "type": "string",
+            "description": "UUID of twin.",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Human-readable display name for the twin.",
+            "nullable": true,
+            "example": "Survey Drone 1"
+          },
+          "geoPosition": { "$ref": "#/components/schemas/GeoPosition" },
+          "geoHash": {
+            "type": "string",
+            "description": "drone geohash",
+            "nullable": true
+          },
+          "homePosition": { "$ref": "#/components/schemas/GeoPosition" },
+          "serverPosition": { "$ref": "#/components/schemas/GeoPosition" },
+          "serverGeoHash": {
+            "type": "string",
+            "description": "Server geohash.",
+            "nullable": true
+          },
+          "velocityVector": { "$ref": "#/components/schemas/VelocityVector" },
+          "orientation": { "$ref": "#/components/schemas/Orientation" },
+          "fixInfo": { "$ref": "#/components/schemas/FixInfo" },
+          "batteryState": { "$ref": "#/components/schemas/BatteryState" },
+          "linkState": { "$ref": "#/components/schemas/LinkState" },
+          "lifecycleStatus": {
+            "type": "string",
+            "description": "Lifecycle status of the twin.",
+            "enum": ["ACTIVE", "DISCONNECTED", "STALE"]
+          },
+          "relationships": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Relationship edges owned by this twin.",
+            "items": { "$ref": "#/components/schemas/TwinRelationship" }
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "description": "Extensible non-protocol metadata attributes associated with the twin."
+            },
+            "description": "Extensible non-protocol metadata attributes associated with the twin."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when the twin was created.",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2026-04-20T06:30:00Z"
+          },
+          "lastSeenAt": {
+            "type": "string",
+            "description": "Timestamp when the twin was last observed.",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2026-04-20T06:35:12Z"
+          },
+          "validTill": {
+            "type": "string",
+            "description": "time that the data is valid till",
+            "format": "date-time"
+          },
+          "identityUpdatedAt": {
+            "type": "string",
+            "description": "Timestamp when identity-related fields were last updated.",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2026-04-20T06:31:00Z"
+          },
+          "navigationUpdatedAt": {
+            "type": "string",
+            "description": "Timestamp when navigation-related fields were last updated.",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2026-04-20T06:34:10Z"
+          },
+          "motionUpdatedAt": {
+            "type": "string",
+            "description": "Timestamp when motion-related fields were last updated.",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2026-04-20T06:34:11Z"
+          },
+          "powerUpdatedAt": {
+            "type": "string",
+            "description": "Timestamp when power-related fields were last updated.",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2026-04-20T06:33:45Z"
+          },
+          "connectivityUpdatedAt": {
+            "type": "string",
+            "description": "Timestamp when connectivity-related fields were last updated.",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2026-04-20T06:34:20Z"
+          },
+          "vehicleClass": {
+            "type": "string",
+            "description": "Vehicle class (UAV=air, USV=surface, UGV=ground, UUV=underwater, GCS=control).",
+            "nullable": true,
+            "example": "UAV",
+            "enum": ["UAV", "USV", "UGV", "UUV", "GCS", "UNKNOWN"]
+          },
+          "relationshipsUpdatedAt": {
+            "type": "string",
+            "description": "Timestamp when relationship data was last updated.",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2026-04-20T06:32:00Z"
+          },
+          "responseTopicName": {
+            "type": "string",
+            "description": "Resolved response topic used to send outbound protocol messages to this twin. For MAVLink twins this is populated from the configured MAVLink outbound topic name, with placeholders such as {interfaceName} already resolved. Messages published to this topic are consumed by the MAVLink protocol implementation and sent onwards to the vehicle.",
+            "nullable": true,
+            "example": "/protocol/mavlink/mavlink-interface-1/outbound"
+          },
+          "uniqueOutboundIdentifier": { "type": "string" },
+          "createdAtSeconds": { "type": "integer", "format": "int64" },
+          "lastSeenAtSeconds": { "type": "integer", "format": "int64" },
+          "identityUpdatedAtSeconds": { "type": "integer", "format": "int64" },
+          "navigationUpdatedAtSeconds": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "motionUpdatedAtSeconds": { "type": "integer", "format": "int64" },
+          "powerUpdatedAtSeconds": { "type": "integer", "format": "int64" },
+          "connectivityUpdatedAtSeconds": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "relationshipsUpdatedAtSeconds": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "description": "Base protocol-agnostic digital twin aggregate."
+      },
+      "FixInfo": {
+        "type": "object",
+        "properties": {
+          "fixType": {
+            "type": "string",
+            "description": "Type of GNSS fix (e.g. NO_FIX, 2D, 3D, RTK).",
+            "nullable": true,
+            "example": "3D"
+          },
+          "satelliteCount": {
+            "type": "integer",
+            "description": "Number of satellites used in the fix.",
+            "format": "int32",
+            "nullable": true,
+            "example": 12
+          },
+          "hdop": {
+            "type": "number",
+            "description": "Horizontal dilution of precision.",
+            "format": "double",
+            "nullable": true,
+            "example": 0.8
+          },
+          "vdop": {
+            "type": "number",
+            "description": "Vertical dilution of precision.",
+            "format": "double",
+            "nullable": true,
+            "example": 1.2
+          },
+          "horizontalAccuracyMeters": {
+            "type": "number",
+            "description": "Estimated horizontal position accuracy in meters.",
+            "format": "double",
+            "nullable": true,
+            "example": 1.5
+          },
+          "verticalAccuracyMeters": {
+            "type": "number",
+            "description": "Estimated vertical position accuracy in meters.",
+            "format": "double",
+            "nullable": true,
+            "example": 2.3
+          }
+        },
+        "description": "GNSS fix quality and positional accuracy information.",
+        "nullable": true
+      },
+      "GeoPosition": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "maximum": 90,
+            "minimum": -90,
+            "type": "number",
+            "description": "Latitude in decimal degrees.",
+            "format": "double",
+            "nullable": true,
+            "example": -33.8688
+          },
+          "longitude": {
+            "maximum": 180,
+            "minimum": -180,
+            "type": "number",
+            "description": "Longitude in decimal degrees.",
+            "format": "double",
+            "nullable": true,
+            "example": 151.2093
+          },
+          "altitudeMslMeters": {
+            "type": "number",
+            "description": "Altitude above mean sea level in meters.",
+            "format": "double",
+            "nullable": true,
+            "example": 120.5
+          },
+          "altitudeAglMeters": {
+            "type": "number",
+            "description": "Altitude above ground level in meters.",
+            "format": "double",
+            "nullable": true,
+            "example": 35.2
+          },
+          "preferredAltitudeMeters": { "type": "number", "format": "double" },
+          "preferredAltitudeType": { "type": "string" }
+        },
+        "description": "Geodetic position of the entity expressed in latitude, longitude and altitude.",
+        "nullable": true
+      },
+      "LinkState": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "High-level link state (e.g. CONNECTED, DEGRADED, LOST).",
+            "nullable": true,
+            "example": "CONNECTED"
+          },
+          "connected": {
+            "type": "boolean",
+            "description": "Indicates whether the link is currently connected.",
+            "nullable": true,
+            "example": true
+          },
+          "rssiDbm": {
+            "type": "integer",
+            "description": "Received Signal Strength Indicator in dBm.",
+            "format": "int32",
+            "nullable": true,
+            "example": -67
+          },
+          "snrDb": {
+            "type": "number",
+            "description": "Signal-to-noise ratio in decibels.",
+            "format": "double",
+            "nullable": true,
+            "example": 25.4
+          },
+          "latencyMs": {
+            "type": "number",
+            "description": "Estimated round-trip latency in milliseconds.",
+            "format": "double",
+            "nullable": true,
+            "example": 42.5
+          },
+          "rxErrorRate": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "number",
+            "description": "Receive error rate as a ratio (0.0 to 1.0).",
+            "format": "double",
+            "nullable": true,
+            "example": 0.01
+          },
+          "txErrorRate": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "number",
+            "description": "Transmit error rate as a ratio (0.0 to 1.0).",
+            "format": "double",
+            "nullable": true,
+            "example": 0.005
+          }
+        },
+        "description": "Communication link quality and connectivity state.",
+        "nullable": true
+      },
+      "Orientation": {
+        "type": "object",
+        "properties": {
+          "rollDegrees": {
+            "type": "number",
+            "description": "Roll angle in degrees (rotation around the longitudinal axis).",
+            "format": "double",
+            "nullable": true,
+            "example": 2.5
+          },
+          "pitchDegrees": {
+            "type": "number",
+            "description": "Pitch angle in degrees (rotation around the lateral axis).",
+            "format": "double",
+            "nullable": true,
+            "example": -1.2
+          },
+          "yawDegrees": {
+            "maximum": 360.0,
+            "minimum": 0.0,
+            "type": "number",
+            "description": "Yaw angle in degrees (rotation around the vertical axis).",
+            "format": "double",
+            "nullable": true,
+            "example": 180.0
+          },
+          "headingFromYaw": { "type": "number", "format": "double" }
+        },
+        "description": "Body orientation expressed as roll, pitch, and yaw in degrees.",
+        "nullable": true
+      },
+      "TwinRelationship": {
+        "type": "object",
+        "properties": {
+          "sourceTwinId": { "type": "string" },
+          "targetTwinId": { "type": "string" },
+          "relationshipType": { "type": "string" },
+          "bidirectional": { "type": "boolean" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "active": { "type": "boolean" }
+        },
+        "description": "Relationship edges owned by this twin."
+      },
+      "VelocityVector": {
+        "type": "object",
+        "properties": {
+          "northMetersPerSecond": {
+            "type": "number",
+            "description": "Velocity component toward geographic north in meters per second.",
+            "format": "double",
+            "nullable": true,
+            "example": 5.2
+          },
+          "eastMetersPerSecond": {
+            "type": "number",
+            "description": "Velocity component toward geographic east in meters per second.",
+            "format": "double",
+            "nullable": true,
+            "example": -1.3
+          },
+          "downMetersPerSecond": {
+            "type": "number",
+            "description": "Velocity component toward Earth center (down) in meters per second. Positive values indicate descent.",
+            "format": "double",
+            "nullable": true,
+            "example": 0.8
+          }
+        },
+        "description": "Velocity vector using North-East-Down (NED) coordinate system in meters per second.",
+        "nullable": true
       }
     },
     "securitySchemes": {
