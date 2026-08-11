@@ -16,6 +16,7 @@
  */
 
 import { useAddUserToGroup } from "@/components/groups/hooks";
+import type { Group } from "@/components/groups/models";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -29,16 +30,19 @@ import {
 } from "@/components/ui/dialog";
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { GroupSearch } from "@/components/users/add-group-dialog/group-search";
+import { useGetUser } from "@/components/users/hooks";
 import { useForm } from "@tanstack/react-form";
 import { type FunctionComponent, useState } from "react";
 import * as z from "zod";
 import type { MinimalUser } from "../models";
 
 const formSchema = z.object({
-  group: z.object({
-    uniqueId: z.string(),
-    name: z.string(),
-  }),
+  groups: z.array(
+    z.object({
+      uniqueId: z.string(),
+      name: z.string(),
+    }),
+  ),
 });
 
 interface AddGroupDialogProps {
@@ -52,12 +56,17 @@ export const AddGroupDialog: FunctionComponent<AddGroupDialogProps> = ({
 
   const { mutate } = useAddUserToGroup();
 
+  const { data: user } = useGetUser(users[0]?.uniqueId ?? "", {
+    enabled: users.length === 1,
+  });
+
   const form = useForm({
     defaultValues: {
-      group: {
-        uniqueId: "",
-        name: "",
-      },
+      groups:
+        users.length === 1
+          ? (user?.groupList?.filter((item): item is Group => item !== null) ??
+            [])
+          : [],
     },
     validators: {
       onSubmit: formSchema,
@@ -65,11 +74,13 @@ export const AddGroupDialog: FunctionComponent<AddGroupDialogProps> = ({
     onSubmit: async ({ value }) => {
       const results = await Promise.allSettled(
         users.map(({ uniqueId }) =>
-          mutate({
-            params: {
-              path: { groupUuid: value.group.uniqueId, userUuid: uniqueId },
-            },
-          }),
+          value.groups.map((group) =>
+            mutate({
+              params: {
+                path: { groupUuid: group.uniqueId, userUuid: uniqueId },
+              },
+            }),
+          ),
         ),
       );
       if (results.every((r) => r.status === "fulfilled")) {
@@ -99,7 +110,7 @@ export const AddGroupDialog: FunctionComponent<AddGroupDialogProps> = ({
           </DialogHeader>
           <FieldGroup>
             <form.Field
-              name="group"
+              name="groups"
               children={(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid;
