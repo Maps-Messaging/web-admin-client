@@ -99,10 +99,14 @@ export const useCreateUser = () => {
 
 export const useDeleteUser = () => {
   return apiClient.useMutation("delete", "/api/v1/auth/users/{userUuid}", {
-    onSettled: () =>
+    onSettled: () => {
       queryClient.invalidateQueries(
         apiClient.queryOptions("get", "/api/v1/auth/users"),
-      ),
+      );
+      queryClient.invalidateQueries(
+        apiClient.queryOptions("get", "/api/v1/auth/groups"),
+      );
+    },
   });
 };
 

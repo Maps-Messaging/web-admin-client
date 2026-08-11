@@ -54,10 +54,14 @@ export const useCreateGroup = () => {
 
 export const useDeleteGroup = () => {
   return apiClient.useMutation("delete", "/api/v1/auth/groups/{groupUuid}", {
-    onSettled: () =>
+    onSettled: () => {
       queryClient.invalidateQueries(
         apiClient.queryOptions("get", "/api/v1/auth/groups"),
-      ),
+      );
+      queryClient.invalidateQueries(
+        apiClient.queryOptions("get", "/api/v1/auth/users"),
+      );
+    },
   });
 };
 
@@ -77,6 +81,9 @@ export const useAddUserToGroup = () => {
           apiClient.queryOptions("get", "/api/v1/auth/users/{userUuid}", {
             params: { path: { userUuid } },
           }),
+        );
+        queryClient.invalidateQueries(
+          apiClient.queryOptions("get", "/api/v1/auth/users"),
         );
       },
     },
@@ -99,6 +106,9 @@ export const useRemoveUserFromGroup = () => {
           apiClient.queryOptions("get", "/api/v1/auth/users/{userUuid}", {
             params: { path: { userUuid } },
           }),
+        );
+        queryClient.invalidateQueries(
+          apiClient.queryOptions("get", "/api/v1/auth/users"),
         );
       },
     },
