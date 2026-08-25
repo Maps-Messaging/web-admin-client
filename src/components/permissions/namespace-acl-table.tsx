@@ -52,6 +52,8 @@ interface NamespaceAclTableProps {
   isEditable?: boolean;
   namespace: string;
   type: string;
+  displayName?: string;
+  inheritsToChildren?: boolean;
 }
 
 export const NamespaceAclTable: FunctionComponent<NamespaceAclTableProps> = ({
@@ -59,6 +61,8 @@ export const NamespaceAclTable: FunctionComponent<NamespaceAclTableProps> = ({
   isEditable = false,
   namespace,
   type,
+  displayName,
+  inheritsToChildren = true,
 }) => {
   const columns = useMemo<ColumnDef<NamespaceAclItem | InheritedPermissions>[]>(
     () => [
@@ -101,6 +105,8 @@ export const NamespaceAclTable: FunctionComponent<NamespaceAclTableProps> = ({
                   namespace={namespace}
                   type={type}
                   acl={row.original}
+                  displayName={displayName}
+                  inheritsToChildren={inheritsToChildren}
                 />
               ),
               size: 30,
@@ -108,7 +114,7 @@ export const NamespaceAclTable: FunctionComponent<NamespaceAclTableProps> = ({
           ]
         : []),
     ],
-    [acls, isEditable, namespace, type],
+    [acls, displayName, inheritsToChildren, isEditable, namespace, type],
   );
 
   const table = useReactTable({
@@ -124,10 +130,11 @@ export const NamespaceAclTable: FunctionComponent<NamespaceAclTableProps> = ({
           <EmptyMedia variant="icon">
             <LockKeyholeOpen />
           </EmptyMedia>
-          <EmptyTitle>No Permissions directly Yet</EmptyTitle>
+          <EmptyTitle>No Permissions Yet</EmptyTitle>
           <EmptyDescription>
-            There are no permissions directly set on this namespace. Access is
-            inherited from parent (see below for permissions)
+            {inheritsToChildren
+              ? "There are no permissions directly set on this namespace. Access is inherited from its parents."
+              : "There are no permissions directly set on this server."}
           </EmptyDescription>
         </EmptyHeader>
       </Empty>

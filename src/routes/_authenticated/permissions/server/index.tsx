@@ -15,16 +15,83 @@
  * limitations under the License.
  */
 
+import { apiClient } from "@/api/api-client";
+import { AddPermissionDialog } from "@/components/permissions/add-permission-dialog/add-permission-dialog";
+import { useNamespacePermissions } from "@/components/permissions/hooks";
+import { NamespaceAclTable } from "@/components/permissions/namespace-acl-table";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { createFileRoute } from "@tanstack/react-router";
+
+const SERVER_RESOURCE_TYPE = "Server";
 
 export const Route = createFileRoute("/_authenticated/permissions/server/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const { data, isLoading, isError } = apiClient.useQuery(
+    "get",
+    "/api/v1/name",
+  );
+
+  if (isLoading) {
+    return <div className="px-6">Loading server permissions...</div>;
+  }
+
+  if (isError || !data?.name) {
+    return <div className="px-6">Unable to load the server identity.</div>;
+  }
+
   return (
     <div className="px-6 flex flex-col gap-4 w-6xl mx-auto">
-      <h1 className="text-4xl font-extrabold">Permissions</h1>
+      <h1 className="text-4xl font-extrabold">Server Permissions</h1>
+      <ServerPermissionsCard serverName={data.name} />
     </div>
+  );
+}
+
+function ServerPermissionsCard({ serverName }: { serverName: string }) {
+  const { explicitPermissions, isLoading, isError } = useNamespacePermissions(
+    serverName,
+    SERVER_RESOURCE_TYPE,
+  );
+  const displayName = `server ${serverName}`;
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{serverName}</CardTitle>
+        <CardAction>
+          <AddPermissionDialog
+            namespace={serverName}
+            type={SERVER_RESOURCE_TYPE}
+            displayName={displayName}
+            inheritsToChildren={false}
+          />
+        </CardAction>
+      </CardHeader>
+      <CardContent>
+        {isLoading ? (
+          <div>Loading permissions...</div>
+        ) : isError ? (
+          <div>Unable to load permissions for this server.</div>
+        ) : (
+          <NamespaceAclTable
+            namespace={serverName}
+            type={SERVER_RESOURCE_TYPE}
+            acls={explicitPermissions}
+            displayName={displayName}
+            inheritsToChildren={false}
+            isEditable
+          />
+        )}
+      </CardContent>
+    </Card>
   );
 }
