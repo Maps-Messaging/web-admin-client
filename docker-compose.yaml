@@ -1,0 +1,10 @@
+services:
+  node:
+    image: node:24-slim
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      CI: "true"
+      HOME: /tmp
+      COREPACK_HOME: /tmp/corepack

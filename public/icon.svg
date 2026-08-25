@@ -1,0 +1,22 @@
+<!--
+  - Copyright [ 2020 - 2024 ] [Matthew Buckton]
+  - Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 100" width="108.334px" height="100">
+  <path d="M 82.625 90.561 L 23.625 90.354 C 23.419 90.807 23.18 91.251 22.911 91.685 C 19.445 97.263 12.094 98.96 6.491 95.479 C 0.887 91.997 -0.847 84.654 2.618 79.078 C 6.083 73.502 13.434 71.804 19.038 75.285 C 21.405 76.756 23.083 78.918 23.968 81.343 L 23.979 81.172 L 64.128 81.421 L 64.222 72.58 L 82.625 90.561 Z" style="stroke-width: 1; fill: rgb(10, 38, 99); transform-origin: 39.229px 87.664px;"></path>
+  <path d="M 66.177 24.022 L 77.931 43.118 L 77.875 43.149 L 95.771 73.444 C 96.265 73.38 96.768 73.348 97.279 73.348 C 103.845 73.348 109.167 78.696 109.167 85.293 C 109.167 91.89 103.845 97.238 97.28 97.238 C 90.715 97.238 85.393 91.89 85.393 85.293 C 85.393 82.506 86.344 79.94 87.936 77.909 L 87.785 77.989 L 69.691 47.727 L 61.059 52.554 L 66.177 24.022 Z" style="fill: rgb(28, 87, 186); stroke-width: 1;"></path>
+  <path d="M 14.38 72.552 L 45.043 21.613 C 44.751 21.21 44.482 20.783 44.237 20.335 C 41.094 14.57 43.242 7.337 49.035 4.18 C 54.827 1.022 62.07 3.135 65.212 8.899 C 68.355 14.663 66.207 21.895 60.414 25.053 C 57.967 26.387 55.259 26.78 52.714 26.355 L 52.857 26.449 L 32.065 61.337 L 43.612 65.412 L 14.38 72.552 Z" style="stroke-width: 1; fill: rgb(28, 87, 186); transform-origin: 37.365px 36.163px;"></path>
+</svg>
