@@ -34,6 +34,7 @@ interface DeleteGroupDialogProps {
   namespace: string;
   type: string;
   acl: NamespaceAclItem;
+  displayName?: string;
 }
 
 export const DeletePermissionDialog = ({
@@ -42,6 +43,7 @@ export const DeletePermissionDialog = ({
   namespace,
   type,
   acl,
+  displayName = namespace ? namespace : "<root>",
 }: DeleteGroupDialogProps) => {
   const { mutate } = useDeleteNamespacePermission(namespace, type);
 
@@ -51,8 +53,8 @@ export const DeletePermissionDialog = ({
         <DialogHeader>
           <DialogTitle>Confirm Deletion</DialogTitle>
           <DialogDescription>
-            Delete the permissions for {acl.principalId} on{" "}
-            {namespace ? namespace : "<root>"}? This can not be undone
+            Delete the permissions for {acl.principalId} on {displayName}? This
+            can not be undone
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex sm:justify-between">

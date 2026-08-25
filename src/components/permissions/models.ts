@@ -20,6 +20,8 @@ export type NamespaceAcl = components["schemas"]["AclResourceViewDTO"];
 
 export type NamespaceAclItem = components["schemas"]["AclEntryDTO"];
 
+export type PermissionDetails = components["schemas"]["PermissionDetailsDTO"];
+
 export interface InheritedPermissions extends NamespaceAclItem {
   source: string;
 }
@@ -35,4 +37,26 @@ export function isInheritedPermission(
   acl: NamespaceAclItem | InheritedPermissions,
 ): acl is InheritedPermissions {
   return "source" in acl && typeof acl.source === "string";
+}
+
+export function getPermissionsForResource(
+  permissions: PermissionDetails[],
+  resourceType: string,
+): PermissionDetails[] {
+  const isServerResource = resourceType.toLowerCase() === "server";
+  return permissions.filter(
+    (permission) => permission.server === isServerResource,
+  );
+}
+
+export function removePermissionEntry(
+  entries: NamespaceAclItem[],
+  permission: NamespaceAclItem,
+): NamespaceAclItem[] {
+  return entries.filter(
+    (entry) =>
+      entry.principalId !== permission.principalId ||
+      entry.principalType !== permission.principalType ||
+      entry.effect !== permission.effect,
+  );
 }

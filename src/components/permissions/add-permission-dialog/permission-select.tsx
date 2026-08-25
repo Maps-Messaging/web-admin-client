@@ -16,6 +16,7 @@
  */
 
 import { usePermissionList } from "@/components/permissions/hooks";
+import { getPermissionsForResource } from "@/components/permissions/models";
 import {
   Combobox,
   ComboboxChip,
@@ -33,13 +34,19 @@ import type { FunctionComponent } from "react";
 interface PermissionSelectProps {
   value: string[];
   handleChange: (value: string[]) => void;
+  resourceType: string;
 }
 
 export const PermissionSelect: FunctionComponent<PermissionSelectProps> = ({
   value,
   handleChange,
+  resourceType,
 }) => {
   const { data } = usePermissionList();
+  const permissions = getPermissionsForResource(
+    data?.permissions ?? [],
+    resourceType,
+  );
 
   const anchor = useComboboxAnchor();
 
@@ -47,7 +54,7 @@ export const PermissionSelect: FunctionComponent<PermissionSelectProps> = ({
     <Combobox
       multiple
       autoHighlight
-      items={data?.permissions ?? []}
+      items={permissions}
       value={value}
       onValueChange={handleChange}
     >

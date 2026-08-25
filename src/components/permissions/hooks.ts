@@ -17,6 +17,7 @@
 
 import { apiClient } from "@/api/api-client";
 import { queryClient } from "@/api/query-client";
+import { removePermissionEntry } from "@/components/permissions/models";
 import type {
   AggregatedPermissions,
   NamespaceAcl,
@@ -66,6 +67,17 @@ export function useNamespacePermissions(
 
 export function usePermissionList() {
   return apiClient.useQuery("get", "/api/v1/auth/permissions");
+}
+
+export function useResourcePermissions(resourceKey: string, type: string) {
+  return apiClient.useQuery("get", "/api/v1/auth/resources/acl", {
+    params: {
+      query: {
+        resourceType: type,
+        resourceKey,
+      },
+    },
+  });
 }
 
 const updateNamespacePermissions = (namespace: string, type: string) => {
@@ -213,11 +225,7 @@ export const useDeleteNamespacePermission = (
       }).queryKey,
     );
 
-    const entries = (data?.entries ?? []).filter(
-      (acl) =>
-        acl.principalId === permission.principalId &&
-        acl.principalType === permission.principalType,
-    );
+    const entries = removePermissionEntry(data?.entries ?? [], permission);
 
     mutate(
       {

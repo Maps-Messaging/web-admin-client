@@ -33,11 +33,13 @@ interface NamespaceAclTableRowActionsProps {
   namespace: string;
   type: string;
   acl: NamespaceAclItem;
+  displayName?: string;
+  inheritsToChildren?: boolean;
 }
 
 export const NamespaceAclTableRowActions: FunctionComponent<
   NamespaceAclTableRowActionsProps
-> = ({ namespace, type, acl }) => {
+> = ({ namespace, type, acl, displayName, inheritsToChildren }) => {
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
@@ -70,6 +72,8 @@ export const NamespaceAclTableRowActions: FunctionComponent<
         acl={acl}
         open={showUpdateDialog}
         setOpen={setShowUpdateDialog}
+        displayName={displayName}
+        inheritsToChildren={inheritsToChildren}
       />
       <DeletePermissionDialog
         open={showDeleteDialog}
@@ -77,6 +81,7 @@ export const NamespaceAclTableRowActions: FunctionComponent<
         namespace={namespace}
         type={type}
         acl={acl}
+        displayName={displayName}
       />
     </>
   );

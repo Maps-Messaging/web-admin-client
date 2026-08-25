@@ -48,6 +48,8 @@ import { Search } from "./search";
 interface AddPermissionDialogProps {
   namespace: string;
   type: string;
+  displayName?: string;
+  inheritsToChildren?: boolean;
 }
 
 const formSchema = z.object({
@@ -64,7 +66,12 @@ type AddPermissionFormValues = z.infer<typeof formSchema>;
 
 export const AddPermissionDialog: FunctionComponent<
   AddPermissionDialogProps
-> = ({ namespace, type }) => {
+> = ({
+  namespace,
+  type,
+  displayName = namespace ? namespace : "<root>",
+  inheritsToChildren = true,
+}) => {
   const [open, setOpen] = useState(false);
   const { mutate } = useAddNamespacePermission(namespace, type);
 
@@ -86,7 +93,7 @@ export const AddPermissionDialog: FunctionComponent<
         },
         {
           onSuccess: () => {
-            toast.success(`Permissions updated for ${namespace}`);
+            toast.success(`Permissions updated for ${displayName}`);
             setOpen(false);
             form.reset();
           },
@@ -109,11 +116,11 @@ export const AddPermissionDialog: FunctionComponent<
         <DialogTrigger render={<Button />}>Add permission</DialogTrigger>
         <DialogContent showCloseButton={false} className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>
-              Add Permission to {namespace ? namespace : "<root>"}
-            </DialogTitle>
+            <DialogTitle>Add Permission to {displayName}</DialogTitle>
             <DialogDescription>
-              Permission will be inherited by all children
+              {inheritsToChildren
+                ? "Permission will be inherited by all children"
+                : "Permission applies to this server"}
             </DialogDescription>
           </DialogHeader>
           <FieldGroup>
@@ -229,6 +236,7 @@ export const AddPermissionDialog: FunctionComponent<
                     <PermissionSelect
                       value={field.state.value}
                       handleChange={field.handleChange}
+                      resourceType={type}
                     />
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
