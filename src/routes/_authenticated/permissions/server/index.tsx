@@ -17,7 +17,7 @@
 
 import { apiClient } from "@/api/api-client";
 import { AddPermissionDialog } from "@/components/permissions/add-permission-dialog/add-permission-dialog";
-import { useNamespacePermissions } from "@/components/permissions/hooks";
+import { useResourcePermissions } from "@/components/permissions/hooks";
 import { NamespaceAclTable } from "@/components/permissions/namespace-acl-table";
 import {
   Card,
@@ -57,7 +57,7 @@ function RouteComponent() {
 }
 
 function ServerPermissionsCard({ serverName }: { serverName: string }) {
-  const { explicitPermissions, isLoading, isError } = useNamespacePermissions(
+  const { data, isLoading, isError } = useResourcePermissions(
     serverName,
     SERVER_RESOURCE_TYPE,
   );
@@ -85,7 +85,7 @@ function ServerPermissionsCard({ serverName }: { serverName: string }) {
           <NamespaceAclTable
             namespace={serverName}
             type={SERVER_RESOURCE_TYPE}
-            acls={explicitPermissions}
+            acls={data?.entries ?? []}
             displayName={displayName}
             inheritsToChildren={false}
             isEditable

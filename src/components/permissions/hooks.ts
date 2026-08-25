@@ -69,6 +69,17 @@ export function usePermissionList() {
   return apiClient.useQuery("get", "/api/v1/auth/permissions");
 }
 
+export function useResourcePermissions(resourceKey: string, type: string) {
+  return apiClient.useQuery("get", "/api/v1/auth/resources/acl", {
+    params: {
+      query: {
+        resourceType: type,
+        resourceKey,
+      },
+    },
+  });
+}
+
 const updateNamespacePermissions = (namespace: string, type: string) => {
   return apiClient.useMutation("put", "/api/v1/auth/resources/acl", {
     onSettled: () => {
